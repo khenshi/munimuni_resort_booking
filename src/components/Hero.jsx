@@ -38,7 +38,7 @@ export default function Hero({ navItems, menuOpen, onMenuToggle, onNavigateTo })
         </div>
       </main>
 
-      // Anchors for the sections
+      {/* Anchors for the sections */}
       <div id="resort" className="sectionAnchor" />
       <div id="experiences" className="sectionAnchor" />
       <div id="gallery" className="sectionAnchor" />
