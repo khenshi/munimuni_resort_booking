@@ -3,7 +3,7 @@ export default function TopNav({ navItems, menuOpen, onMenuToggle, onNavigateTo 
     <header className="navHeader">
       <div className="navInner">
 
-        // to be replaced with logo 
+        {/* to be replaced with logo*/} 
         <a
           className="brand"
           href="#top"
