@@ -1,0 +1,308 @@
+/* BeachResort hero + transparent navbar (expanded project landing page) */
+
+.heroSection {
+  --brand-cyan-rgb: 0, 169, 216;
+  --brand-cyan: rgb(var(--brand-cyan-rgb));
+
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.heroBg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transform: scale(1.05);
+  filter: saturate(1.05) contrast(1.05);
+}
+
+.heroBg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.navHeader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  padding: 18px 20px;
+}
+
+.navInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  justify-content: space-between;
+
+  background: rgba(10, 14, 20, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 20px;
+  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  padding: 14px 18px;
+}
+
+.brand {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 20px;
+  white-space: nowrap;
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  flex: 1;
+}
+
+.navLink {
+  text-decoration: none;
+  color: rgba(255, 255, 255);
+  font-weight: 400;
+  font-size: 15px;
+  letter-spacing: 0.2px;
+  position: relative;
+  padding: 8px 6px;
+  font-family: var(--font-body);
+}
+
+.navLink::after {
+  content: '';
+  position: absolute;
+  left: 6px;
+  right: 6px;
+  bottom: 2px;
+  height: 1px;
+  background: var(--brand-cyan);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 160ms ease;
+}
+
+.navLink:hover::after {
+  transform: scaleX(1);
+}
+
+.navActions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.bookNowBtn {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-weight: 400;
+  letter-spacing: 0.2px;
+  color: rgba(255, 255, 255, 0.96);
+  background: var(--brand-cyan);
+  box-shadow: 0 14px 40px rgba(var(--brand-cyan-rgb), 0.18);
+  transition: transform 160ms ease, box-shadow 160ms ease;
+  font-family: var(--font-body);
+}
+
+.bookNowBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 18px 52px rgba(var(--brand-cyan-rgb), 0.26);
+}
+
+.menuButton {
+  display: none;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(0, 0, 0, 0.18);
+  color: rgba(255, 255, 255, 0.92);
+  border-radius: 10px;
+  padding: 10px 12px;
+  cursor: pointer;
+  font-family: var(--font-body);
+}
+
+.menuIcon {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.menuIcon span {
+  width: 18px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.88);
+  border-radius: 2px;
+}
+
+.mobileMenu {
+  position: absolute;
+  top: calc(100% - 6px);
+  left: 20px;
+  right: 20px;
+  margin: 0 auto;
+  z-index: 60;
+  max-width: 1200px;
+}
+
+.mobileMenuInner {
+  background: rgba(10, 14, 20, 0.52);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 18px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 26px 80px rgba(0, 0, 0, 0.35);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mobileNavLink {
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.82);
+  font-weight: 400;
+  padding: 12px 12px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  font-family: var(--font-body);
+}
+
+.mobileNavLink:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.mobileBookNow {
+  text-decoration: none;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.96);
+  padding: 12px 12px;
+  border-radius: 10px;
+  background: var(--brand-cyan);
+  font-family: var(--font-body);
+}
+
+.heroContent {
+  position: relative;
+  z-index: 2;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 120px 20px 64px;
+}
+
+.heroCopy {
+  max-width: 720px;
+  text-align: center;
+  margin: 0 auto;
+}
+
+.kicker {
+  display: inline-block;
+  font-size: 13px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.78);
+  margin-bottom: 18px;
+  font-family: var(--font-body);
+}
+
+.heroCopy h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(44px, 5.1vw, 72px);
+  line-height: 1.03;
+  color: rgba(255, 255, 255, 0.97);
+  text-shadow: 0 18px 60px rgba(0, 0, 0, 0.45);
+  letter-spacing: -0.5px;
+}
+
+.heroHeadingAccent {
+  color: var(--brand-cyan);
+  font-style: italic;
+}
+
+.heroCopy p {
+  margin: 18px 0 28px;
+  font-size: 18px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.heroCtas {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.primaryCta {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 18px;
+  border-radius: 10px;
+  font-weight: 450;
+  color: rgba(255, 255, 255, 0.96);
+  background: var(--brand-cyan);
+  box-shadow: 0 14px 40px rgba(var(--brand-cyan-rgb), 0.18);
+  font-family: var(--font-body);
+}
+
+.secondaryCta {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 18px;
+  border-radius: 10px;
+  font-weight: 450;
+  color: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(0, 0, 0, 0.18);
+  font-family: var(--font-body);
+}
+
+.sectionAnchor {
+  height: 1px;
+}
+
+.bookingAnchor {
+  height: 1px;
+}
+
+@media (max-width: 860px) {
+  .navLinks {
+    display: none;
+  }
+
+  .menuButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .mobileMenu {
+    max-width: none;
+  }
+
+  .heroContent {
+    padding-top: 110px;
+  }
+}
+
