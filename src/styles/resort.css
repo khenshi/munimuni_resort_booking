@@ -1,0 +1,36 @@
+.resortSection {
+    --brand-cyan-rgb: 0, 169, 216;
+    --brand-cyan: rgb(var(--brand-cyan-rgb));
+
+    position: relative;
+    min-height: 150vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 120px 20px 64px;
+}
+
+.sectionFirst {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.resortImg {
+  width: 55%;
+  object-fit: cover;
+}
+
+.textContainer {
+    padding-left: 2rem;
+}
+
+
+
+
+@media (max-width: 768px) {
+  .resortImg {
+    max-width: 200px;    /* Even smaller on mobile */
+  }
+}
