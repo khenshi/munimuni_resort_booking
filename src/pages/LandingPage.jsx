@@ -8,9 +8,8 @@ export default function LandingPage() {
 
   const navItems = useMemo(
     () => [
-      { label: 'Resort', targetId: 'resort' },
-      { label: 'Experiences', targetId: 'experiences' },
-      { label: 'Gallery', targetId: 'gallery' },
+      { label: 'Highlights', targetId: 'highlights' },
+      { label: 'Gallery', targetId: 'resort' },
     ],
     [],
   )
