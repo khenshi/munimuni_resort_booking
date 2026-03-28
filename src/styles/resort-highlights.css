@@ -1,0 +1,82 @@
+.resortHighlights {
+  --brand-cyan-rgb: 0, 169, 216;
+  --brand-cyan: rgb(var(--brand-cyan-rgb));
+
+  padding: 50px 20px 50px;
+}
+
+.resortHighlightsInner {
+  width: min(1100px, 100%);
+  margin: 0 auto;
+  padding: 8px 0;
+  text-align: center;
+}
+
+.resortHighlightsKicker {
+  margin: 0;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: rgba(21, 33, 49, 0.62);
+  font-family: var(--font-body);
+}
+
+.resortHighlightsInner h2 {
+  margin: 8px 0 40px;
+  font-size: clamp(26px, 2.4vw, 34px);
+  color: #162033;
+}
+
+.resortHighlightsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  align-items: start;
+}
+
+.resortHighlightCard {
+  padding: 4px 6px;
+  text-align: center;
+}
+
+.resortHighlightIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  background: rgba(var(--brand-cyan-rgb), 0.18);
+  color: var(--brand-cyan);
+}
+
+.resortHighlightIcon svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+.resortHighlightCard h3 {
+  margin: 10px 0 6px;
+  font-family: var(--font-display);
+  font-size: 20px;
+  color: #1b2a3f;
+}
+
+.resortHighlightCard p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: rgba(27, 42, 63, 0.78);
+}
+
+@media (max-width: 860px) {
+  .resortHighlights {
+    padding: 20px 16px 8px;
+  }
+
+  .resortHighlightsGrid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+}

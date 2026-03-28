@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import Hero from '../components/Hero'
-import Resort from '../components/Resort'
+import ResortHighlights from '../components/ResortHighlights'
+import ResortGallery from '../components/Resort'
 
 export default function LandingPage() {
   const [menuOpen, setMenuOpen] = useState(false)
@@ -37,7 +38,8 @@ export default function LandingPage() {
       onMenuToggle={() => setMenuOpen((v) => !v)}
       onNavigateTo={onNavigateTo}
       />
-      <Resort />
+      <ResortHighlights />
+      <ResortGallery />
     </div>
   )
 }
