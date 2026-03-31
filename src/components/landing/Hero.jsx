@@ -1,6 +1,7 @@
-import heroBg from '../assets/herobg.jpg'
-import resortImage from '../assets/resort_sectionbg.jpg'
-import { Link } from 'react-scroll'
+import heroBg from '../../assets/herobg.jpg'
+import resortImage from '../../assets/resort_sectionbg.jpg'
+import { Link as ScrollLink } from 'react-scroll'
+import { Link as RouterLink } from 'react-router-dom'
 
 export default function Hero() {
   return (
@@ -19,10 +20,10 @@ export default function Hero() {
             </p>
 
             <div className="heroCtas">
-              <Link className="primaryCta" to="booking" spy={true} smooth={true} offset={-70} duration={450}>
+              <RouterLink className="primaryCta" to="/booking">
                 Book Now
-              </Link>
-              <Link
+              </RouterLink>
+              <ScrollLink
                 className="secondaryCta"
                 to="resort-gallery"
                 spy={true}
@@ -31,7 +32,7 @@ export default function Hero() {
                 duration={450}
               >
                 View Gallery
-              </Link>
+              </ScrollLink>
             </div>
           </div>
 

@@ -1,0 +1,353 @@
+/* Packages Page Header styles */
+
+.packagesPageHeader {
+  --brand-cyan-rgb: var(--color-cyan-rgb);
+  --brand-cyan: rgb(var(--brand-cyan-rgb));
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  padding: 18px 20px;
+  background: #ffffff;
+  border-bottom: 1px solid rgba(var(--brand-cyan-rgb), 0.35);
+}
+
+.packagesPageHeaderInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  position: relative;
+}
+
+.packagesPageBrand {
+  position: absolute;
+  left: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-decoration: none;
+  color: var(--color-ink);
+  font-size: 20px;
+  white-space: nowrap;
+  transition: color 160ms ease;
+}
+
+.packagesPageBrand:hover {
+  color: var(--brand-cyan);
+}
+
+.packagesToggleGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(var(--brand-cyan-rgb), 0.08);
+  border: 1px solid rgba(var(--brand-cyan-rgb), 0.25);
+  border-radius: 12px;
+  padding: 6px;
+}
+
+.packagesToggle {
+  appearance: none;
+  background: transparent;
+  border: none;
+  color: rgba(22, 32, 51, 0.78);
+  font-weight: 400;
+  font-size: 13px;
+  letter-spacing: 0.2px;
+  font-family: var(--font-body);
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 200ms ease;
+  white-space: nowrap;
+}
+
+.packagesToggle:hover {
+  color: var(--color-ink);
+  background: rgba(var(--brand-cyan-rgb), 0.16);
+}
+
+.packagesToggle.active {
+  color: rgba(255, 255, 255, 0.96);
+  background: var(--brand-cyan);
+  box-shadow: 0 4px 12px rgba(var(--brand-cyan-rgb), 0.3);
+}
+
+.packagesPage {
+  min-height: 100vh;
+  background: var(--brand-cyan);
+}
+
+.packagesPageMain {
+  min-height: 100vh;
+  padding: 116px 20px 36px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.packagesInfoSection,
+.packagesListSection {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  border-radius: 20px;
+  box-shadow: 0 18px 50px rgba(22, 32, 51, 0.12);
+  padding: 24px;
+}
+
+.packagesListSection {
+  margin-top: 20px;
+}
+
+.packagesSectionKicker {
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(22, 32, 51, 0.62);
+  font-family: var(--font-body);
+}
+
+.packagesInfoSection h2,
+.packagesListSection h2 {
+  margin: 8px 0 18px;
+  color: var(--color-ink);
+}
+
+.packagesInfoGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.packagesInfoCard {
+  background: rgba(var(--color-cyan-rgb), 0.08);
+  border: 1px solid rgba(var(--color-cyan-rgb), 0.2);
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.packagesInfoCard h3 {
+  margin: 0 0 10px;
+  color: var(--color-ink);
+}
+
+.packagesInfoCard ul {
+  margin: 0;
+  padding-left: 18px;
+  color: rgba(22, 32, 51, 0.86);
+}
+
+.packagesInfoCard li + li {
+  margin-top: 8px;
+}
+
+.packageCard {
+  border: 2px dashed rgba(var(--color-cyan-rgb), 0.45);
+  border-radius: 14px;
+  background: rgba(var(--color-cyan-rgb), 0.06);
+  padding: 18px;
+}
+
+.packageCard h3 {
+  margin: 0;
+  color: var(--color-ink);
+}
+
+.packageSubtitle {
+  margin: 8px 0 14px;
+  color: rgba(22, 32, 51, 0.75);
+}
+
+.packageDetailsList {
+  margin: 0;
+  padding-left: 18px;
+  color: rgba(22, 32, 51, 0.9);
+}
+
+.packageDetailsList li + li {
+  margin-top: 8px;
+}
+
+.packageTypeHeader {
+  margin-top: 18px;
+}
+
+.packageTypeHeader h3 {
+  margin: 0;
+  color: var(--color-ink);
+}
+
+.packageTypeHeader p {
+  margin: 6px 0 0;
+  color: rgba(22, 32, 51, 0.72);
+}
+
+.cottageGrid {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.cottageCard {
+  background: #ffffff;
+  border: 1px solid rgba(var(--color-cyan-rgb), 0.28);
+  border-radius: 12px;
+  padding: 14px;
+}
+
+.cottageCard.isSelected {
+  border-color: rgba(var(--color-cyan-rgb), 0.85);
+  box-shadow: 0 8px 20px rgba(var(--color-cyan-rgb), 0.2);
+}
+
+.cottageCard h4 {
+  margin: 0;
+  color: var(--color-ink);
+}
+
+.cottageCard p {
+  margin: 6px 0 0;
+  color: rgba(22, 32, 51, 0.74);
+}
+
+.cottageSelectBtn {
+  margin-top: 12px;
+  appearance: none;
+  border: none;
+  border-radius: 10px;
+  background: var(--color-ink);
+  color: #ffffff;
+  padding: 8px 12px;
+  font-family: var(--font-body);
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 160ms ease;
+}
+
+.cottageSelectBtn:hover {
+  background: var(--brand-cyan);
+}
+
+.cottageDetailsPanel {
+  margin-top: 14px;
+  background: rgba(var(--color-cyan-rgb), 0.08);
+  border: 1px solid rgba(var(--color-cyan-rgb), 0.28);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.cottageDetailsPanel h3 {
+  margin: 0;
+  color: var(--color-ink);
+}
+
+.cottageDetailsRate {
+  margin: 6px 0 12px;
+  color: rgba(22, 32, 51, 0.75);
+}
+
+.cottageDetailsPanel ul {
+  margin: 0;
+  padding-left: 18px;
+  color: rgba(22, 32, 51, 0.86);
+}
+
+.cottageDetailsPanel li + li {
+  margin-top: 8px;
+}
+
+.overnightOffersGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.overnightOfferCard {
+  background: #ffffff;
+  border: 1px solid rgba(var(--color-cyan-rgb), 0.28);
+  border-radius: 12px;
+  padding: 14px;
+}
+
+.overnightOfferCard h3 {
+  margin: 0;
+  color: var(--color-ink);
+  font-size: 18px;
+}
+
+.overnightOfferCard p {
+  margin: 8px 0 0;
+  color: rgba(22, 32, 51, 0.74);
+}
+
+.addonsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.addonCard {
+  background: #ffffff;
+  border: 1px solid rgba(var(--color-cyan-rgb), 0.28);
+  border-radius: 12px;
+  padding: 14px;
+}
+
+.addonCard h3 {
+  margin: 0;
+  color: var(--color-ink);
+  font-size: 17px;
+}
+
+.addonCard p {
+  margin: 8px 0 0;
+  color: rgba(22, 32, 51, 0.74);
+}
+
+@media (max-width: 860px) {
+  .packagesPageHeaderInner {
+    flex-direction: column;
+    gap: 16px;
+    position: static;
+  }
+
+  .packagesPageBrand {
+    position: static;
+  }
+
+  .packagesToggleGroup {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .packagesToggle {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+
+  .packagesPageMain {
+    padding: 132px 16px 24px;
+  }
+
+  .packagesInfoGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .cottageGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .overnightOffersGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .addonsGrid {
+    grid-template-columns: 1fr;
+  }
+}

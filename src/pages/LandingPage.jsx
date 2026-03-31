@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
-import Hero from '../components/Hero'
-import TopNav from '../components/TopNav'
-import ResortHighlights from '../components/ResortHighlights'
-import ResortGallery from '../components/ResortGallery'
+import Hero from '../components/landing/Hero'
+import TopNav from '../components/landing/TopNav'
+import ResortHighlights from '../components/landing/ResortHighlights'
+import ResortGallery from '../components/landing/ResortGallery'
 
 export default function LandingPage() {
   const [menuOpen, setMenuOpen] = useState(false)

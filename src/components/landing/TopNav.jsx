@@ -1,4 +1,5 @@
-import { Link } from 'react-scroll'
+import { Link as ScrollLink } from 'react-scroll'
+import { Link as RouterLink } from 'react-router-dom'
 
 export default function TopNav({ navItems, menuOpen, onMenuToggle}) {
   return (
@@ -6,7 +7,7 @@ export default function TopNav({ navItems, menuOpen, onMenuToggle}) {
       <div className="navInner">
 
         {/* to be replaced with logo*/} 
-        <Link
+        <ScrollLink
           className="brand"
           to="heroSection"
           spy
@@ -16,11 +17,11 @@ export default function TopNav({ navItems, menuOpen, onMenuToggle}) {
           aria-label="BeachResort home"
         >
           MuniMuni
-        </Link>
+        </ScrollLink>
 
         <nav className="navLinks" aria-label="Primary navigation">
           {navItems.map((item) => (
-            <Link
+            <ScrollLink
               activeClass="activeNavLink"
               spy
               smooth
@@ -31,21 +32,17 @@ export default function TopNav({ navItems, menuOpen, onMenuToggle}) {
               to={item.targetId}
             >
               {item.label}
-            </Link>
+            </ScrollLink>
           ))}
         </nav>
 
         <div className="navActions">
-          <Link
+          <RouterLink
             className="bookNowBtn"
-            to="resort-highlights"
-            spy
-            smooth
-            offset={-70}
-            duration={450}
+            to="/booking"
           >
             Book Now
-          </Link>
+          </RouterLink>
 
           <button
             type="button"
