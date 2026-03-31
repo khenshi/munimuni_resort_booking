@@ -1,39 +1,51 @@
-export default function TopNav({ navItems, menuOpen, onMenuToggle, onNavigateTo }) {
+import { Link } from 'react-scroll'
+
+export default function TopNav({ navItems, menuOpen, onMenuToggle}) {
   return (
     <header className="navHeader">
       <div className="navInner">
 
         {/* to be replaced with logo*/} 
-        <a
+        <Link
           className="brand"
-          href="#top"
-          onClick={(e) => onNavigateTo(e, 'top')}
+          to="heroSection"
+          spy
+          smooth
+          offset={-70}
+          duration={450}
           aria-label="BeachResort home"
         >
           MuniMuni
-        </a>
+        </Link>
 
         <nav className="navLinks" aria-label="Primary navigation">
           {navItems.map((item) => (
-            <a
+            <Link
+              activeClass="activeNavLink"
+              spy
+              smooth
+              offset={-70}
+              duration={450}
               key={item.targetId}
-              href={`#${item.targetId}`}
               className="navLink"
-              onClick={(e) => onNavigateTo(e, item.targetId)}
+              to={item.targetId}
             >
               {item.label}
-            </a>
+            </Link>
           ))}
         </nav>
 
         <div className="navActions">
-          <a
+          <Link
             className="bookNowBtn"
-            href="#booking"
-            onClick={(e) => onNavigateTo(e, 'booking')}
+            to="resort-highlights"
+            spy
+            smooth
+            offset={-70}
+            duration={450}
           >
             Book Now
-          </a>
+          </Link>
 
           <button
             type="button"

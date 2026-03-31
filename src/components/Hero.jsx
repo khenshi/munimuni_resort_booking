@@ -1,18 +1,11 @@
-import TopNav from './TopNav'
 import heroBg from '../assets/herobg.jpg'
 import resortImage from '../assets/resort_sectionbg.jpg'
+import { Link } from 'react-scroll'
 
-export default function Hero({ navItems, menuOpen, onMenuToggle, onNavigateTo }) {
+export default function Hero() {
   return (
     <section className="heroSection" id="top" aria-label="Beach Resort Hero">
       <div className="heroBg" style={{ backgroundImage: `url(${heroBg})` }} aria-hidden="true" />
-
-      <TopNav
-        navItems={navItems}
-        menuOpen={menuOpen}
-        onMenuToggle={onMenuToggle}
-        onNavigateTo={onNavigateTo}
-      />
 
       <main className="heroContent">
         <div className="heroGrid">
@@ -26,16 +19,19 @@ export default function Hero({ navItems, menuOpen, onMenuToggle, onNavigateTo })
             </p>
 
             <div className="heroCtas">
-              <a className="primaryCta" href="#booking" onClick={(e) => onNavigateTo(e, 'booking')}>
+              <Link className="primaryCta" to="booking" spy={true} smooth={true} offset={-70} duration={450}>
                 Book Now
-              </a>
-              <a
+              </Link>
+              <Link
                 className="secondaryCta"
-                href="#gallery"
-                onClick={(e) => onNavigateTo(e, 'gallery')}
+                to="resort-gallery"
+                spy={true}
+                smooth={true}
+                offset={-70}
+                duration={450}
               >
                 View Gallery
-              </a>
+              </Link>
             </div>
           </div>
 

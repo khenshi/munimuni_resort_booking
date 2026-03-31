@@ -1,15 +1,16 @@
 import { useEffect, useMemo, useState } from 'react'
 import Hero from '../components/Hero'
+import TopNav from '../components/TopNav'
 import ResortHighlights from '../components/ResortHighlights'
-import ResortGallery from '../components/Resort'
+import ResortGallery from '../components/ResortGallery'
 
 export default function LandingPage() {
   const [menuOpen, setMenuOpen] = useState(false)
 
   const navItems = useMemo(
     () => [
-      { label: 'Highlights', targetId: 'highlights' },
-      { label: 'Gallery', targetId: 'resort' },
+      { label: 'Highlights', targetId: 'resort-highlights' },
+      { label: 'Gallery', targetId: 'resort-gallery' },
     ],
     [],
   )
@@ -22,21 +23,14 @@ export default function LandingPage() {
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [])
 
-  const onNavigateTo = (e, targetId) => {
-    e.preventDefault()
-    const el = document.getElementById(targetId)
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    setMenuOpen(false)
-  }
-
   return (
     <div>
-      <Hero
-      navItems={navItems}
-      menuOpen={menuOpen}
-      onMenuToggle={() => setMenuOpen((v) => !v)}
-      onNavigateTo={onNavigateTo}
+      <TopNav
+        navItems={navItems}
+        menuOpen={menuOpen}
+        onMenuToggle={() => setMenuOpen((v) => !v)}
       />
+      <Hero/>
       <ResortHighlights />
       <ResortGallery />
     </div>

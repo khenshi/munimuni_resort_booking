@@ -85,7 +85,7 @@ export default function ResortGallery() {
   }
 
   return (
-    <section className="resortSection" id="resort">
+    <section className="resortSection" id="resort-gallery">
       <header className="resortSectionHeader">
         <p className="resortSectionKicker">At A Glance</p>
         <h2 className="resortSectionTitle">Resort Gallery</h2>

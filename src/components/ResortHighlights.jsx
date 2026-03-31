@@ -33,7 +33,7 @@ const highlights = [
 
 export default function ResortHighlights() {
   return (
-    <section className="resortHighlights" id="highlights" aria-label="Resort highlights">
+    <section className="resortHighlights" id="resort-highlights" aria-label="Resort highlights">
       <div className="resortHighlightsInner">
         <p className="resortHighlightsKicker">At A Glance</p>
         <h2>Small reasons guests love Muni-Muni</h2>

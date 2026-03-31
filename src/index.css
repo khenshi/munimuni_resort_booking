@@ -97,3 +97,7 @@ code {
   padding: 4px 8px;
   background: var(--color-code-bg);
 }
+
+a {
+  cursor: pointer;
+}
