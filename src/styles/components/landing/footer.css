@@ -1,0 +1,64 @@
+.landingFooter {
+  background:#0f1a28;
+  color: rgba(255, 255, 255, 0.92);
+  padding: 36px 20px 22px;
+}
+
+.landingFooterInner {
+  width: min(1120px, 100%);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.3fr 1fr 1.2fr;
+  gap: 20px;
+  align-items: start;
+}
+
+.landingFooterBrand h3 {
+  margin: 0;
+  font-size: 24px;
+  color: #ffffff;
+}
+
+.landingFooterBrand p {
+  margin: 8px 0 0;
+  color: rgba(255, 255, 255, 0.72);
+  line-height: 1.6;
+}
+
+.landingFooterNav {
+  display: grid;
+  gap: 10px;
+}
+
+.landingFooterNav a,
+.landingFooterContact a {
+  color: rgba(255, 255, 255, 0.86);
+  text-decoration: none;
+  transition: color 140ms ease;
+}
+
+.landingFooterNav a:hover,
+.landingFooterContact a:hover {
+  color: rgb(var(--color-cyan-rgb));
+}
+
+.landingFooterContact {
+  display: grid;
+  gap: 10px;
+}
+
+.landingFooterCopy {
+  width: min(1120px, 100%);
+  margin: 22px auto 0;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.64);
+  font-size: 13px;
+}
+
+@media (max-width: 900px) {
+  .landingFooterInner {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}

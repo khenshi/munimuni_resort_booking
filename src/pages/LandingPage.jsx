@@ -3,6 +3,9 @@ import Hero from '../components/landing/Hero'
 import TopNav from '../components/landing/TopNav'
 import ResortHighlights from '../components/landing/ResortHighlights'
 import ResortGallery from '../components/landing/ResortGallery'
+import Experiences from '../components/landing/Experiences'
+import ContactDetails from '../components/landing/ContactDetails'
+import LandingFooter from '../components/landing/LandingFooter'
 import '../styles/pages/landing-page.css'
 
 export default function LandingPage() {
@@ -12,6 +15,8 @@ export default function LandingPage() {
     () => [
       { label: 'Highlights', targetId: 'resort-highlights' },
       { label: 'Gallery', targetId: 'resort-gallery' },
+      { label: 'Featured Offers', targetId: 'featured-offers' },
+      { label: 'Contact', targetId: 'resort-contact' },
     ],
     [],
   )
@@ -34,6 +39,9 @@ export default function LandingPage() {
       <Hero/>
       <ResortHighlights />
       <ResortGallery />
+      <Experiences />
+      <ContactDetails />
+      <LandingFooter />
     </div>
   )
 }
