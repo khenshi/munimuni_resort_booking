@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import PackagesPageHeader from '../components/packages/PackagesPageHeader'
 import { addOns, cottages, overnightOffers } from '../components/packages/data'
+import '../styles/pages/packages-page.css'
 
 const tabByType = {
   daytour: 'daytour',

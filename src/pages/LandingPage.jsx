@@ -3,6 +3,7 @@ import Hero from '../components/landing/Hero'
 import TopNav from '../components/landing/TopNav'
 import ResortHighlights from '../components/landing/ResortHighlights'
 import ResortGallery from '../components/landing/ResortGallery'
+import '../styles/pages/landing-page.css'
 
 export default function LandingPage() {
   const [menuOpen, setMenuOpen] = useState(false)

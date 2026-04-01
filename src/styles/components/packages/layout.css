@@ -1,0 +1,118 @@
+.packagesPage {
+  --brand-cyan-rgb: var(--color-cyan-rgb);
+  --brand-cyan: rgb(var(--brand-cyan-rgb));
+
+  min-height: 100vh;
+  background: var(--color-sand-soft);
+}
+
+.packagesPageMain {
+  min-height: 100vh;
+  padding: 116px 20px 36px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.packagesInfoSection,
+.packagesListSection {
+  background: #ffffff;
+  border: 1px solid var(--color-border-soft);
+  border-radius: 20px;
+  box-shadow: 0 18px 50px rgba(22, 32, 51, 0.12);
+  padding: 24px;
+}
+
+.packagesListSection {
+  margin-top: 20px;
+}
+
+.packagesSectionKicker {
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(22, 32, 51, 0.62);
+  font-family: var(--font-body);
+}
+
+.packagesInfoSection h2,
+.packagesListSection h2 {
+  margin: 8px 0 18px;
+  color: var(--color-ink);
+}
+
+.packagesInfoGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.packagesInfoCard {
+  background: rgba(var(--color-cyan-rgb), 0.08);
+  border: 1px solid rgba(var(--color-cyan-rgb), 0.2);
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.packagesInfoCard h3 {
+  margin: 0 0 10px;
+  color: var(--color-ink);
+}
+
+.packagesInfoCard ul {
+  margin: 0;
+  padding-left: 18px;
+  color: rgba(22, 32, 51, 0.86);
+}
+
+.packagesInfoCard li + li {
+  margin-top: 8px;
+}
+
+.packageCard {
+  border: 2px dashed rgba(var(--color-cyan-rgb), 0.45);
+  border-radius: 14px;
+  background: rgba(var(--color-cyan-rgb), 0.06);
+  padding: 18px;
+}
+
+.packageCard h3 {
+  margin: 0;
+  color: var(--color-ink);
+}
+
+.packageSubtitle {
+  margin: 8px 0 14px;
+  color: rgba(22, 32, 51, 0.75);
+}
+
+.packagePrice {
+  margin: 0 0 12px;
+  font-weight: 600;
+  color: var(--color-cyan);
+  font-size: 16px;
+}
+
+.packageDetailsList {
+  margin: 0;
+  padding-left: 18px;
+  color: rgba(22, 32, 51, 0.9);
+}
+
+.packageDetailsList li + li {
+  margin-top: 8px;
+}
+
+.packageTypeHeader {
+  margin-top: 18px;
+}
+
+.packageTypeHeader h3 {
+  margin: 0;
+  color: var(--color-ink);
+}
+
+.packageTypeHeader p {
+  margin: 6px 0 0;
+  color: rgba(22, 32, 51, 0.72);
+}

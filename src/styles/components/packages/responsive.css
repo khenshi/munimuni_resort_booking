@@ -1,0 +1,46 @@
+@media (max-width: 860px) {
+  .packagesPageHeaderInner {
+    flex-direction: column;
+    gap: 16px;
+    position: static;
+  }
+
+  .packagesPageBrand {
+    position: static;
+  }
+
+  .packagesToggleGroup {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .packagesToggle {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+
+  .packagesPageMain {
+    padding: 132px 16px 24px;
+  }
+
+  .packagesInfoGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .offersSortBar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .offersSortBlock,
+  .offersFilterBlock {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .cottageGrid,
+  .overnightOffersGrid,
+  .addonsGrid {
+    grid-template-columns: 1fr;
+  }
+}

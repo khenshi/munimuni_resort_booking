@@ -1,6 +1,7 @@
 export const cottages = [
   {
     id: 'cove',
+    title: 'Cove',
     name: 'Cove',
     price: 2000,
     priceLabel: 'PHP 2,000',
@@ -8,6 +9,9 @@ export const cottages = [
     paxMax: 15,
     paxLabel: '10-15 pax',
     description: 'Recommended for small group day tours and intimate gatherings.',
+    availability: {
+      unavailableCheckInDates: ['2026-04-06', '2026-04-12', '2026-04-20'],
+    },
     details: [
       'Capacity: 10-15 persons with comfortable seating and dining areas.',
       'Amenities: Equipped with sturdy tables and chairs, ceiling fan for shade and cooling.',
@@ -20,6 +24,7 @@ export const cottages = [
   },
   {
     id: 'jungle',
+    title: 'Jungle',
     name: 'Jungle',
     price: 1800,
     priceLabel: 'PHP 1,800',
@@ -27,6 +32,9 @@ export const cottages = [
     paxMax: 15,
     paxLabel: '10-15 pax',
     description: 'Value-friendly option excellent for group outings and budget-conscious travelers.',
+    availability: {
+      unavailableCheckInDates: ['2026-04-08', '2026-04-15', '2026-04-21'],
+    },
     details: [
       'Capacity: 10-15 persons with functional tables and chairs.',
       'Amenities: Natural shade from native trees, ceiling fan, open-air design for fresh air flow.',
@@ -39,6 +47,7 @@ export const cottages = [
   },
   {
     id: 'cliffside',
+    title: 'Cliffside',
     name: 'Cliffside',
     price: 3500,
     priceLabel: 'PHP 3,500',
@@ -46,6 +55,9 @@ export const cottages = [
     paxMax: 30,
     paxLabel: '20-30 pax',
     description: 'Best for larger gatherings, celebrations, and special events.',
+    availability: {
+      unavailableCheckInDates: ['2026-04-10', '2026-04-18', '2026-04-27'],
+    },
     details: [
       'Capacity: 20-30 persons with ample space for dining and mingling.',
       'Amenities: Multiple tables and chair sets, panoramic views, elevated seating for scenic vantage point.',
@@ -115,7 +127,13 @@ export const overnightOffers = [
     title: 'Overnight Cottage Stay',
     price: 2000,
     priceLabel: 'From PHP 2,000',
+    paxMin: 10,
+    paxMax: 30,
+    paxLabel: '10-30 pax',
     description: 'Ideal for guests who want a private stay space with overnight access.',
+    availability: {
+      unavailableCheckInDates: ['2026-04-05', '2026-04-11', '2026-04-19'],
+    },
     details: [
       'Choose from Cove, Jungle, or Cliffside cottages based on group size.',
       'Check-in: 2:00 PM | Check-out: 11:00 AM (flexible with prior coordination).',
@@ -134,7 +152,13 @@ export const overnightOffers = [
     title: 'Overnight Family Package',
     price: 3500,
     priceLabel: 'From PHP 3,500',
+    paxMin: 10,
+    paxMax: 20,
+    paxLabel: '10-20 pax',
     description: 'Designed for family groups with bundled overnight inclusions.',
+    availability: {
+      unavailableCheckInDates: ['2026-04-07', '2026-04-13', '2026-04-22'],
+    },
     details: [
       'Includes: Cottage rental, welcome refreshments (juice/coffee), and breakfast spread the next morning.',
       'Group size: Recommended for 10-20 persons (smaller family groups).',
@@ -153,7 +177,13 @@ export const overnightOffers = [
     title: 'Overnight Barkada Package',
     price: 4000,
     priceLabel: 'From PHP 4,000',
+    paxMin: 15,
+    paxMax: 30,
+    paxLabel: '15-30 pax',
     description: 'Best for friends looking for an extended resort stay.',
+    availability: {
+      unavailableCheckInDates: ['2026-04-09', '2026-04-17', '2026-04-25'],
+    },
     details: [
       'Includes: Cottage rental, lunch spread on day of arrival, and grilling station setup.',
       'Group size: Perfect for 15-30 persons (larger friend groups and celebrations).',
@@ -169,12 +199,39 @@ export const overnightOffers = [
   },
 ]
 
+export const dayTourOffers = [
+  {
+    id: 'basic',
+    title: 'Basic Type - Entrance Fee',
+    price: 275,
+    priceLabel: 'PHP 275-325 per person',
+    paxMin: 1,
+    paxMax: null,
+    paxLabel: 'Any pax',
+    description: 'Includes free use of tables and chairs.',
+    availability: {
+      unavailableCheckInDates: ['2026-04-04', '2026-04-14', '2026-04-24'],
+    },
+    details: [
+      'Day tour access from 8:00 AM to 5:00 PM.',
+      'Entrance fee starts at PHP 275 and may vary based on date and guest type.',
+      'Free use of shared tables and chairs is included in this option.',
+      'Ideal for guests who want flexible resort access without cottage rental.',
+      'Cottage rental can be added separately for grilling and dedicated resting space.',
+      'Walk-ins are welcome subject to resort capacity and availability.',
+    ],
+  },
+]
+
 export const addOns = [
   {
     id: 'extra-table-chair-set',
     title: 'Extra Table and Chair Set',
     price: 300,
     priceLabel: 'PHP 300 per set',
+    paxMin: 1,
+    paxMax: null,
+    paxLabel: 'Any pax',
     description: 'Additional seating setup for bigger groups.',
     details: [
       'Quantity: 1 set includes 1 sturdy table and 4-6 chairs.',
@@ -191,6 +248,9 @@ export const addOns = [
     title: 'Grilling Setup Add-On',
     price: 800,
     priceLabel: 'PHP 800 per setup',
+    paxMin: 1,
+    paxMax: null,
+    paxLabel: 'Any pax',
     description: 'Available when paired with an eligible cottage booking.',
     details: [
       'Includes: Professional grilling station setup with grill, charcoal, and cooking utensils.',
@@ -209,6 +269,9 @@ export const addOns = [
     title: 'Floating Table',
     price: 500,
     priceLabel: 'PHP 500 per day',
+    paxMin: 1,
+    paxMax: 10,
+    paxLabel: 'Up to 10 pax',
     description: 'Great for photos, snacks, and lounge moments.',
     details: [
       'Type: Scenic floating platform setup in designated water area (subject to weather conditions).',
@@ -227,6 +290,9 @@ export const addOns = [
     title: 'Videoke / Sound Add-On',
     price: 1200,
     priceLabel: 'PHP 1,200 for 4 hours | PHP 2,000 for 8 hours',
+    paxMin: 1,
+    paxMax: null,
+    paxLabel: 'Any pax',
     description: 'Available in approved areas and time slots.',
     details: [
       'Equipment: Professional-grade videoke machine, 2 microphones, large LED display, full sound system.',

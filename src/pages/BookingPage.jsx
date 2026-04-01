@@ -1,4 +1,5 @@
 import BookingPageHeader from '../components/booking/BookingPageHeader'
+import '../styles/pages/booking-page.css'
 
 export default function BookingPage() {
   return (

@@ -27,7 +27,7 @@
 }
 
 .resortSectionTitle {
-  margin: 8px 0 40px;
+  margin: 8px 0 40pxas;
   color: #162033;
   font-size: clamp(26px, 2.4vw, 34px);
 }

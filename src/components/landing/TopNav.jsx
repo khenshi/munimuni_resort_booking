@@ -39,7 +39,7 @@ export default function TopNav({ navItems, menuOpen, onMenuToggle}) {
         <div className="navActions">
           <RouterLink
             className="bookNowBtn"
-            to="/booking"
+            to="/packages"
           >
             Book Now
           </RouterLink>

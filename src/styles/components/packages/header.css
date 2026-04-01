@@ -1,0 +1,77 @@
+.packagesPageHeader {
+  --brand-cyan-rgb: var(--color-cyan-rgb);
+  --brand-cyan: rgb(var(--brand-cyan-rgb));
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  padding: 18px 20px;
+  background: #ffffff;
+  border-bottom: 1px solid rgba(var(--brand-cyan-rgb), 0.35);
+}
+
+.packagesPageHeaderInner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  position: relative;
+}
+
+.packagesPageBrand {
+  position: absolute;
+  left: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-decoration: none;
+  color: var(--color-ink);
+  font-size: 20px;
+  white-space: nowrap;
+  transition: color 160ms ease;
+}
+
+.packagesPageBrand:hover {
+  color: var(--brand-cyan);
+}
+
+.packagesToggleGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(var(--brand-cyan-rgb), 0.08);
+  border: 1px solid rgba(var(--brand-cyan-rgb), 0.25);
+  border-radius: 12px;
+  padding: 6px;
+}
+
+.packagesToggle {
+  appearance: none;
+  background: transparent;
+  border: none;
+  color: rgba(22, 32, 51, 0.78);
+  font-weight: 400;
+  font-size: 13px;
+  letter-spacing: 0.2px;
+  font-family: var(--font-body);
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 200ms ease;
+  white-space: nowrap;
+}
+
+.packagesToggle:hover {
+  color: var(--color-ink);
+  background: rgba(var(--brand-cyan-rgb), 0.16);
+}
+
+.packagesToggle.active {
+  color: rgba(255, 255, 255, 0.96);
+  background: var(--brand-cyan);
+  box-shadow: 0 4px 12px rgba(var(--brand-cyan-rgb), 0.3);
+}

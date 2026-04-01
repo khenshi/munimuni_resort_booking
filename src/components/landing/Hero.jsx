@@ -20,7 +20,7 @@ export default function Hero() {
             </p>
 
             <div className="heroCtas">
-              <RouterLink className="primaryCta" to="/booking">
+              <RouterLink className="primaryCta" to="/packages">
                 Book Now
               </RouterLink>
               <ScrollLink
