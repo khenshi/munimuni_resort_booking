@@ -118,6 +118,66 @@
   color: var(--color-ink);
 }
 
+.offersSortBar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.offersSortBlock,
+.offersFilterBlock {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.offersSortLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(22, 32, 51, 0.78);
+}
+
+.offersSortSelect {
+  appearance: none;
+  border: 1px solid rgba(var(--color-cyan-rgb), 0.35);
+  border-radius: 10px;
+  background: #ffffff;
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  font-size: 13px;
+  padding: 8px 10px;
+}
+
+.rangeInputs {
+  display: flex;
+  gap: 8px;
+}
+
+.offersRangeInput {
+  width: 90px;
+  border: 1px solid rgba(var(--color-cyan-rgb), 0.35);
+  border-radius: 10px;
+  background: #ffffff;
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  font-size: 13px;
+  padding: 8px 10px;
+}
+
+.offersRangeInput:focus-visible {
+  outline: none;
+  border-color: rgba(var(--color-cyan-rgb), 0.9);
+  box-shadow: 0 0 0 3px rgba(var(--color-cyan-rgb), 0.18);
+}
+
+.offersSortSelect:focus-visible {
+  outline: none;
+  border-color: rgba(var(--color-cyan-rgb), 0.9);
+  box-shadow: 0 0 0 3px rgba(var(--color-cyan-rgb), 0.18);
+}
+
 .packagesInfoGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -163,6 +223,13 @@
   color: rgba(22, 32, 51, 0.75);
 }
 
+.packagePrice {
+  margin: 0 0 12px;
+  font-weight: 600;
+  color: var(--color-cyan);
+  font-size: 16px;
+}
+
 .packageDetailsList {
   margin: 0;
   padding-left: 18px;
@@ -190,7 +257,7 @@
 .cottageGrid {
   margin-top: 14px;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: 1fr;
   gap: 12px;
 }
 
@@ -198,12 +265,8 @@
   background: #ffffff;
   border: 1px solid rgba(var(--color-cyan-rgb), 0.28);
   border-radius: 12px;
-  padding: 14px;
-}
-
-.cottageCard.isSelected {
-  border-color: rgba(var(--color-cyan-rgb), 0.85);
-  box-shadow: 0 8px 20px rgba(var(--color-cyan-rgb), 0.2);
+  padding: 0;
+  overflow: hidden;
 }
 
 .cottageCard h4 {
@@ -216,55 +279,139 @@
   color: rgba(22, 32, 51, 0.74);
 }
 
+.offerCardContent {
+  display: flex;
+  align-items: stretch;
+  min-height: 200px;
+}
+
+.offerCardDetails {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 4px;
+}
+
+.offerCardDetails h3,
+.offerCardDetails h4 {
+  margin: 0 0 4px;
+  color: var(--color-ink);
+  font-size: 18px;
+}
+
+.offerCardDetails h4 {
+  font-size: 16px;
+}
+
+.offerPrice {
+  margin: 0;
+  font-weight: 600;
+  color: var(--color-cyan);
+  font-size: 16px;
+}
+
+.paxInfo {
+  margin: 0;
+  color: rgba(22, 32, 51, 0.74);
+  font-size: 13px;
+}
+
+.offerCardDetails p {
+  margin: 0;
+  color: rgba(22, 32, 51, 0.74);
+  font-size: 14px;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.offerCardImage {
+  flex: 0 0 30%;
+  min-width: 200px;
+  background: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.imagePlaceholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(var(--color-cyan-rgb), 0.15) 0%, rgba(var(--color-cyan-rgb), 0.08) 100%);
+  border-left: 1px solid rgba(var(--color-cyan-rgb), 0.28);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(22, 32, 51, 0.5);
+  font-size: 14px;
+  font-weight: 500;
+}
+
 .cottageSelectBtn {
   margin-top: 12px;
+  margin-right: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
   appearance: none;
-  border: none;
+  border: 1px solid transparent;
   border-radius: 10px;
-  background: var(--color-ink);
+  background: linear-gradient(135deg, rgba(var(--color-cyan-rgb), 1) 0%, rgba(0, 145, 184, 1) 100%);
   color: #ffffff;
-  padding: 8px 12px;
+  padding: 9px 13px;
+  font-weight: 600;
   font-family: var(--font-body);
   font-size: 13px;
+  letter-spacing: 0.2px;
   cursor: pointer;
-  transition: background 160ms ease;
+  transition: transform 140ms ease, background 160ms ease;
 }
 
 .cottageSelectBtn:hover {
-  background: var(--brand-cyan);
+  transform: translateY(-1px);
 }
 
-.cottageDetailsPanel {
-  margin-top: 14px;
-  background: rgba(var(--color-cyan-rgb), 0.08);
+.cottageSelectBtn:focus-visible {
+  outline: none;
+  border-color: rgba(22, 32, 51, 0.48);
+}
+
+.daytourOffersGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.daytourOfferCard {
+  background: #ffffff;
   border: 1px solid rgba(var(--color-cyan-rgb), 0.28);
   border-radius: 12px;
-  padding: 16px;
+  padding: 0;
+  overflow: hidden;
 }
 
-.cottageDetailsPanel h3 {
+.daytourOfferCard h3 {
   margin: 0;
   color: var(--color-ink);
+  font-size: 18px;
 }
 
-.cottageDetailsRate {
-  margin: 6px 0 12px;
-  color: rgba(22, 32, 51, 0.75);
-}
-
-.cottageDetailsPanel ul {
+.daytourOfferCard p {
   margin: 0;
-  padding-left: 18px;
-  color: rgba(22, 32, 51, 0.86);
-}
-
-.cottageDetailsPanel li + li {
-  margin-top: 8px;
+  color: rgba(22, 32, 51, 0.74);
 }
 
 .overnightOffersGrid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: 1fr;
   gap: 12px;
 }
 
@@ -272,7 +419,8 @@
   background: #ffffff;
   border: 1px solid rgba(var(--color-cyan-rgb), 0.28);
   border-radius: 12px;
-  padding: 14px;
+  padding: 0;
+  overflow: hidden;
 }
 
 .overnightOfferCard h3 {
@@ -288,7 +436,7 @@
 
 .addonsGrid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: 1fr;
   gap: 12px;
 }
 
@@ -296,7 +444,8 @@
   background: #ffffff;
   border: 1px solid rgba(var(--color-cyan-rgb), 0.28);
   border-radius: 12px;
-  padding: 14px;
+  padding: 0;
+  overflow: hidden;
 }
 
 .addonCard h3 {
@@ -337,6 +486,17 @@
 
   .packagesInfoGrid {
     grid-template-columns: 1fr;
+  }
+
+  .offersSortBar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .offersSortBlock,
+  .offersFilterBlock {
+    width: 100%;
+    justify-content: space-between;
   }
 
   .cottageGrid {
