@@ -1,12 +1,69 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { addOns, cottages, dayTourOffers, overnightOffers } from './data'
 import { addDaysToISODate, getStayNightsByTab, getTodayISODate, isItemAvailableForDate } from './availability-utils'
 import PackageOfferCard from './PackageOfferCard'
 
+const OFFERS_FILTERS_STORAGE_KEY = 'resortPackagesOffersFiltersV1'
+
+const defaultFilters = {
+  sortBy: 'recommended',
+  paxValue: '',
+  checkInDate: '',
+}
+
+function readStoredFilters() {
+  if (typeof window === 'undefined') return {}
+
+  try {
+    const rawValue = window.localStorage.getItem(OFFERS_FILTERS_STORAGE_KEY)
+    if (!rawValue) return {}
+    const parsed = JSON.parse(rawValue)
+    return parsed && typeof parsed === 'object' ? parsed : {}
+  } catch {
+    return {}
+  }
+}
+
+function getFiltersForTab(tab) {
+  const stored = readStoredFilters()
+  const entry = stored?.[tab]
+  if (!entry || typeof entry !== 'object') return defaultFilters
+
+  return {
+    sortBy: typeof entry.sortBy === 'string' ? entry.sortBy : defaultFilters.sortBy,
+    paxValue: typeof entry.paxValue === 'string' ? entry.paxValue : defaultFilters.paxValue,
+    checkInDate: typeof entry.checkInDate === 'string' ? entry.checkInDate : defaultFilters.checkInDate,
+  }
+}
+
 export default function PackagesOffersSection({ activeTab }) {
-  const [sortBy, setSortBy] = useState('recommended')
-  const [paxValue, setPaxValue] = useState('')
-  const [checkInDate, setCheckInDate] = useState('')
+  const initialFilters = getFiltersForTab(activeTab)
+  const [sortBy, setSortBy] = useState(initialFilters.sortBy)
+  const [paxValue, setPaxValue] = useState(initialFilters.paxValue)
+  const [checkInDate, setCheckInDate] = useState(initialFilters.checkInDate)
+
+  useEffect(() => {
+    const tabFilters = getFiltersForTab(activeTab)
+    setSortBy(tabFilters.sortBy)
+    setPaxValue(tabFilters.paxValue)
+    setCheckInDate(tabFilters.checkInDate)
+  }, [activeTab])
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+
+    const stored = readStoredFilters()
+    const nextStored = {
+      ...stored,
+      [activeTab]: {
+        sortBy,
+        paxValue,
+        checkInDate,
+      },
+    }
+
+    window.localStorage.setItem(OFFERS_FILTERS_STORAGE_KEY, JSON.stringify(nextStored))
+  }, [activeTab, sortBy, paxValue, checkInDate])
 
   const heading =
     activeTab === 'overnight' ? 'Overnight Offers' : activeTab === 'addons' ? 'Add-Ons List' : 'Day Tour Options'
@@ -30,6 +87,49 @@ export default function PackagesOffersSection({ activeTab }) {
   const requiresStayDates = activeTab === 'overnight' || activeTab === 'daytour'
   const stayNights = getStayNightsByTab(activeTab)
   const checkOutDate = checkInDate ? addDaysToISODate(checkInDate, stayNights) : ''
+  const prefillGuestCount = paxValue.trim()
+
+  const buildDetailsTo = (basePath) => {
+    const params = new URLSearchParams()
+
+    if (checkInDate) {
+      params.set('checkInDate', checkInDate)
+      params.set('checkOutDate', checkOutDate)
+    }
+
+    if (prefillGuestCount) params.set('guests', prefillGuestCount)
+
+    if (!params.toString()) return basePath
+
+    return `${basePath}?${params.toString()}`
+  }
+
+  const buildBookingTo = (offerType, offerId) => {
+    const params = new URLSearchParams({
+      offerType,
+      offerId,
+    })
+
+    if (checkInDate) {
+      params.set('checkInDate', checkInDate)
+      if (checkOutDate) params.set('checkOutDate', checkOutDate)
+    }
+
+    if (prefillGuestCount) params.set('guests', prefillGuestCount)
+
+    return `/booking?${params.toString()}`
+  }
+
+  const bookingPrefillState =
+    checkInDate || prefillGuestCount
+      ? {
+        prefillStayDates: {
+          checkInDate,
+          checkOutDate,
+        },
+        prefillGuestCount: prefillGuestCount || undefined,
+      }
+      : undefined
 
   const filterByPax = (items, getPax) => {
     const paxNeeded = paxValue === '' ? null : Number(paxValue)
@@ -177,55 +277,6 @@ export default function PackagesOffersSection({ activeTab }) {
         <p className="offersDateNotice">All offers are shown. Pick a check-in date to prioritize available options.</p>
       ) : null}
 
-      {activeTab === 'overnight' ? (
-        <div className="overnightOffersGrid" role="list" aria-label="Overnight package offers">
-          {sortedOvernightOffers.map((offer) => (
-            <PackageOfferCard
-              key={offer.id}
-              offer={offer}
-              to={`/packages/offers/overnight/${offer.id}`}
-              isUnavailable={offer.isUnavailableForSelectedDate}
-            />
-          ))}
-        </div>
-      ) : activeTab === 'addons' ? (
-        <div className="addonsGrid" role="list" aria-label="Available add-ons">
-          {sortedAddOns.map((item) => (
-            <PackageOfferCard key={item.id} offer={item} to={`/packages/offers/addons/${item.id}`} />
-          ))}
-        </div>
-      ) : (
-        <>
-          <div className="daytourOffersGrid" role="list" aria-label="Day tour options">
-            {sortedDayTourOffers.map((offer) => (
-              <PackageOfferCard
-                key={offer.id}
-                offer={offer}
-                to={`/packages/offers/daytour/${offer.id}`}
-                isUnavailable={offer.isUnavailableForSelectedDate}
-              />
-            ))}
-          </div>
-
-          <div className="packageTypeHeader">
-            <h3>Cottage Rental Choices</h3>
-            <p>Select one cottage option to add to your day tour booking.</p>
-          </div>
-
-          <div className="cottageGrid" role="list" aria-label="Available cottage options">
-            {sortedCottages.map((cottage) => (
-              <PackageOfferCard
-                key={cottage.id}
-                offer={cottage}
-                to={`/packages/offers/daytour/cottage-${cottage.id}`}
-                cardClassName="cottageCard"
-                isUnavailable={cottage.isUnavailableForSelectedDate}
-              />
-            ))}
-          </div>
-        </>
-      )}
-
       {requiresStayDates && checkInDate && activeTab === 'overnight' && overnightAvailableCount === 0 ? (
         <p className="offersDateNotice">No overnight offers are available for the selected date. Unavailable offers are listed below.</p>
       ) : null}
@@ -237,6 +288,63 @@ export default function PackagesOffersSection({ activeTab }) {
       {requiresStayDates && checkInDate && activeTab === 'daytour' && cottagesAvailableCount === 0 ? (
         <p className="offersDateNotice">No cottages are available for the selected date. Unavailable cottages are listed below.</p>
       ) : null}
+
+      <div className="offersCardsScroll" aria-label="Offers cards scroll area">
+        {activeTab === 'overnight' ? (
+          <div className="overnightOffersGrid" role="list" aria-label="Overnight package offers">
+            {sortedOvernightOffers.map((offer) => (
+              <PackageOfferCard
+                key={offer.id}
+                offer={offer}
+                to={buildDetailsTo(`/packages/offers/overnight/${offer.id}`)}
+                bookingTo={buildBookingTo('overnight', offer.id)}
+                bookingState={bookingPrefillState}
+                isUnavailable={offer.isUnavailableForSelectedDate}
+              />
+            ))}
+          </div>
+        ) : activeTab === 'addons' ? (
+          <div className="addonsGrid" role="list" aria-label="Available add-ons">
+            {sortedAddOns.map((item) => (
+              <PackageOfferCard key={item.id} offer={item} to={buildDetailsTo(`/packages/offers/addons/${item.id}`)} />
+            ))}
+          </div>
+        ) : (
+          <>
+            <div className="daytourOffersGrid" role="list" aria-label="Day tour options">
+              {sortedDayTourOffers.map((offer) => (
+                <PackageOfferCard
+                  key={offer.id}
+                  offer={offer}
+                  to={buildDetailsTo(`/packages/offers/daytour/${offer.id}`)}
+                  bookingTo={buildBookingTo('daytour', offer.id)}
+                  bookingState={bookingPrefillState}
+                  isUnavailable={offer.isUnavailableForSelectedDate}
+                />
+              ))}
+            </div>
+
+            <div className="packageTypeHeader">
+              <h3>Cottage Rental Choices</h3>
+              <p>Select one cottage option to add to your day tour booking.</p>
+            </div>
+
+            <div className="cottageGrid" role="list" aria-label="Available cottage options">
+              {sortedCottages.map((cottage) => (
+                <PackageOfferCard
+                  key={cottage.id}
+                  offer={cottage}
+                  to={buildDetailsTo(`/packages/offers/daytour/cottage-${cottage.id}`)}
+                  bookingTo={buildBookingTo('daytour', `cottage-${cottage.id}`)}
+                  bookingState={bookingPrefillState}
+                  cardClassName="cottageCard"
+                  isUnavailable={cottage.isUnavailableForSelectedDate}
+                />
+              ))}
+            </div>
+          </>
+        )}
+      </div>
     </section>
   )
 }

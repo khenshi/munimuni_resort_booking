@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useLocation, useParams } from 'react-router-dom'
 import PackagesPageHeader from '../components/packages/PackagesPageHeader'
 import { addOns, cottages, overnightOffers } from '../components/packages/data'
 import '../styles/pages/packages-page.css'
@@ -12,6 +12,11 @@ const tabByType = {
 
 export default function PackageOfferDetailsPage() {
   const { offerType, offerId } = useParams()
+  const location = useLocation()
+  const query = new URLSearchParams(location.search)
+  const prefillCheckInDate = query.get('checkInDate') ?? ''
+  const prefillCheckOutDate = query.get('checkOutDate') ?? ''
+  const prefillGuests = query.get('guests') ?? ''
   const activeTab = tabByType[offerType] ?? 'daytour'
 
   const detail = useMemo(() => {
@@ -98,9 +103,9 @@ export default function PackageOfferDetailsPage() {
             Back to Packages
           </Link>
 
-          {detail ? (
+          {detail && offerType !== 'addons' ? (
             <Link
-              to={`/booking?offerType=${encodeURIComponent(offerType ?? '')}&offerId=${encodeURIComponent(offerId ?? '')}`}
+              to={`/booking?offerType=${encodeURIComponent(offerType ?? '')}&offerId=${encodeURIComponent(offerId ?? '')}${prefillCheckInDate ? `&checkInDate=${encodeURIComponent(prefillCheckInDate)}` : ''}${prefillCheckOutDate ? `&checkOutDate=${encodeURIComponent(prefillCheckOutDate)}` : ''}${prefillGuests ? `&guests=${encodeURIComponent(prefillGuests)}` : ''}`}
               state={{
                 selectedOffer: {
                   offerType,
@@ -109,6 +114,13 @@ export default function PackageOfferDetailsPage() {
                   subtitle: detail.subtitle,
                   priceInfo: detail.priceInfo ?? 'Price available upon confirmation',
                 },
+                prefillStayDates: prefillCheckInDate
+                  ? {
+                      checkInDate: prefillCheckInDate,
+                      checkOutDate: prefillCheckOutDate,
+                    }
+                  : undefined,
+                prefillGuestCount: prefillGuests || undefined,
               }}
               className="cottageSelectBtn"
             >

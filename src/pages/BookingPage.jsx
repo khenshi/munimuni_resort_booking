@@ -13,6 +13,9 @@ export default function BookingPage() {
   const query = new URLSearchParams(location.search)
   const offerType = query.get('offerType') ?? ''
   const offerId = query.get('offerId') ?? ''
+  const prefilledCheckInDate = location.state?.prefillStayDates?.checkInDate ?? query.get('checkInDate') ?? ''
+  const prefilledCheckOutDate = location.state?.prefillStayDates?.checkOutDate ?? query.get('checkOutDate') ?? ''
+  const prefilledGuests = location.state?.prefillGuestCount ?? query.get('guests') ?? ''
 
   const selectedOffer = useMemo(() => {
     const fromState = location.state?.selectedOffer
@@ -20,11 +23,19 @@ export default function BookingPage() {
     return resolveSelectedOffer(offerType, offerId)
   }, [location.state, offerId, offerType])
 
+  const detailsTo = useMemo(() => {
+    const detailOfferType = selectedOffer?.offerType ?? offerType
+    const detailOfferId = selectedOffer?.offerId ?? offerId
+
+    if (!detailOfferType || !detailOfferId) return '/packages'
+    return `/packages/offers/${detailOfferType}/${detailOfferId}`
+  }, [selectedOffer, offerType, offerId])
+
   const [step, setStep] = useState(1)
   const [formData, setFormData] = useState({
-    checkInDate: '',
-    checkOutDate: '',
-    guests: '',
+    checkInDate: prefilledCheckInDate,
+    checkOutDate: prefilledCheckOutDate,
+    guests: prefilledGuests,
     specialRequest: '',
     fullName: '',
     phone: '',
@@ -71,7 +82,7 @@ export default function BookingPage() {
 
   return (
     <div className="bookingPage">
-      <BookingPageHeader />
+      <BookingPageHeader detailsTo={detailsTo} />
       <main className="bookingMain">
         <section className="bookingShell" aria-labelledby="booking-heading">
           <p className="bookingKicker">Reservation</p>

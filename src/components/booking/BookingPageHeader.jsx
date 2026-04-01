@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 
-export default function BookingPageHeader() {
+export default function BookingPageHeader({ detailsTo = '/packages' }) {
   return (
     <header className="bookingPageHeader">
       <div className="bookingPageHeaderInner">
@@ -12,9 +12,9 @@ export default function BookingPageHeader() {
           <Link to="/packages" className="bookingPageNavLink">
             View More Packages
           </Link>
-          <button onClick={() => window.history.back()} className="bookingPageNavLink">
+          <Link to={detailsTo} className="bookingPageNavLink">
             ← Back to Details
-          </button>
+          </Link>
         </nav>
       </div>
     </header>

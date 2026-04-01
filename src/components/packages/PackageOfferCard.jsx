@@ -5,6 +5,8 @@ export default function PackageOfferCard({
   to,
   cardClassName = 'cottageCard',
   isUnavailable = false,
+  bookingTo,
+  bookingState,
 }) {
   const title = offer.name ?? offer.title
 
@@ -17,9 +19,16 @@ export default function PackageOfferCard({
           <p className="offerPrice">{offer.priceLabel}</p>
           {offer.paxLabel ? <p className="paxInfo">{offer.paxLabel}</p> : null}
           <p>{offer.description}</p>
-          <Link to={to} className="cottageSelectBtn">
-            View details
-          </Link>
+          <div className="offerCardActions">
+            <Link to={to} className="offerCardSecondaryBtn">
+              View details
+            </Link>
+            {bookingTo ? (
+              <Link to={bookingTo} state={bookingState} className="cottageSelectBtn">
+                Book now
+              </Link>
+            ) : null}
+          </div>
         </div>
         <div className="offerCardImage">
           <div className="imagePlaceholder">Image</div>

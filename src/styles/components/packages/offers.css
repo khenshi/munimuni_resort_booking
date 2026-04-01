@@ -198,6 +198,14 @@
   overflow: hidden;
 }
 
+.offerCardActions {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
 .offerCardImage {
   flex: 0 0 30%;
   min-width: 200px;
@@ -222,7 +230,7 @@
 }
 
 .cottageSelectBtn {
-  margin-top: 12px;
+  margin-top: 0;
   margin-right: 0;
   display: inline-flex;
   align-items: center;
@@ -239,14 +247,42 @@
   font-size: 13px;
   letter-spacing: 0.2px;
   cursor: pointer;
-  transition: transform 140ms ease, background 160ms ease;
+  transition: transform 140ms ease, background 160ms ease, box-shadow 160ms ease;
 }
 
 .cottageSelectBtn:hover {
   transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(var(--color-cyan-rgb), 0.3);
 }
 
 .cottageSelectBtn:focus-visible {
+  outline: none;
+  border-color: rgba(22, 32, 51, 0.48);
+}
+
+.offerCardSecondaryBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  border: 1px solid rgba(var(--color-cyan-rgb), 0.45);
+  border-radius: 10px;
+  background: #ffffff;
+  color: var(--color-ink);
+  padding: 9px 13px;
+  font-weight: 600;
+  font-family: var(--font-body);
+  font-size: 13px;
+  letter-spacing: 0.2px;
+  transition: background 160ms ease, border-color 160ms ease;
+}
+
+.offerCardSecondaryBtn:hover {
+  background: rgba(var(--color-cyan-rgb), 0.08);
+  border-color: rgba(var(--color-cyan-rgb), 0.7);
+}
+
+.offerCardSecondaryBtn:focus-visible {
   outline: none;
   border-color: rgba(22, 32, 51, 0.48);
 }

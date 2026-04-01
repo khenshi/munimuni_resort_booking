@@ -8,7 +8,7 @@ export default function PackagesPage() {
   const [activeTab, setActiveTab] = useState('daytour')
 
   return (
-    <div className="packagesPage">
+    <div className="packagesPage packagesBrowsePage">
       <PackagesPageHeader activeTab={activeTab} onTabChange={setActiveTab} />
       <main className="packagesPageMain">
         <PackagesInfoSection activeTab={activeTab} />
