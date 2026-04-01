@@ -10,11 +10,11 @@ export default function BookingPageHeader() {
 
         <nav className="bookingPageNav">
           <Link to="/packages" className="bookingPageNavLink">
-            View Packages
+            View More Packages
           </Link>
-          <Link to="/" className="bookingPageNavLink">
-            Explore
-          </Link>
+          <button onClick={() => window.history.back()} className="bookingPageNavLink">
+            ← Back to Details
+          </button>
         </nav>
       </div>
     </header>

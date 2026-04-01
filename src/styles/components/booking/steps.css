@@ -1,0 +1,52 @@
+.bookingSteps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0 0 14px;
+  padding: 0;
+  list-style: none;
+}
+
+.bookingStep {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+}
+
+.bookingStepCircle {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(22, 32, 51, 0.22);
+  color: rgba(22, 32, 51, 0.78);
+  background: #ffffff;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.bookingStepLabel {
+  color: rgba(22, 32, 51, 0.66);
+  font-size: 12px;
+}
+
+.bookingStep.isActive .bookingStepCircle {
+  background: var(--color-cyan);
+  border-color: transparent;
+  color: #ffffff;
+}
+
+.bookingStep.isDone .bookingStepCircle {
+  background: rgba(var(--color-cyan-rgb), 0.14);
+  border-color: rgba(var(--color-cyan-rgb), 0.4);
+  color: #116787;
+}
+
+.bookingStep.isActive .bookingStepLabel,
+.bookingStep.isDone .bookingStepLabel {
+  color: #162033;
+}

@@ -1,0 +1,19 @@
+.bookingNotice {
+  border: 1px solid rgba(22, 32, 51, 0.12);
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
+  padding: 16px;
+  display: grid;
+  gap: 10px;
+}
+
+.bookingNotice h2 {
+  margin: 0;
+  color: #162033;
+}
+
+.bookingNotice p {
+  margin: 0;
+  color: rgba(22, 32, 51, 0.74);
+}

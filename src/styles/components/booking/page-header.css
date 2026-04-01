@@ -10,7 +10,8 @@
   right: 0;
   z-index: 50;
   padding: 18px 20px;
-  background: var(--brand-cyan);
+  background: #ffffff;
+  border-bottom: 1px solid rgba(var(--brand-cyan-rgb), 0.35);
 }
 
 .bookingPageHeaderInner {
@@ -19,15 +20,8 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 24px;
-
-  background: rgba(10, 14, 20, 0.28);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 20px;
-  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.25);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  padding: 14px 18px;
+  gap: 40px;
+  position: relative;
 }
 
 .bookingPageBrand {
@@ -35,53 +29,57 @@
   font-weight: 700;
   letter-spacing: 0.3px;
   text-decoration: none;
-  color: rgba(255, 255, 255, 0.92);
+  color: var(--color-ink);
   font-size: 20px;
   white-space: nowrap;
   transition: color 160ms ease;
 }
 
+.bookingPageBrand:hover {
+  color: var(--brand-cyan);
+}
+
 .bookingPageNav {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 12px;
+  background: rgba(var(--brand-cyan-rgb), 0.08);
+  border: 1px solid rgba(var(--brand-cyan-rgb), 0.25);
+  border-radius: 12px;
+  padding: 6px;
 }
 
 .bookingPageNavLink {
-  text-decoration: none;
-  color: rgba(255, 255, 255, 0.85);
+  appearance: none;
+  background: transparent;
+  border: none;
+  color: rgba(22, 32, 51, 0.78);
   font-weight: 400;
-  font-size: 14px;
+  font-size: 13px;
   letter-spacing: 0.2px;
   font-family: var(--font-body);
-  position: relative;
-  padding: 8px 0;
-  transition: color 160ms ease;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 200ms ease;
+  white-space: nowrap;
+  display: inline-block;
 }
 
-.bookingPageNavLink::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: var(--color-ink);
-  transform: scaleX(0);
-  transform-origin: center;
-  transition: transform 160ms ease;
-}
-
-.bookingPageNavLink:hover::after {
-  transform: scaleX(1);
+.bookingPageNavLink:hover {
+  color: var(--color-ink);
+  background: rgba(var(--brand-cyan-rgb), 0.16);
 }
 
 @media (max-width: 860px) {
   .bookingPageNav {
-    gap: 16px;
+    gap: 8px;
+    padding: 4px;
   }
 
   .bookingPageNavLink {
-    font-size: 13px;
+    font-size: 12px;
+    padding: 6px 12px;
   }
 }

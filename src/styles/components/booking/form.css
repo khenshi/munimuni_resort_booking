@@ -1,0 +1,132 @@
+.bookingGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.bookingField {
+  display: grid;
+  gap: 6px;
+}
+
+.bookingField.isFull {
+  grid-column: 1 / -1;
+}
+
+.bookingField label {
+  font-size: 13px;
+  color: rgba(22, 32, 51, 0.78);
+}
+
+.bookingField input,
+.bookingField textarea {
+  width: 100%;
+  border: 1px solid rgba(22, 32, 51, 0.2);
+  border-radius: 10px;
+  background: #ffffff;
+  padding: 10px 12px;
+  font: inherit;
+  color: #162033;
+}
+
+.bookingStaticValue {
+  border: 1px dashed rgba(var(--color-cyan-rgb), 0.4);
+  border-radius: 10px;
+  background: rgba(var(--color-cyan-rgb), 0.08);
+  padding: 10px 12px;
+  display: grid;
+  gap: 2px;
+}
+
+.bookingStaticValue strong {
+  color: #162033;
+}
+
+.bookingStaticValue span {
+  color: rgba(22, 32, 51, 0.76);
+  font-size: 14px;
+}
+
+.bookingAddOnsList {
+  display: grid;
+  gap: 10px;
+}
+
+.bookingAddOn {
+  border: 1px solid rgba(22, 32, 51, 0.16);
+  border-radius: 10px;
+  background: #ffffff;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.bookingAddOn.isChecked {
+  border-color: rgba(var(--color-cyan-rgb), 0.65);
+  background: rgba(var(--color-cyan-rgb), 0.08);
+}
+
+.bookingAddOn span {
+  display: grid;
+  gap: 2px;
+}
+
+.bookingAddOn strong {
+  color: #162033;
+  font-size: 15px;
+}
+
+.bookingAddOn small {
+  color: rgba(22, 32, 51, 0.72);
+}
+
+.bookingReview p {
+  margin: 0;
+  color: rgba(22, 32, 51, 0.8);
+}
+
+.bookingReview p + p {
+  margin-top: 7px;
+}
+
+.bookingTerms {
+  margin-top: 14px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  color: rgba(22, 32, 51, 0.8);
+}
+
+.bookingActions {
+  margin-top: 14px;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.bookingActionBtn {
+  min-height: 38px;
+  border: 1px solid rgba(22, 32, 51, 0.24);
+  border-radius: 10px;
+  background: #ffffff;
+  color: #162033;
+  padding: 8px 14px;
+  font: inherit;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.bookingActionBtn.isPrimary {
+  border-color: transparent;
+  background: var(--color-cyan);
+  color: #ffffff;
+}
+
+.bookingActionBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

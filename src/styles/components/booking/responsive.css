@@ -1,0 +1,21 @@
+@media (max-width: 900px) {
+  .bookingMain {
+    padding: 104px 16px 24px;
+  }
+
+  .bookingSteps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .bookingGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .bookingActions {
+    flex-direction: column;
+  }
+
+  .bookingActionBtn {
+    width: 100%;
+  }
+}

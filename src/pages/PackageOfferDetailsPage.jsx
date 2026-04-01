@@ -97,6 +97,24 @@ export default function PackageOfferDetailsPage() {
           <Link to="/packages" className="cottageSelectBtn">
             Back to Packages
           </Link>
+
+          {detail ? (
+            <Link
+              to={`/booking?offerType=${encodeURIComponent(offerType ?? '')}&offerId=${encodeURIComponent(offerId ?? '')}`}
+              state={{
+                selectedOffer: {
+                  offerType,
+                  offerId,
+                  title: detail.title,
+                  subtitle: detail.subtitle,
+                  priceInfo: detail.priceInfo ?? 'Price available upon confirmation',
+                },
+              }}
+              className="cottageSelectBtn"
+            >
+              Proceed to Booking
+            </Link>
+          ) : null}
         </section>
       </main>
     </div>

@@ -1,0 +1,42 @@
+.bookingPage {
+  min-height: 100vh;
+  background: var(--color-sand-soft);
+}
+
+.bookingMain {
+  padding: 112px 20px 28px;
+}
+
+.bookingShell {
+  width: min(980px, 100%);
+  margin: 0 auto;
+}
+
+.bookingKicker {
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(22, 32, 51, 0.58);
+}
+
+.bookingShell h1 {
+  margin: 8px 0 18px;
+  font-size: clamp(30px, 4vw, 44px);
+  color: #162033;
+}
+
+.bookingForm {
+  border: 1px solid rgba(22, 32, 51, 0.12);
+  border-radius: 20px;
+  background: #ffffff;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.08);
+  padding: 18px;
+}
+
+.bookingPanel {
+  border: 1px solid rgba(22, 32, 51, 0.1);
+  border-radius: 14px;
+  padding: 14px;
+  background: rgba(246, 251, 255, 0.82);
+}
