@@ -7,8 +7,14 @@ export default function PackageOfferCard({
   isUnavailable = false,
   bookingTo,
   bookingState,
+  onBookNowClick,
 }) {
   const title = offer.name ?? offer.title
+
+  const handleBookNowClick = (event) => {
+    const canProceed = onBookNowClick ? onBookNowClick() : true
+    if (!canProceed) event.preventDefault()
+  }
 
   return (
     <article className={`${cardClassName} ${isUnavailable ? 'isUnavailable' : ''}`} role="listitem" key={offer.id ?? title}>
@@ -24,7 +30,7 @@ export default function PackageOfferCard({
               View details
             </Link>
             {bookingTo ? (
-              <Link to={bookingTo} state={bookingState} className="cottageSelectBtn">
+              <Link to={bookingTo} state={bookingState} className="cottageSelectBtn" onClick={handleBookNowClick}>
                 Book now
               </Link>
             ) : null}

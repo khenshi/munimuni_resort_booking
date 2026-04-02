@@ -294,3 +294,63 @@
   outline: none;
   border-color: rgba(22, 32, 51, 0.48);
 }
+
+.bookingGuardPopupOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 140;
+  background: rgba(9, 15, 24, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.bookingGuardPopup {
+  width: min(460px, 100%);
+  border-radius: 16px;
+  background: #ffffff;
+  border: 1px solid rgba(var(--color-cyan-rgb), 0.32);
+  box-shadow: 0 20px 50px rgba(9, 15, 24, 0.24);
+  padding: 20px;
+}
+
+.bookingGuardPopup h3 {
+  margin: 0;
+  color: var(--color-ink);
+  font-size: 20px;
+}
+
+.bookingGuardPopup p {
+  margin: 10px 0 0;
+  color: rgba(22, 32, 51, 0.82);
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+.bookingGuardPopupBtn {
+  margin-top: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(var(--color-cyan-rgb), 1) 0%, rgba(0, 145, 184, 1) 100%);
+  color: #ffffff;
+  padding: 10px 14px;
+  font-weight: 600;
+  font-family: var(--font-body);
+  font-size: 13px;
+  letter-spacing: 0.2px;
+  cursor: pointer;
+}
+
+.bookingGuardPopupBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(var(--color-cyan-rgb), 0.3);
+}
+
+.bookingGuardPopupBtn:focus-visible {
+  outline: none;
+  border-color: rgba(22, 32, 51, 0.48);
+}

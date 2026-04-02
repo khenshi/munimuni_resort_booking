@@ -1,11 +1,20 @@
+import { useEffect, useState } from 'react'
 import PackagesPageHeader from '../components/packages/PackagesPageHeader'
 import PackagesInfoSection from '../components/packages/PackagesInfoSection'
 import PackagesOffersSection from '../components/packages/PackagesOffersSection'
-import { useState } from 'react'
+import { readPackagesViewState, writePackagesViewState } from '../components/packages/packages-view-state'
 import '../styles/pages/packages-page.css'
 
 export default function PackagesPage() {
-  const [activeTab, setActiveTab] = useState('daytour')
+  const [activeTab, setActiveTab] = useState(() => readPackagesViewState().activeTab)
+
+  useEffect(() => {
+    const currentState = readPackagesViewState()
+    writePackagesViewState({
+      ...currentState,
+      activeTab,
+    })
+  }, [activeTab])
 
   return (
     <div className="packagesPage packagesBrowsePage">

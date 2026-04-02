@@ -11,18 +11,21 @@ export default function PackagesPageHeader({ activeTab, onTabChange }) {
 
         <div className="packagesToggleGroup">
           <button
+            type="button"
             className={`packagesToggle ${activeTab === 'overnight' ? 'active' : ''}`}
             onClick={() => onTabChange('overnight')}
           >
             Overnight Packages
           </button>
           <button
+            type="button"
             className={`packagesToggle ${activeTab === 'daytour' ? 'active' : ''}`}
             onClick={() => onTabChange('daytour')}
           >
             Day Tour Packages
           </button>
           <button
+            type="button"
             className={`packagesToggle ${activeTab === 'addons' ? 'active' : ''}`}
             onClick={() => onTabChange('addons')}
           >

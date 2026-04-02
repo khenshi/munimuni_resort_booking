@@ -1,7 +1,9 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { addOns, cottages, dayTourOffers, overnightOffers } from './data'
 import { addDaysToISODate, getStayNightsByTab, getTodayISODate, isItemAvailableForDate } from './availability-utils'
 import PackageOfferCard from './PackageOfferCard'
+import BookingGuardPopup from './BookingGuardPopup'
+import { getSavedScrollTop, readPackagesViewState, writePackagesViewState } from './packages-view-state'
 
 const OFFERS_FILTERS_STORAGE_KEY = 'resortPackagesOffersFiltersV1'
 
@@ -41,12 +43,45 @@ export default function PackagesOffersSection({ activeTab }) {
   const [sortBy, setSortBy] = useState(initialFilters.sortBy)
   const [paxValue, setPaxValue] = useState(initialFilters.paxValue)
   const [checkInDate, setCheckInDate] = useState(initialFilters.checkInDate)
+  const [popupState, setPopupState] = useState({
+    isOpen: false,
+    title: '',
+    message: '',
+  })
+  const scrollContainerRef = useRef(null)
 
   useEffect(() => {
     const tabFilters = getFiltersForTab(activeTab)
     setSortBy(tabFilters.sortBy)
     setPaxValue(tabFilters.paxValue)
     setCheckInDate(tabFilters.checkInDate)
+  }, [activeTab])
+
+  useLayoutEffect(() => {
+    const scrollContainer = scrollContainerRef.current
+    if (!scrollContainer) return
+
+    scrollContainer.scrollTop = getSavedScrollTop(activeTab)
+  }, [activeTab])
+
+  useEffect(() => {
+    const scrollContainer = scrollContainerRef.current
+    if (!scrollContainer) return
+
+    const handleScroll = () => {
+      const currentState = readPackagesViewState()
+      writePackagesViewState({
+        ...currentState,
+        activeTab,
+        scrollTopByTab: {
+          ...(currentState.scrollTopByTab ?? {}),
+          [activeTab]: scrollContainer.scrollTop,
+        },
+      })
+    }
+
+    scrollContainer.addEventListener('scroll', handleScroll, { passive: true })
+    return () => scrollContainer.removeEventListener('scroll', handleScroll)
   }, [activeTab])
 
   useEffect(() => {
@@ -198,6 +233,35 @@ export default function PackagesOffersSection({ activeTab }) {
   const daytourAvailableCount = sortedDayTourOffers.filter((item) => !item.isUnavailableForSelectedDate).length
   const cottagesAvailableCount = sortedCottages.filter((item) => !item.isUnavailableForSelectedDate).length
 
+  const showBookingGuardPopup = (title, message) => {
+    setPopupState({
+      isOpen: true,
+      title,
+      message,
+    })
+  }
+
+  const closeBookingGuardPopup = () => {
+    setPopupState((prev) => ({
+      ...prev,
+      isOpen: false,
+    }))
+  }
+
+  const handleBookNowClick = (offerTitle, isUnavailableForSelectedDate) => {
+    if (!checkInDate) {
+      showBookingGuardPopup('Select Date First', 'Please select a check-in date first before booking this offer.')
+      return false
+    }
+
+    if (isUnavailableForSelectedDate) {
+      showBookingGuardPopup('Offer Unavailable', `${offerTitle} is not available on the selected date.`)
+      return false
+    }
+
+    return true
+  }
+
   return (
     <section className="packagesListSection" aria-labelledby="packages-list-heading">
       <p className="packagesSectionKicker">Our Offers</p>
@@ -289,7 +353,7 @@ export default function PackagesOffersSection({ activeTab }) {
         <p className="offersDateNotice">No cottages are available for the selected date. Unavailable cottages are listed below.</p>
       ) : null}
 
-      <div className="offersCardsScroll" aria-label="Offers cards scroll area">
+      <div ref={scrollContainerRef} className="offersCardsScroll" aria-label="Offers cards scroll area">
         {activeTab === 'overnight' ? (
           <div className="overnightOffersGrid" role="list" aria-label="Overnight package offers">
             {sortedOvernightOffers.map((offer) => (
@@ -300,6 +364,7 @@ export default function PackagesOffersSection({ activeTab }) {
                 bookingTo={buildBookingTo('overnight', offer.id)}
                 bookingState={bookingPrefillState}
                 isUnavailable={offer.isUnavailableForSelectedDate}
+                onBookNowClick={() => handleBookNowClick(offer.title, offer.isUnavailableForSelectedDate)}
               />
             ))}
           </div>
@@ -320,6 +385,7 @@ export default function PackagesOffersSection({ activeTab }) {
                   bookingTo={buildBookingTo('daytour', offer.id)}
                   bookingState={bookingPrefillState}
                   isUnavailable={offer.isUnavailableForSelectedDate}
+                  onBookNowClick={() => handleBookNowClick(offer.title, offer.isUnavailableForSelectedDate)}
                 />
               ))}
             </div>
@@ -339,12 +405,20 @@ export default function PackagesOffersSection({ activeTab }) {
                   bookingState={bookingPrefillState}
                   cardClassName="cottageCard"
                   isUnavailable={cottage.isUnavailableForSelectedDate}
+                  onBookNowClick={() => handleBookNowClick(cottage.name, cottage.isUnavailableForSelectedDate)}
                 />
               ))}
             </div>
           </>
         )}
       </div>
+
+      <BookingGuardPopup
+        isOpen={popupState.isOpen}
+        title={popupState.title}
+        message={popupState.message}
+        onClose={closeBookingGuardPopup}
+      />
     </section>
   )
 }
