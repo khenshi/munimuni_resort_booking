@@ -135,6 +135,36 @@ export default function BookingStepContent({
     )
   }
 
+  //cost calculation
+  const calculateCostBreakdown = () => {
+    let offerCost = 0
+    let addOnsCost = 0
+
+    if (selectedOffer?.price && selectedOffer?.offerType === 'daytour' && selectedOffer?.offerId === 'basic') {
+      offerCost = selectedOffer.price * (parseInt(formData.guests) || 1)
+    } else if (selectedOffer?.price) {
+      offerCost = selectedOffer.price
+    }
+
+    //add-ons cost
+    formData.selectedAddOns.forEach((addOnId) => {
+      const addOn = addOns.find((item) => item.id === addOnId)
+      if (addOn?.price) {
+        addOnsCost += addOn.price
+      }
+    })
+
+    const totalCost = offerCost + addOnsCost
+
+    return {
+      offerCost,
+      addOnsCost,
+      totalCost,
+    }
+  }
+
+  const { offerCost, addOnsCost, totalCost } = calculateCostBreakdown()
+
   return (
     <div className="bookingReview">
       <p>
@@ -152,6 +182,25 @@ export default function BookingStepContent({
       <p>
         <strong>Add-ons:</strong> {selectedAddOnLabels.length ? selectedAddOnLabels.join(', ') : 'None'}
       </p>
+
+      <div className="bookingCostBreakdown">
+        <h3>Cost Breakdown</h3>
+        <div className="costLine">
+          <span>{selectedOffer.title}</span>
+          <span className="costAmount">₱ {offerCost.toLocaleString('en-US')}</span>
+        </div>
+        {addOnsCost > 0 && (
+          <div className="costLine">
+            <span>Add-ons</span>
+            <span className="costAmount">₱ {addOnsCost.toLocaleString('en-US')}</span>
+          </div>
+        )}
+        <div className="costLine costTotal">
+          <span>Total Amount</span>
+          <span className="costAmount">₱ {totalCost.toLocaleString('en-US')}</span>
+        </div>
+      </div>
+
       <label className="bookingTerms">
         <input
           type="checkbox"

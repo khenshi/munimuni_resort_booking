@@ -13,6 +13,7 @@ export function resolveSelectedOffer(offerType, offerId) {
       subtitle: offer.description,
       priceInfo: offer.priceLabel,
       paxLabel: offer.paxLabel,
+      price: offer.price,
       offerType,
       offerId,
     }
@@ -27,6 +28,7 @@ export function resolveSelectedOffer(offerType, offerId) {
       subtitle: cottage.description,
       priceInfo: `${cottage.priceLabel} (${cottage.paxLabel})`,
       paxLabel: cottage.paxLabel,
+      price: cottage.price,
       offerType,
       offerId,
     }
@@ -40,6 +42,7 @@ export function resolveSelectedOffer(offerType, offerId) {
       subtitle: offer.description,
       priceInfo: offer.priceLabel,
       paxLabel: offer.paxLabel,
+      price: offer.price,
       offerType,
       offerId,
     }
