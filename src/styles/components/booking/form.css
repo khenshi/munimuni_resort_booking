@@ -21,6 +21,7 @@
 .bookingField input,
 .bookingField textarea {
   width: 100%;
+  box-sizing: border-box;
   border: 1px solid rgba(22, 32, 51, 0.2);
   border-radius: 10px;
   background: #ffffff;
@@ -88,6 +89,50 @@
 
 .bookingReview p + p {
   margin-top: 7px;
+}
+
+.bookingCostBreakdown {
+  margin-top: 18px;
+  padding: 14px;
+  background: rgba(var(--color-cyan-rgb), 0.08);
+  border: 1px solid rgba(var(--color-cyan-rgb), 0.25);
+  border-radius: 10px;
+}
+
+.bookingCostBreakdown h3 {
+  margin: 0 0 12px;
+  color: #162033;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.costLine {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  color: rgba(22, 32, 51, 0.8);
+  font-size: 13px;
+  border-bottom: 1px solid rgba(var(--color-cyan-rgb), 0.15);
+}
+
+.costLine:last-child {
+  border-bottom: none;
+}
+
+.costLine.costTotal {
+  margin-top: 4px;
+  padding-top: 10px;
+  padding-bottom: 0;
+  border-top: 2px solid rgba(var(--color-cyan-rgb), 0.3);
+  border-bottom: none;
+  font-weight: 600;
+  color: #162033;
+}
+
+.costAmount {
+  font-weight: 600;
+  color: var(--color-cyan);
 }
 
 .bookingTerms {

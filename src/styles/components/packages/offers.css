@@ -230,8 +230,10 @@
 }
 
 .cottageSelectBtn {
-  margin-top: 0;
-  margin-right: 0;
+  margin-top: 16px;
+  margin-right: 10px;
+  margin-bottom: 0;
+  margin-left: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -248,6 +250,7 @@
   letter-spacing: 0.2px;
   cursor: pointer;
   transition: transform 140ms ease, background 160ms ease, box-shadow 160ms ease;
+  box-sizing: border-box;
 }
 
 .cottageSelectBtn:hover {
@@ -261,6 +264,10 @@
 }
 
 .offerCardSecondaryBtn {
+  margin-top: 16px;
+  margin-right: 10px;
+  margin-bottom: 0;
+  margin-left: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -275,6 +282,7 @@
   font-size: 13px;
   letter-spacing: 0.2px;
   transition: background 160ms ease, border-color 160ms ease;
+  box-sizing: border-box;
 }
 
 .offerCardSecondaryBtn:hover {
