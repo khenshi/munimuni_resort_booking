@@ -19,6 +19,9 @@
 
 .packagesPage.packagesBrowsePage .packagesPageMain {
   min-height: calc(100vh - 116px - 36px);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .packagesInfoSection,
@@ -32,6 +35,10 @@
 
 .packagesListSection {
   margin-top: 20px;
+}
+
+.packagesPage.packagesBrowsePage .packagesListSection {
+  margin-top: 0;
 }
 
 .packagesPage.packagesBrowsePage .packagesListSection {
@@ -61,6 +68,36 @@
 .packagesListSection h2 {
   margin: 8px 0 18px;
   color: var(--color-ink);
+}
+
+.packagesInfoHeaderRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.packagesInfoToggle {
+  border: 1px solid rgba(var(--color-cyan-rgb), 0.35);
+  background: rgba(var(--color-cyan-rgb), 0.08);
+  color: var(--color-ink);
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--font-body);
+  cursor: pointer;
+  transition: background-color 180ms ease, border-color 180ms ease;
+}
+
+.packagesInfoToggle:hover {
+  background: rgba(var(--color-cyan-rgb), 0.16);
+  border-color: rgba(var(--color-cyan-rgb), 0.5);
+}
+
+.packagesInfoToggle:focus-visible {
+  outline: 2px solid rgba(var(--color-cyan-rgb), 0.72);
+  outline-offset: 2px;
 }
 
 .packagesInfoGrid {

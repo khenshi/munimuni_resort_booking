@@ -1,24 +1,27 @@
-import { useEffect, useState } from 'react'
-import PackagesPageHeader from '../components/packages/PackagesPageHeader'
-import PackagesInfoSection from '../components/packages/PackagesInfoSection'
-import PackagesOffersSection from '../components/packages/PackagesOffersSection'
-import { readPackagesViewState, writePackagesViewState } from '../components/packages/packages-view-state'
+import { useState } from 'react'
+import {
+  PackagesInfoSection,
+  PackagesOffersSection,
+  PackagesPageHeader,
+  readPackagesViewState,
+  writePackagesViewState,
+} from '../components/packages'
 import '../styles/pages/packages-page.css'
 
 export default function PackagesPage() {
   const [activeTab, setActiveTab] = useState(() => readPackagesViewState().activeTab)
 
-  useEffect(() => {
-    const currentState = readPackagesViewState()
-    writePackagesViewState({
-      ...currentState,
-      activeTab,
+  const handleTabChange = (nextTab) => {
+    setActiveTab((prevTab) => {
+      if (prevTab === nextTab) return prevTab
+      writePackagesViewState({ activeTab: nextTab })
+      return nextTab
     })
-  }, [activeTab])
+  }
 
   return (
     <div className="packagesPage packagesBrowsePage">
-      <PackagesPageHeader activeTab={activeTab} onTabChange={setActiveTab} />
+      <PackagesPageHeader activeTab={activeTab} onTabChange={handleTabChange} />
       <main className="packagesPageMain">
         <PackagesInfoSection activeTab={activeTab} />
         <PackagesOffersSection activeTab={activeTab} />

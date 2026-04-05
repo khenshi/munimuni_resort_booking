@@ -1,9 +1,8 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
-import { addOns, cottages, dayTourOffers, overnightOffers } from './data'
-import { addDaysToISODate, getStayNightsByTab, getTodayISODate, isItemAvailableForDate } from './availability-utils'
-import PackageOfferCard from './PackageOfferCard'
-import BookingGuardPopup from './BookingGuardPopup'
-import { getSavedScrollTop, readPackagesViewState, writePackagesViewState } from './packages-view-state'
+import { useEffect, useState } from 'react'
+import { addOns, cottages, dayTourOffers, overnightOffers } from '../../../data/packages'
+import { addDaysToISODate, getStayNightsByTab, getTodayISODate, isItemAvailableForDate } from '../utils/availability-utils'
+import PackageOfferCard from '../cards/PackageOfferCard'
+import BookingGuardPopup from '../feedback/BookingGuardPopup'
 
 const OFFERS_FILTERS_STORAGE_KEY = 'resortPackagesOffersFiltersV1'
 
@@ -26,9 +25,7 @@ function readStoredFilters() {
   }
 }
 
-function getFiltersForTab(tab) {
-  const stored = readStoredFilters()
-  const entry = stored?.[tab]
+function normalizeFilters(entry) {
   if (!entry || typeof entry !== 'object') return defaultFilters
 
   return {
@@ -39,69 +36,42 @@ function getFiltersForTab(tab) {
 }
 
 export default function PackagesOffersSection({ activeTab }) {
-  const initialFilters = getFiltersForTab(activeTab)
-  const [sortBy, setSortBy] = useState(initialFilters.sortBy)
-  const [paxValue, setPaxValue] = useState(initialFilters.paxValue)
-  const [checkInDate, setCheckInDate] = useState(initialFilters.checkInDate)
+  const [filtersByTab, setFiltersByTab] = useState(() => readStoredFilters())
   const [popupState, setPopupState] = useState({
     isOpen: false,
     title: '',
     message: '',
   })
-  const scrollContainerRef = useRef(null)
 
-  useEffect(() => {
-    const tabFilters = getFiltersForTab(activeTab)
-    setSortBy(tabFilters.sortBy)
-    setPaxValue(tabFilters.paxValue)
-    setCheckInDate(tabFilters.checkInDate)
-  }, [activeTab])
+  const activeFilters = normalizeFilters(filtersByTab?.[activeTab])
+  const { sortBy, paxValue, checkInDate } = activeFilters
 
-  useLayoutEffect(() => {
-    const scrollContainer = scrollContainerRef.current
-    if (!scrollContainer) return
-
-    scrollContainer.scrollTop = getSavedScrollTop(activeTab)
-  }, [activeTab])
-
-  useEffect(() => {
-    const scrollContainer = scrollContainerRef.current
-    if (!scrollContainer) return
-
-    const handleScroll = () => {
-      const currentState = readPackagesViewState()
-      writePackagesViewState({
-        ...currentState,
-        activeTab,
-        scrollTopByTab: {
-          ...(currentState.scrollTopByTab ?? {}),
-          [activeTab]: scrollContainer.scrollTop,
-        },
-      })
-    }
-
-    scrollContainer.addEventListener('scroll', handleScroll, { passive: true })
-    return () => scrollContainer.removeEventListener('scroll', handleScroll)
-  }, [activeTab])
+  const updateActiveFilters = (patch) => {
+    setFiltersByTab((prev) => ({
+      ...prev,
+      [activeTab]: {
+        ...normalizeFilters(prev?.[activeTab]),
+        ...patch,
+      },
+    }))
+  }
 
   useEffect(() => {
     if (typeof window === 'undefined') return
 
-    const stored = readStoredFilters()
-    const nextStored = {
-      ...stored,
-      [activeTab]: {
-        sortBy,
-        paxValue,
-        checkInDate,
-      },
-    }
-
-    window.localStorage.setItem(OFFERS_FILTERS_STORAGE_KEY, JSON.stringify(nextStored))
-  }, [activeTab, sortBy, paxValue, checkInDate])
+    window.localStorage.setItem(OFFERS_FILTERS_STORAGE_KEY, JSON.stringify(filtersByTab))
+  }, [filtersByTab])
 
   const heading =
     activeTab === 'overnight' ? 'Overnight Offers' : activeTab === 'addons' ? 'Add-Ons List' : 'Day Tour Options'
+
+  const sortByLabelByValue = {
+    recommended: 'Recommended',
+    'price-asc': 'Price: Low to High',
+    'price-desc': 'Price: High to Low',
+    'name-asc': 'Name: A to Z',
+    'name-desc': 'Name: Z to A',
+  }
 
   const sortItems = (items, getTitle, getPrice) => {
     const sorted = [...items]
@@ -158,12 +128,12 @@ export default function PackagesOffersSection({ activeTab }) {
   const bookingPrefillState =
     checkInDate || prefillGuestCount
       ? {
-        prefillStayDates: {
-          checkInDate,
-          checkOutDate,
-        },
-        prefillGuestCount: prefillGuestCount || undefined,
-      }
+          prefillStayDates: {
+            checkInDate,
+            checkOutDate,
+          },
+          prefillGuestCount: prefillGuestCount || undefined,
+        }
       : undefined
 
   const filterByPax = (items, getPax) => {
@@ -194,39 +164,22 @@ export default function PackagesOffersSection({ activeTab }) {
     })
   }
 
-  const sortedOvernightOffers = useMemo(
-    () => {
-      const filtered = filterByPax(overnightOffers, getPaxMax)
-      const sorted = sortItems(filtered, (item) => item.title, (item) => item.price)
-      return markAndOrderByAvailability(sorted)
-    },
-    [sortBy, paxValue, checkInDate, activeTab],
+  const sortedOvernightOffers = markAndOrderByAvailability(
+    sortItems(filterByPax(overnightOffers, getPaxMax), (item) => item.title, (item) => item.price),
   )
 
-  const sortedAddOns = useMemo(
-    () => {
-      const filtered = filterByPax(addOns, () => Number.POSITIVE_INFINITY)
-      return sortItems(filtered, (item) => item.title, () => Number.POSITIVE_INFINITY)
-    },
-    [sortBy, paxValue],
+  const sortedAddOns = sortItems(
+    filterByPax(addOns, () => Number.POSITIVE_INFINITY),
+    (item) => item.title,
+    () => Number.POSITIVE_INFINITY,
   )
 
-  const sortedDayTourOffers = useMemo(
-    () => {
-      const filtered = filterByPax(dayTourOffers, () => Number.POSITIVE_INFINITY)
-      const sorted = sortItems(filtered, (item) => item.title, (item) => item.price)
-      return markAndOrderByAvailability(sorted)
-    },
-    [sortBy, paxValue, checkInDate, activeTab],
+  const sortedDayTourOffers = markAndOrderByAvailability(
+    sortItems(filterByPax(dayTourOffers, () => Number.POSITIVE_INFINITY), (item) => item.title, (item) => item.price),
   )
 
-  const sortedCottages = useMemo(
-    () => {
-      const filtered = filterByPax(cottages, (item) => item.paxMax)
-      const sorted = sortItems(filtered, (item) => item.name, (item) => item.price)
-      return markAndOrderByAvailability(sorted)
-    },
-    [sortBy, paxValue, checkInDate, activeTab],
+  const sortedCottages = markAndOrderByAvailability(
+    sortItems(filterByPax(cottages, (item) => item.paxMax), (item) => item.name, (item) => item.price),
   )
 
   const overnightAvailableCount = sortedOvernightOffers.filter((item) => !item.isUnavailableForSelectedDate).length
@@ -262,6 +215,18 @@ export default function PackagesOffersSection({ activeTab }) {
     return true
   }
 
+  const hasActiveFilters = sortBy !== defaultFilters.sortBy || Boolean(paxValue) || Boolean(checkInDate)
+
+  const clearAllFilters = () => {
+    updateActiveFilters(defaultFilters)
+  }
+
+  const activeFilterChips = []
+
+  if (sortBy !== defaultFilters.sortBy) activeFilterChips.push(`Sort: ${sortByLabelByValue[sortBy] ?? sortBy}`)
+  if (paxValue) activeFilterChips.push(`Pax: ${paxValue}+`)
+  if (checkInDate) activeFilterChips.push(`Check-in: ${checkInDate}`)
+
   return (
     <section className="packagesListSection" aria-labelledby="packages-list-heading">
       <p className="packagesSectionKicker">Our Offers</p>
@@ -276,7 +241,7 @@ export default function PackagesOffersSection({ activeTab }) {
             id="offers-sort"
             className="offersSortSelect"
             value={sortBy}
-            onChange={(event) => setSortBy(event.target.value)}
+            onChange={(event) => updateActiveFilters({ sortBy: event.target.value })}
           >
             <option value="recommended">Recommended</option>
             <option value="price-asc">Price: Low to High</option>
@@ -295,7 +260,7 @@ export default function PackagesOffersSection({ activeTab }) {
               className="offersRangeInput"
               placeholder="e.g. 12"
               value={paxValue}
-              onChange={(event) => setPaxValue(event.target.value)}
+              onChange={(event) => updateActiveFilters({ paxValue: event.target.value })}
             />
           </div>
         </div>
@@ -313,7 +278,7 @@ export default function PackagesOffersSection({ activeTab }) {
                   min={getTodayISODate()}
                   className="offersRangeInput offersDateInput"
                   value={checkInDate}
-                  onChange={(event) => setCheckInDate(event.target.value)}
+                  onChange={(event) => updateActiveFilters({ checkInDate: event.target.value })}
                 />
               </div>
             </div>
@@ -337,6 +302,21 @@ export default function PackagesOffersSection({ activeTab }) {
         ) : null}
       </div>
 
+      {hasActiveFilters ? (
+        <div className="offersActiveFilters" aria-live="polite">
+          <div className="offersFilterChips" aria-label="Active filters">
+            {activeFilterChips.map((chip) => (
+              <span className="offersFilterChip" key={chip}>
+                {chip}
+              </span>
+            ))}
+          </div>
+          <button type="button" className="offersClearFiltersBtn" onClick={clearAllFilters}>
+            Clear all
+          </button>
+        </div>
+      ) : null}
+
       {requiresStayDates && !checkInDate ? (
         <p className="offersDateNotice">All offers are shown. Pick a check-in date to prioritize available options.</p>
       ) : null}
@@ -353,7 +333,7 @@ export default function PackagesOffersSection({ activeTab }) {
         <p className="offersDateNotice">No cottages are available for the selected date. Unavailable cottages are listed below.</p>
       ) : null}
 
-      <div ref={scrollContainerRef} className="offersCardsScroll" aria-label="Offers cards scroll area">
+      <div className="offersCardsScroll" aria-label="Offers cards scroll area">
         {activeTab === 'overnight' ? (
           <div className="overnightOffersGrid" role="list" aria-label="Overnight package offers">
             {sortedOvernightOffers.map((offer) => (

@@ -13,6 +13,18 @@
   grid-column: 1 / -1;
 }
 
+.bookingInlineWarning {
+  grid-column: 1 / -1;
+  margin: -2px 0 2px;
+  border: 1px solid rgba(179, 66, 0, 0.32);
+  background: rgba(255, 179, 71, 0.14);
+  border-radius: 10px;
+  padding: 8px 10px;
+  color: rgba(97, 41, 0, 0.9);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
 .bookingField label {
   font-size: 13px;
   color: rgba(22, 32, 51, 0.78);

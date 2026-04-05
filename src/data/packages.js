@@ -1,3 +1,12 @@
+import galleryImage1 from '../assets/1.png'
+import galleryImage2 from '../assets/2.png'
+import galleryImage3 from '../assets/3.png'
+import galleryImage4 from '../assets/4.png'
+import galleryImage5 from '../assets/5.png'
+import galleryImage6 from '../assets/6.png'
+import galleryImage7 from '../assets/7.png'
+import galleryImage8 from '../assets/8.png'
+
 export const cottages = [
   {
     id: 'cove',
@@ -9,6 +18,7 @@ export const cottages = [
     paxMax: 15,
     paxLabel: '10-15 pax',
     description: 'Recommended for small group day tours and intimate gatherings.',
+    imageUrl: galleryImage3,
     availability: {
       unavailableCheckInDates: ['2026-04-06', '2026-04-12', '2026-04-20'],
     },
@@ -32,6 +42,7 @@ export const cottages = [
     paxMax: 15,
     paxLabel: '10-15 pax',
     description: 'Value-friendly option excellent for group outings and budget-conscious travelers.',
+    imageUrl: galleryImage5,
     availability: {
       unavailableCheckInDates: ['2026-04-08', '2026-04-15', '2026-04-21'],
     },
@@ -55,6 +66,7 @@ export const cottages = [
     paxMax: 30,
     paxLabel: '20-30 pax',
     description: 'Best for larger gatherings, celebrations, and special events.',
+    imageUrl: galleryImage7,
     availability: {
       unavailableCheckInDates: ['2026-04-10', '2026-04-18', '2026-04-27'],
     },
@@ -131,6 +143,7 @@ export const overnightOffers = [
     paxMax: 30,
     paxLabel: '10-30 pax',
     description: 'Ideal for guests who want a private stay space with overnight access.',
+    imageUrl: galleryImage6,
     availability: {
       unavailableCheckInDates: ['2026-04-05', '2026-04-11', '2026-04-19'],
     },
@@ -156,6 +169,7 @@ export const overnightOffers = [
     paxMax: 20,
     paxLabel: '10-20 pax',
     description: 'Designed for family groups with bundled overnight inclusions.',
+    imageUrl: galleryImage2,
     availability: {
       unavailableCheckInDates: ['2026-04-07', '2026-04-13', '2026-04-22'],
     },
@@ -181,6 +195,7 @@ export const overnightOffers = [
     paxMax: 30,
     paxLabel: '15-30 pax',
     description: 'Best for friends looking for an extended resort stay.',
+    imageUrl: galleryImage8,
     availability: {
       unavailableCheckInDates: ['2026-04-09', '2026-04-17', '2026-04-25'],
     },
@@ -209,6 +224,7 @@ export const dayTourOffers = [
     paxMax: null,
     paxLabel: 'Any pax',
     description: 'Includes free use of tables and chairs.',
+    imageUrl: galleryImage1,
     availability: {
       unavailableCheckInDates: ['2026-04-04', '2026-04-14', '2026-04-24'],
     },
@@ -233,6 +249,7 @@ export const addOns = [
     paxMax: null,
     paxLabel: 'Any pax',
     description: 'Additional seating setup for bigger groups.',
+    imageUrl: galleryImage4,
     details: [
       'Quantity: 1 set includes 1 sturdy table and 4-6 chairs.',
       'Perfect for: Extra dining space, kids area, or beverage station setup.',
@@ -252,6 +269,7 @@ export const addOns = [
     paxMax: null,
     paxLabel: 'Any pax',
     description: 'Available when paired with an eligible cottage booking.',
+    imageUrl: galleryImage6,
     details: [
       'Includes: Professional grilling station setup with grill, charcoal, and cooking utensils.',
       'Grilling attendant: Available for first 2 hours of setup to guide basic use (additional hours: PHP 200/hour).',
@@ -273,6 +291,7 @@ export const addOns = [
     paxMax: 10,
     paxLabel: 'Up to 10 pax',
     description: 'Great for photos, snacks, and lounge moments.',
+    imageUrl: galleryImage8,
     details: [
       'Type: Scenic floating platform setup in designated water area (subject to weather conditions).',
       'Perfect for: Instagram-worthy photos, intimate snack moments, group lounging.',
@@ -294,6 +313,7 @@ export const addOns = [
     paxMax: null,
     paxLabel: 'Any pax',
     description: 'Available in approved areas and time slots.',
+    imageUrl: galleryImage2,
     details: [
       'Equipment: Professional-grade videoke machine, 2 microphones, large LED display, full sound system.',
       'Song library: 10,000+ songs (OPM, Pop, Rock, Classics, and more) — requests accepted during event.',

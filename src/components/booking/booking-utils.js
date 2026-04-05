@@ -1,4 +1,4 @@
-import { cottages, dayTourOffers, overnightOffers } from '../packages/data'
+import { cottages, dayTourOffers, overnightOffers } from '../../data/packages'
 
 export const stepLabels = ['Stay Details', 'Guest Info', 'Add-ons', 'Review']
 

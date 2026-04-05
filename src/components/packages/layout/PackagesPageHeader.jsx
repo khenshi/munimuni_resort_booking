@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom'
 
 export default function PackagesPageHeader({ activeTab, onTabChange }) {
-
   return (
     <header className="packagesPageHeader">
       <div className="packagesPageHeaderInner">

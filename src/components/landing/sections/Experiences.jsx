@@ -1,14 +1,8 @@
 
-import cottageOne from '../../assets/3.png'
-import cottageTwo from '../../assets/5.png'
-import cottageThree from '../../assets/7.png'
-import { cottages } from '../packages/data'
-
-const cottageImageById = {
-  cove: { src: cottageOne, alt: 'Cove cottage with ocean-facing lounge area' },
-  jungle: { src: cottageTwo, alt: 'Jungle cottage surrounded by tropical greenery' },
-  cliffside: { src: cottageThree, alt: 'Cliffside cottage with panoramic sea view' },
-}
+import { Link } from 'react-router-dom'
+import cottageOne from '../../../assets/3.png'
+import { cottageImageById } from '../../../data/landing'
+import { cottages } from '../../../data/packages'
 
 const featuredOffers = cottages.slice(0, 3).map((cottage) => ({
   ...cottage,
@@ -50,9 +44,9 @@ export default function Experiences() {
         </div>
 
         <div className="featuredOffersCtaWrap">
-          <a className="featuredOffersCta" href="/packages">
+          <Link className="featuredOffersCta" to="/packages">
             View All Offers
-          </a>
+          </Link>
         </div>
       </div>
     </section>

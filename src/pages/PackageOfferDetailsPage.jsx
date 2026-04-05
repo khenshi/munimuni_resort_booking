@@ -1,7 +1,7 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import { Link, useLocation, useParams } from 'react-router-dom'
-import PackagesPageHeader from '../components/packages/PackagesPageHeader'
-import { addOns, cottages, overnightOffers } from '../components/packages/data'
+import { PackageOfferDateEditor, PackagesPageHeader } from '../components/packages'
+import { addOns, cottages, dayTourOffers, overnightOffers } from '../data/packages'
 import '../styles/pages/packages-page.css'
 
 const tabByType = {
@@ -10,14 +10,24 @@ const tabByType = {
   addons: 'addons',
 }
 
+const gallerySlots = [
+  'Front view',
+  'Cottage view',
+  'Dining area',
+  'Evening view',
+]
+
 export default function PackageOfferDetailsPage() {
   const { offerType, offerId } = useParams()
   const location = useLocation()
   const query = new URLSearchParams(location.search)
   const prefillCheckInDate = query.get('checkInDate') ?? ''
-  const prefillCheckOutDate = query.get('checkOutDate') ?? ''
   const prefillGuests = query.get('guests') ?? ''
   const activeTab = tabByType[offerType] ?? 'daytour'
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [offerType, offerId])
 
   const detail = useMemo(() => {
     if (offerType === 'daytour' && offerId === 'basic') {
@@ -74,6 +84,23 @@ export default function PackageOfferDetailsPage() {
     return null
   }, [offerType, offerId])
 
+  const selectedAvailabilityItem = useMemo(() => {
+    if (offerType === 'daytour' && offerId === 'basic') {
+      return dayTourOffers.find((item) => item.id === 'basic') ?? null
+    }
+
+    if (offerType === 'daytour' && offerId?.startsWith('cottage-')) {
+      const cottageId = offerId.replace('cottage-', '')
+      return cottages.find((item) => item.id === cottageId) ?? null
+    }
+
+    if (offerType === 'overnight') {
+      return overnightOffers.find((item) => item.id === offerId) ?? null
+    }
+
+    return null
+  }, [offerType, offerId])
+
   return (
     <div className="packagesPage">
       <PackagesPageHeader activeTab={activeTab} onTabChange={() => {}} />
@@ -99,34 +126,45 @@ export default function PackageOfferDetailsPage() {
             </div>
           )}
 
-          <Link to="/packages" className="cottageSelectBtn">
-            Back to Packages
-          </Link>
+          {detail ? (
+            <section className="offerDetailsGallerySection" aria-labelledby="offer-gallery-heading">
+              <div className="offerDetailsSectionHeader">
+                <div>
+                  <p className="packagesSectionKicker">Package Gallery</p>
+                  <h3 id="offer-gallery-heading">Pictures of the package</h3>
+                </div>
+              </div>
+
+              <div className="offerDetailsGalleryGrid">
+                {gallerySlots.map((slotLabel) => (
+                  <div key={slotLabel} className="offerDetailsGalleryCard" role="presentation">
+                    <div className="offerDetailsGalleryPlaceholder" aria-hidden="true">
+                      <span>{slotLabel}</span>
+                    </div>
+                    <p>{slotLabel}</p>
+                  </div>
+                ))}
+              </div>
+            </section>
+          ) : null}
 
           {detail && offerType !== 'addons' ? (
-            <Link
-              to={`/booking?offerType=${encodeURIComponent(offerType ?? '')}&offerId=${encodeURIComponent(offerId ?? '')}${prefillCheckInDate ? `&checkInDate=${encodeURIComponent(prefillCheckInDate)}` : ''}${prefillCheckOutDate ? `&checkOutDate=${encodeURIComponent(prefillCheckOutDate)}` : ''}${prefillGuests ? `&guests=${encodeURIComponent(prefillGuests)}` : ''}`}
-              state={{
-                selectedOffer: {
-                  offerType,
-                  offerId,
-                  title: detail.title,
-                  subtitle: detail.subtitle,
-                  priceInfo: detail.priceInfo ?? 'Price available upon confirmation',
-                },
-                prefillStayDates: prefillCheckInDate
-                  ? {
-                      checkInDate: prefillCheckInDate,
-                      checkOutDate: prefillCheckOutDate,
-                    }
-                  : undefined,
-                prefillGuestCount: prefillGuests || undefined,
-              }}
-              className="cottageSelectBtn"
-            >
-              Proceed to Booking
-            </Link>
+            <PackageOfferDateEditor
+              key={`${offerType}-${offerId}-${location.search}`}
+              offerType={offerType}
+              offerId={offerId}
+              offerTitle={detail.title}
+              offerSubtitle={detail.subtitle}
+              offerPriceInfo={detail.priceInfo}
+              selectedAvailabilityItem={selectedAvailabilityItem}
+              initialCheckInDate={prefillCheckInDate}
+              initialGuests={prefillGuests}
+            />
           ) : null}
+
+          <Link to="/packages" className="offerDetailsBackLink">
+            Back to Packages
+          </Link>
         </section>
       </main>
     </div>

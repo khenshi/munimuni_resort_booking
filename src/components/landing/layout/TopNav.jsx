@@ -1,7 +1,24 @@
 import { Link as ScrollLink } from 'react-scroll'
 import { Link as RouterLink } from 'react-router-dom'
 
-export default function TopNav({ navItems, menuOpen, onMenuToggle}) {
+export default function TopNav({ navItems, menuOpen, onMenuToggle }) {
+  const onNavigateTo = (event, targetId) => {
+    event.preventDefault()
+
+    const target = document.getElementById(targetId)
+    if (target) {
+      const navOffset = 70
+      const top = target.getBoundingClientRect().top + window.scrollY - navOffset
+      window.scrollTo({ top, behavior: 'smooth' })
+    }
+
+    onMenuToggle?.()
+  }
+
+  const onMobileBookNowClick = () => {
+    onMenuToggle?.()
+  }
+
   return (
     <header className="navHeader">
       <div className="navInner">
@@ -41,7 +58,7 @@ export default function TopNav({ navItems, menuOpen, onMenuToggle}) {
             className="bookNowBtn"
             to="/packages"
           >
-            Book Now
+            Book Here
           </RouterLink>
 
           <button
@@ -64,22 +81,22 @@ export default function TopNav({ navItems, menuOpen, onMenuToggle}) {
         <div className="mobileMenu" role="dialog" aria-label="Mobile menu">
           <div className="mobileMenuInner">
             {navItems.map((item) => (
-              <a
+              <button
+                type="button"
                 key={item.targetId}
-                href={`#${item.targetId}`}
                 className="mobileNavLink"
                 onClick={(e) => onNavigateTo(e, item.targetId)}
               >
                 {item.label}
-              </a>
+              </button>
             ))}
-            <a
-              href="#booking"
+            <RouterLink
+              to="/packages"
               className="mobileBookNow"
-              onClick={(e) => onNavigateTo(e, 'booking')}
+              onClick={onMobileBookNowClick}
             >
               Book Now
-            </a>
+            </RouterLink>
           </div>
         </div>
       )}

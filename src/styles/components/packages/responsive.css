@@ -38,9 +38,43 @@
     justify-content: space-between;
   }
 
+  .offerDetailsDateInput {
+    width: 95%;
+  }
+
+  .offerDetailsSectionHeader {
+    flex-direction: column;
+  }
+
+  .offerDetailsSectionNote {
+    max-width: none;
+    text-align: left;
+  }
+
+  .offerDetailsGalleryGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .offerDetailsGalleryPlaceholder {
+    min-height: 150px;
+  }
+
   .cottageGrid,
   .overnightOffersGrid,
   .addonsGrid {
     grid-template-columns: 1fr;
+  }
+
+  .offerDetailsBookingFields {
+    grid-template-columns: 1fr;
+  }
+
+  .offerDetailsBookingActions {
+    width: 100%;
+  }
+
+  .offerDetailsBookingActions .cottageSelectBtn {
+    width: 100%;
   }
 }

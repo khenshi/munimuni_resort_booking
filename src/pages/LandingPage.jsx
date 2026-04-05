@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from 'react'
-import Hero from '../components/landing/Hero'
-import TopNav from '../components/landing/TopNav'
-import ResortHighlights from '../components/landing/ResortHighlights'
-import ResortGallery from '../components/landing/ResortGallery'
-import Experiences from '../components/landing/Experiences'
-import ContactDetails from '../components/landing/ContactDetails'
-import LandingFooter from '../components/landing/LandingFooter'
+import Hero from '../components/landing/sections/Hero'
+import TopNav from '../components/landing/layout/TopNav'
+import ResortHighlights from '../components/landing/sections/ResortHighlights'
+import ResortGallery from '../components/landing/sections/ResortGallery'
+import Experiences from '../components/landing/sections/Experiences'
+import ContactDetails from '../components/landing/sections/ContactDetails'
+import LandingFooter from '../components/landing/layout/LandingFooter'
 import '../styles/pages/landing-page.css'
 
 export default function LandingPage() {

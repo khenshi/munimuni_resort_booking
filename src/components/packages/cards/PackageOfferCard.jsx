@@ -16,6 +16,8 @@ export default function PackageOfferCard({
     if (!canProceed) event.preventDefault()
   }
 
+  const imageAlt = `${title} resort offer`
+
   return (
     <article className={`${cardClassName} ${isUnavailable ? 'isUnavailable' : ''}`} role="listitem" key={offer.id ?? title}>
       <div className={`offerCardContent ${isUnavailable ? 'isUnavailable' : ''}`}>
@@ -37,7 +39,11 @@ export default function PackageOfferCard({
           </div>
         </div>
         <div className="offerCardImage">
-          <div className="imagePlaceholder">Image</div>
+          {offer.imageUrl ? (
+            <img src={offer.imageUrl} alt={imageAlt} loading="lazy" />
+          ) : (
+            <div className="imagePlaceholder">{title}</div>
+          )}
         </div>
       </div>
     </article>

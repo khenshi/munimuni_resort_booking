@@ -2,7 +2,6 @@ const PACKAGES_VIEW_STATE_KEY = 'resortPackagesViewStateV1'
 
 const defaultViewState = {
   activeTab: 'daytour',
-  scrollTopByTab: {},
 }
 
 function readPackagesViewState() {
@@ -18,10 +17,6 @@ function readPackagesViewState() {
     return {
       ...defaultViewState,
       ...parsed,
-      scrollTopByTab:
-        parsed.scrollTopByTab && typeof parsed.scrollTopByTab === 'object'
-          ? parsed.scrollTopByTab
-          : defaultViewState.scrollTopByTab,
     }
   } catch {
     return defaultViewState
@@ -34,11 +29,4 @@ function writePackagesViewState(nextState) {
   window.sessionStorage.setItem(PACKAGES_VIEW_STATE_KEY, JSON.stringify(nextState))
 }
 
-function getSavedScrollTop(activeTab) {
-  const state = readPackagesViewState()
-  const savedScrollTop = state.scrollTopByTab?.[activeTab]
-
-  return Number.isFinite(savedScrollTop) ? savedScrollTop : 0
-}
-
-export { defaultViewState, getSavedScrollTop, readPackagesViewState, writePackagesViewState }
+export { readPackagesViewState, writePackagesViewState }

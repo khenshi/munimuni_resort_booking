@@ -6,7 +6,10 @@ export default function BookingStepContent({
   toggleAddOn,
   addOns,
   selectedAddOnLabels,
+  availabilityMessage,
 }) {
+  const formatCurrency = (value) => `PHP ${value.toLocaleString('en-US')}`
+
   if (step === 1) {
     return (
       <div className="bookingGrid">
@@ -39,6 +42,8 @@ export default function BookingStepContent({
             onChange={(e) => onChange('checkOutDate', e.target.value)}
           />
         </div>
+
+        {availabilityMessage ? <p className="bookingInlineWarning">{availabilityMessage}</p> : null}
 
         <div className="bookingField">
           <label htmlFor="guests">Number of Guests</label>
@@ -135,35 +140,42 @@ export default function BookingStepContent({
     )
   }
 
-  //cost calculation
   const calculateCostBreakdown = () => {
-    let offerCost = 0
+    const guestCount = Math.max(1, Number.parseInt(formData.guests, 10) || 1)
+    let offerCost = Number(selectedOffer?.price) || 0
     let addOnsCost = 0
+    let offerLabel = selectedOffer.title
+    const addOnCostLines = []
 
-    if (selectedOffer?.price && selectedOffer?.offerType === 'daytour' && selectedOffer?.offerId === 'basic') {
-      offerCost = selectedOffer.price * (parseInt(formData.guests) || 1)
-    } else if (selectedOffer?.price) {
-      offerCost = selectedOffer.price
+    if (selectedOffer?.offerType === 'daytour' && selectedOffer?.offerId === 'basic') {
+      offerCost = (Number(selectedOffer?.price) || 0) * guestCount
+      offerLabel = `${selectedOffer.title} (${guestCount} guest${guestCount > 1 ? 's' : ''})`
     }
 
-    //add-ons cost
     formData.selectedAddOns.forEach((addOnId) => {
       const addOn = addOns.find((item) => item.id === addOnId)
       if (addOn?.price) {
         addOnsCost += addOn.price
+        addOnCostLines.push({
+          id: addOn.id,
+          title: addOn.title,
+          price: addOn.price,
+        })
       }
     })
 
     const totalCost = offerCost + addOnsCost
 
     return {
+      offerLabel,
       offerCost,
       addOnsCost,
+      addOnCostLines,
       totalCost,
     }
   }
 
-  const { offerCost, addOnsCost, totalCost } = calculateCostBreakdown()
+  const { offerLabel, offerCost, addOnsCost, addOnCostLines, totalCost } = calculateCostBreakdown()
 
   return (
     <div className="bookingReview">
@@ -173,11 +185,19 @@ export default function BookingStepContent({
       <p>
         <strong>Date:</strong> {formData.checkInDate || 'Not set'}
       </p>
+      {formData.checkOutDate ? (
+        <p>
+          <strong>Check-out:</strong> {formData.checkOutDate}
+        </p>
+      ) : null}
       <p>
         <strong>Guests:</strong> {formData.guests || 'Not set'}
       </p>
       <p>
         <strong>Guest Name:</strong> {formData.fullName || 'Not set'}
+      </p>
+      <p>
+        <strong>Email:</strong> {formData.email || 'Not set'}
       </p>
       <p>
         <strong>Add-ons:</strong> {selectedAddOnLabels.length ? selectedAddOnLabels.join(', ') : 'None'}
@@ -186,18 +206,27 @@ export default function BookingStepContent({
       <div className="bookingCostBreakdown">
         <h3>Cost Breakdown</h3>
         <div className="costLine">
-          <span>{selectedOffer.title}</span>
-          <span className="costAmount">₱ {offerCost.toLocaleString('en-US')}</span>
+          <span>{offerLabel}</span>
+          <span className="costAmount">{formatCurrency(offerCost)}</span>
         </div>
-        {addOnsCost > 0 && (
-          <div className="costLine">
-            <span>Add-ons</span>
-            <span className="costAmount">₱ {addOnsCost.toLocaleString('en-US')}</span>
+
+        {addOnCostLines.map((line) => (
+          <div className="costLine" key={line.id}>
+            <span>{line.title}</span>
+            <span className="costAmount">{formatCurrency(line.price)}</span>
           </div>
-        )}
+        ))}
+
+        {addOnsCost > 0 ? (
+          <div className="costLine">
+            <span>Add-ons subtotal</span>
+            <span className="costAmount">{formatCurrency(addOnsCost)}</span>
+          </div>
+        ) : null}
+
         <div className="costLine costTotal">
           <span>Total Amount</span>
-          <span className="costAmount">₱ {totalCost.toLocaleString('en-US')}</span>
+          <span className="costAmount">{formatCurrency(totalCost)}</span>
         </div>
       </div>
 

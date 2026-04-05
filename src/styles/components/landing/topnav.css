@@ -158,6 +158,10 @@
   border-radius: 14px;
   background: rgba(255, 255, 255, 0.04);
   font-family: var(--font-body);
+  border: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
 }
 
 .mobileNavLink:hover {

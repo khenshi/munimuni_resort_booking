@@ -5,8 +5,17 @@ import BookingStateNotice from '../components/booking/BookingStateNotice'
 import BookingStepContent from '../components/booking/BookingStepContent'
 import BookingStepsIndicator from '../components/booking/BookingStepsIndicator'
 import { resolveSelectedOffer } from '../components/booking/booking-utils'
-import { addOns } from '../components/packages/data'
+import { isItemAvailableForDate } from '../components/packages'
+import { addOns, cottages, dayTourOffers, overnightOffers } from '../data/packages'
 import '../styles/pages/booking-page.css'
+
+function generateBookingReference(selectedOffer) {
+  const offerTypePrefix = (selectedOffer?.offerType ?? 'gen').slice(0, 3).toUpperCase()
+  const randomCode = Math.floor(1000 + Math.random() * 9000)
+  const dateCode = new Date().toISOString().slice(2, 10).replace(/-/g, '')
+
+  return `MMR-${offerTypePrefix}-${dateCode}-${randomCode}`
+}
 
 export default function BookingPage() {
   const location = useLocation()
@@ -31,6 +40,23 @@ export default function BookingPage() {
     return `/packages/offers/${detailOfferType}/${detailOfferId}`
   }, [selectedOffer, offerType, offerId])
 
+  const selectedAvailabilityItem = useMemo(() => {
+    if (offerType === 'daytour' && offerId === 'basic') {
+      return dayTourOffers.find((item) => item.id === 'basic') ?? null
+    }
+
+    if (offerType === 'daytour' && offerId.startsWith('cottage-')) {
+      const cottageId = offerId.replace('cottage-', '')
+      return cottages.find((item) => item.id === cottageId) ?? null
+    }
+
+    if (offerType === 'overnight') {
+      return overnightOffers.find((item) => item.id === offerId) ?? null
+    }
+
+    return null
+  }, [offerType, offerId])
+
   const [step, setStep] = useState(1)
   const [formData, setFormData] = useState({
     checkInDate: prefilledCheckInDate,
@@ -45,6 +71,7 @@ export default function BookingPage() {
     termsAccepted: false,
   })
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [bookingReference, setBookingReference] = useState('')
 
   const onChange = (key, value) => {
     setFormData((prev) => ({ ...prev, [key]: value }))
@@ -63,12 +90,27 @@ export default function BookingPage() {
   }
 
   const canProceed = () => {
-    if (step === 1) return Boolean(formData.checkInDate && formData.guests)
+    if (step === 1) {
+      const hasBasicDetails = Boolean(formData.checkInDate && formData.guests)
+      if (!hasBasicDetails) return false
+
+      if (!selectedAvailabilityItem) return true
+      return isItemAvailableForDate(selectedAvailabilityItem, formData.checkInDate)
+    }
     if (step === 2) return Boolean(formData.fullName && formData.phone && formData.email)
     if (step === 3) return true
     if (step === 4) return Boolean(formData.termsAccepted)
     return false
   }
+
+  const prefilledDateUnavailable = Boolean(
+    prefilledCheckInDate && selectedAvailabilityItem && !isItemAvailableForDate(selectedAvailabilityItem, prefilledCheckInDate),
+  )
+  const isMissingPrefilledDate = Boolean(selectedAvailabilityItem) && !prefilledCheckInDate
+
+  const activeDateUnavailable = Boolean(
+    formData.checkInDate && selectedAvailabilityItem && !isItemAvailableForDate(selectedAvailabilityItem, formData.checkInDate),
+  )
 
   const selectedAddOnLabels = formData.selectedAddOns
     .map((id) => addOns.find((item) => item.id === id)?.title)
@@ -77,6 +119,8 @@ export default function BookingPage() {
   const submitBooking = (e) => {
     e.preventDefault()
     if (!canProceed()) return
+
+    setBookingReference(generateBookingReference(selectedOffer))
     setIsSubmitted(true)
   }
 
@@ -95,10 +139,26 @@ export default function BookingPage() {
               actionTo="/packages"
               actionLabel="Browse Offers"
             />
+          ) : isMissingPrefilledDate ? (
+            <BookingStateNotice
+              title="Select date first"
+              message="Please choose a check-in date from the offers page before continuing to booking."
+              actionTo="/packages"
+              actionLabel="Choose Date"
+            />
+          ) : prefilledDateUnavailable ? (
+            <BookingStateNotice
+              title="Selected date is unavailable"
+              message={`The selected offer is not available on ${prefilledCheckInDate}. Please choose another date before booking.`}
+              actionTo="/packages"
+              actionLabel="Choose Another Date"
+            />
           ) : isSubmitted ? (
             <BookingStateNotice
               title="Booking request submitted"
-              message={`Thank you, ${formData.fullName || 'guest'}. We received your request for ${selectedOffer.title}. Our team will contact you shortly.`}
+              message={`Thank you, ${formData.fullName || 'guest'}. Your request for ${selectedOffer.title} is in our queue.
+Reference: ${bookingReference}
+Our reservations team will contact you within 24 hours via ${formData.email || 'your contact details'} to confirm availability and final payment details.`}
               actionTo="/packages"
               actionLabel="Back to Offers"
             />
@@ -115,6 +175,9 @@ export default function BookingPage() {
                   toggleAddOn={toggleAddOn}
                   addOns={addOns}
                   selectedAddOnLabels={selectedAddOnLabels}
+                  availabilityMessage={
+                    activeDateUnavailable ? `This offer is unavailable on ${formData.checkInDate}. Pick another check-in date to continue.` : ''
+                  }
                 />
               </div>
 
