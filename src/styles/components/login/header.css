@@ -1,4 +1,4 @@
-.packagesPageHeader {
+.loginPageHeader {
   --brand-cyan-rgb: var(--color-cyan-rgb);
   --brand-cyan: rgb(var(--brand-cyan-rgb));
 
@@ -9,22 +9,19 @@
   z-index: 50;
   padding: 18px 20px;
   background: #ffffff;
-  border-bottom: 1px solid rgba(var(--brand-cyan-rgb), 0.35);
+  border-bottom: 1px solid rgba(var(--brand-cyan-rgb), 0.32);
 }
 
-.packagesPageHeaderInner {
+.loginPageHeaderInner {
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 40px;
-  position: relative;
+  justify-content: space-between;
+  gap: 16px;
 }
 
-.packagesPageBrand {
-  position: absolute;
-  left: 0;
+.loginPageBrand {
   font-family: var(--font-display);
   font-weight: 700;
   letter-spacing: 0.3px;
@@ -32,63 +29,58 @@
   color: var(--color-ink);
   font-size: 20px;
   white-space: nowrap;
-  transition: color 160ms ease;
 }
 
-.packagesPageBrand:hover {
+.loginPageBrand:hover {
   color: var(--brand-cyan);
 }
 
-.packagesHeaderActions {
-  position: absolute;
-  right: 0;
+.loginPageNav {
   display: inline-flex;
   align-items: center;
   gap: 10px;
 }
 
-.packagesToggleGroup {
-  display: flex;
+.loginPageHeaderActions {
+  display: inline-flex;
   align-items: center;
   gap: 12px;
-  background: rgba(var(--brand-cyan-rgb), 0.08);
+}
+
+.loginPageNavLink {
+  text-decoration: none;
   border: 1px solid rgba(var(--brand-cyan-rgb), 0.25);
-  border-radius: 12px;
-  padding: 6px;
-}
-
-.packagesToggle {
-  appearance: none;
-  background: transparent;
-  border: none;
-  color: rgba(22, 32, 51, 0.78);
-  font-weight: 400;
-  font-size: 13px;
-  letter-spacing: 0.2px;
-  font-family: var(--font-body);
+  border-radius: 10px;
+  background: rgba(var(--brand-cyan-rgb), 0.06);
+  color: rgba(22, 32, 51, 0.84);
   padding: 8px 14px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 200ms ease;
-  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+  transition: all 180ms ease;
 }
 
-.packagesToggle:hover {
+.loginPageNavLink:hover {
+  background: rgba(var(--brand-cyan-rgb), 0.14);
   color: var(--color-ink);
-  background: rgba(var(--brand-cyan-rgb), 0.16);
 }
 
-.packagesToggle.active {
-  color: rgba(255, 255, 255, 0.96);
+.loginPageNavLinkPrimary {
+  border-color: transparent;
   background: var(--brand-cyan);
-  box-shadow: 0 4px 12px rgba(var(--brand-cyan-rgb), 0.3);
+  color: #ffffff;
 }
 
-.packagesProfileMenuWrap {
+.loginPageNavLinkPrimary:hover {
+  background: rgba(var(--brand-cyan-rgb), 0.92);
+  color: #ffffff;
+}
+
+.loginProfileMenuWrap {
   position: relative;
 }
 
-.packagesProfileFabButton {
+.loginProfileFabButton {
   width: 40px;
   height: 40px;
   border-radius: 999px;
@@ -103,11 +95,11 @@
   box-shadow: 0 8px 24px rgba(22, 32, 51, 0.12);
 }
 
-.packagesProfileFabButton:hover {
+.loginProfileFabButton:hover {
   border-color: rgba(var(--brand-cyan-rgb), 0.9);
 }
 
-.packagesProfileDropdownMenu {
+.loginProfileDropdownMenu {
   position: absolute;
   top: calc(100% + 10px);
   right: 0;
@@ -121,7 +113,7 @@
   gap: 6px;
 }
 
-.packagesProfileDropdownTitle {
+.loginProfileDropdownTitle {
   margin: 0;
   padding: 8px 10px;
   color: rgba(22, 32, 51, 0.82);
@@ -129,8 +121,8 @@
   border-bottom: 1px solid rgba(22, 32, 51, 0.12);
 }
 
-.packagesProfileDropdownLink,
-.packagesProfileDropdownButton {
+.loginProfileDropdownLink,
+.loginProfileDropdownButton {
   text-decoration: none;
   border: none;
   border-radius: 8px;
@@ -143,7 +135,7 @@
   cursor: pointer;
 }
 
-.packagesProfileDropdownLink:hover,
-.packagesProfileDropdownButton:hover {
+.loginProfileDropdownLink:hover,
+.loginProfileDropdownButton:hover {
   background: rgba(var(--brand-cyan-rgb), 0.1);
 }

@@ -9,6 +9,11 @@
     position: static;
   }
 
+  .packagesHeaderActions {
+    position: static;
+    align-self: flex-end;
+  }
+
   .packagesToggleGroup {
     width: 100%;
     justify-content: center;

@@ -91,7 +91,8 @@ export default function BookingPage() {
 
   const canProceed = () => {
     if (step === 1) {
-      const hasBasicDetails = Boolean(formData.checkInDate && formData.guests)
+      const guestCount = Number.parseInt(formData.guests, 10)
+      const hasBasicDetails = Boolean(formData.checkInDate) && Number.isFinite(guestCount) && guestCount > 0
       if (!hasBasicDetails) return false
 
       if (!selectedAvailabilityItem) return true

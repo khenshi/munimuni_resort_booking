@@ -3,12 +3,16 @@ import LandingPage from './pages/LandingPage'
 import BookingPage from './pages/BookingPage'
 import PackagesPage from './pages/PackagesPage'
 import PackageOfferDetailsPage from './pages/PackageOfferDetailsPage'
+import CustomerLoginPage from './pages/CustomerLoginPage'
+import CustomerDashboardPage from './pages/CustomerDashboardPage'
 
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LandingPage />} />
+        <Route path="/customer/login" element={<CustomerLoginPage />} />
+        <Route path="/customer/dashboard" element={<CustomerDashboardPage />} />
         <Route path="/booking" element={<BookingPage />} />
         <Route path="/packages">
           <Route index element={<PackagesPage />} />

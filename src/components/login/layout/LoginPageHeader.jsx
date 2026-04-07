@@ -4,9 +4,9 @@ import {
   AUTH_CHANGED_EVENT,
   clearCurrentCustomer,
   readCurrentCustomer,
-} from '../../login/auth-storage'
+} from '../auth-storage'
 
-export default function PackagesPageHeader({ activeTab, onTabChange }) {
+export default function LoginPageHeader() {
   const [profileMenuOpen, setProfileMenuOpen] = useState(false)
   const [currentCustomer, setCurrentCustomer] = useState(() => readCurrentCustomer())
   const profileMenuRef = useRef(null)
@@ -53,41 +53,26 @@ export default function PackagesPageHeader({ activeTab, onTabChange }) {
   }
 
   return (
-    <header className="packagesPageHeader">
-      <div className="packagesPageHeaderInner">
-        <Link to="/" className="packagesPageBrand">
+    <header className="loginPageHeader">
+      <div className="loginPageHeaderInner">
+        <Link to="/" className="loginPageBrand">
           MuniMuni
         </Link>
 
-        <div className="packagesToggleGroup">
-          <button
-            type="button"
-            className={`packagesToggle ${activeTab === 'overnight' ? 'active' : ''}`}
-            onClick={() => onTabChange('overnight')}
-          >
-            Overnight Packages
-          </button>
-          <button
-            type="button"
-            className={`packagesToggle ${activeTab === 'daytour' ? 'active' : ''}`}
-            onClick={() => onTabChange('daytour')}
-          >
-            Day Tour Packages
-          </button>
-          <button
-            type="button"
-            className={`packagesToggle ${activeTab === 'addons' ? 'active' : ''}`}
-            onClick={() => onTabChange('addons')}
-          >
-            Add Ons
-          </button>
-        </div>
+        <div className="loginPageHeaderActions">
+          <nav className="loginPageNav" aria-label="Customer login navigation">
+            <Link to="/" className="loginPageNavLink">
+              Explore
+            </Link>
+            <Link to="/packages" className="loginPageNavLink">
+              Browse Packages
+            </Link>
+          </nav>
 
-        <div className="packagesHeaderActions">
-          <div className="packagesProfileMenuWrap" ref={profileMenuRef}>
+          <div className="loginProfileMenuWrap" ref={profileMenuRef}>
             <button
               type="button"
-              className="packagesProfileFabButton"
+              className="loginProfileFabButton"
               aria-label="Open profile menu"
               aria-haspopup="menu"
               aria-expanded={profileMenuOpen}
@@ -97,13 +82,13 @@ export default function PackagesPageHeader({ activeTab, onTabChange }) {
             </button>
 
             {profileMenuOpen ? (
-              <div className="packagesProfileDropdownMenu" role="menu" aria-label="Profile menu">
+              <div className="loginProfileDropdownMenu" role="menu" aria-label="Profile menu">
                 {currentCustomer ? (
                   <>
-                    <p className="packagesProfileDropdownTitle">{currentCustomer.fullName || currentCustomer.email}</p>
+                    <p className="loginProfileDropdownTitle">{currentCustomer.fullName || currentCustomer.email}</p>
                     <Link
                       to="/customer/dashboard"
-                      className="packagesProfileDropdownLink"
+                      className="loginProfileDropdownLink"
                       role="menuitem"
                       onClick={() => setProfileMenuOpen(false)}
                     >
@@ -111,7 +96,7 @@ export default function PackagesPageHeader({ activeTab, onTabChange }) {
                     </Link>
                     <button
                       type="button"
-                      className="packagesProfileDropdownButton"
+                      className="loginProfileDropdownButton"
                       role="menuitem"
                       onClick={handleSignOut}
                     >
@@ -121,7 +106,7 @@ export default function PackagesPageHeader({ activeTab, onTabChange }) {
                 ) : (
                   <Link
                     to="/customer/login"
-                    className="packagesProfileDropdownLink"
+                    className="loginProfileDropdownLink"
                     role="menuitem"
                     onClick={() => setProfileMenuOpen(false)}
                   >

@@ -1,5 +1,5 @@
-import heroBg from '../../assets/herobg.jpg'
-import resortImage from '../../assets/resort_sectionbg.jpg'
+import heroBg from '../../../assets/herobg.jpg'
+import resortImage from '../../../assets/resort_sectionbg.jpg'
 import { Link as ScrollLink } from 'react-scroll'
 import { Link as RouterLink } from 'react-router-dom'
 
