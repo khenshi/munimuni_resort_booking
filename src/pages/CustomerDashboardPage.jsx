@@ -54,26 +54,96 @@ export default function CustomerDashboardPage() {
     return <Navigate to="/customer/login" replace />
   }
 
+  const upcomingBookings = customerBookings
+    .filter((b) => b.checkInDate && new Date(b.checkInDate) > new Date())
+    .sort((a, b) => new Date(a.checkInDate) - new Date(b.checkInDate));
+
+  const nextStay = upcomingBookings.length > 0 ? upcomingBookings[0] : null;
+
+  let daysUntilCheckIn = null;
+  if (nextStay?.checkInDate) {
+    daysUntilCheckIn = Math.ceil((new Date(nextStay.checkInDate) - new Date()) / (1000 * 60 * 60 * 24));
+  }
+
   return (
     <div className="customerDashboard">
       <LoginPageHeader />
-      <FinancialWalletSection customerName={currentCustomer.fullName || currentCustomer.email} />
-      <PreviousBookingsWidget />
-      <DigitalConciergeSection />
+      
       <main className="dashboardMain">
-        <section className="dashboardShell" aria-label="Customer dashboard overview">
-          <div className="dashboardIntro">
-            <p className="dashboardKicker">Customer Dashboard</p>
-            <h1 className="dashboardTitle">
-              Welcome back, {currentCustomer.fullName || currentCustomer.email}.
-            </h1>
-            <p className="dashboardCopy">
-              Manage balances, review recent receipts, and keep your stay history in one place.
-            </p>
+        <div className="dashboardIntro">
+          <p className="dashboardKicker">Customer Dashboard</p>
+          <h1 className="dashboardTitle">
+            Welcome back, {currentCustomer.fullName || currentCustomer.email}.
+          </h1>
+          <p className="dashboardCopy">
+            Manage balances, review recent receipts, and keep your stay history in one place.
+          </p>
+          <button className="createNewBookingBtn" onClick={() => navigate('/packages')}>
+            Create New Booking
+          </button>
+        </div>
+
+        <div className="dashboardContentStack">
+          
+          {/* Next Stay Section Grid */}
+          <section className="nextStaySection">
+            <h2 className="sectionTitle">Next Stay</h2>
+            {nextStay ? (
+              <div className="nextStayGrid">
+                {/* Countdown Timer Placeholder */}
+                <div className="placeholderDiv">
+                  <span className="placeholderLabel">Countdown Timer</span>
+                  <div className="dynamicData">
+                    <strong>{Math.max(daysUntilCheckIn, 0)} Days</strong> 
+                    <span style={{ fontSize: '0.9rem', color: '#666', marginTop: '0.25rem' }}>until check-in</span>
+                  </div>
+                </div>
+
+                {/* Upcoming Booking Card Placeholder */}
+                <div className="placeholderDiv">
+                  <span className="placeholderLabel">Upcoming Booking</span>
+                  <div className="dynamicData">
+                    <strong style={{ textAlign: 'center' }}>{nextStay.selectedOffer?.title || 'Booking'}</strong>
+                    <span style={{ fontSize: '0.9rem', color: '#666', marginTop: '0.25rem' }}>{nextStay.checkInDate}</span>
+                  </div>
+                </div>
+
+                {/* Quick Actions Bar Placeholder */}
+                <div className="placeholderDiv">
+                  <span className="placeholderLabel">Quick Actions</span>
+                  <div className="dynamicData" style={{ flexDirection: 'row', gap: '0.75rem', marginTop: '0.5rem' }}>
+                    <button 
+                      className="bookingEditBtn isEnabled"
+                      onClick={() => navigate('/booking', { state: { mode: 'edit', booking: nextStay, selectedOffer: nextStay.selectedOffer } })}
+                    >
+                      Edit 
+                    </button>
+                    <button className="bookingEditBtn isEnabled" style={{ background: '#555' }}>
+                      View Details
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="placeholderDiv fullWidthPlaceholder">
+                <span className="placeholderLabel">No Upcoming Stays</span>
+                <div className="dynamicData">
+                  <p style={{ margin: 0, fontSize: '1rem' }}>Time for a vacation?</p>
+                </div>
+              </div>
+            )}
+          </section>
+
+          <FinancialWalletSection customerName={currentCustomer.fullName || currentCustomer.email} />
+          
+          <div className="dashboardWidgetsRow">
+            <PreviousBookingsWidget />
+            <DigitalConciergeSection />
           </div>
+
           <CustomerBookingsList bookings={customerBookings} currentCustomerId={currentCustomer.id} />
           
-        </section>
+        </div>
       </main>
     </div>
   )

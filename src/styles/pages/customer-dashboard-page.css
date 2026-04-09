@@ -14,33 +14,130 @@
   overflow-x: hidden;
 }
 
-.dashboardContent {
-  max-width: 1000px;
-  margin: 0 auto;
-  width: 100%;
+.dashboardIntro {
+  margin-bottom: 2.5rem;
   padding: 0 1rem;
-  box-sizing: border-box;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.dashboardHeader {
-  margin-bottom: 2rem;
-  border-bottom: 2px solid #e0e0e0;
-  padding-bottom: 1.5rem;
-  padding-top: 2rem;
-  width: 100%;
-}
-
-.dashboardHeader h1 {
-  font-size: 1.75rem;
-  color: #333;
-  margin: 0 0 0.5rem 0;
-  word-wrap: break-word;
-}
-
-.dashboardHeader p {
+.dashboardKicker {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
   color: #666;
-  margin: 0;
-  font-size: 0.95rem;
+  margin: 0 0 0.5rem 0;
+  letter-spacing: 0.05em;
+}
+
+.dashboardTitle {
+  font-size: 2.2rem;
+  color: #222;
+  margin: 0 0 1rem 0;
+  font-weight: 700;
+}
+
+.dashboardCopy {
+  font-size: 1.1rem;
+  color: #555;
+  margin: 0 0 1.5rem 0;
+  max-width: 600px;
+}
+
+.createNewBookingBtn {
+  display: inline-block;
+  background: #222;
+  color: #fff;
+  padding: 0.85rem 1.75rem;
+  border-radius: 6px;
+  border: none;
+  font-size: 1.05rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.createNewBookingBtn:hover {
+  background: #000;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.dashboardContentStack {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.sectionTitle {
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 1.5rem;
+}
+
+/* Next Stay Section styling */
+.nextStaySection {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  border: 1px solid #ebebeb;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+}
+
+.nextStayGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.dashboardWidgetsRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+/* Placeholders */
+.placeholderDiv {
+  background: #fafafa;
+  border: 2px dashed #d9d9d9;
+  border-radius: 8px;
+  padding: 2rem 1.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #555;
+  min-height: 120px;
+}
+
+.fullWidthPlaceholder {
+  grid-column: 1 / -1;
+  min-height: 150px;
+}
+
+.placeholderLabel {
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.03em;
+  color: #777;
+}
+
+.dynamicData {
+  color: #222;
+  font-size: 1.15rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .bookingsList {
@@ -213,13 +310,27 @@
   cursor: not-allowed;
 }
 
+@media (max-width: 1024px) {
+  .nextStayGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media (max-width: 768px) {
-  .dashboardContent {
+  .dashboardIntro {
     padding: 0 0.5rem;
   }
-
-  .dashboardHeader h1 {
-    font-size: 1.5rem;
+  
+  .dashboardTitle {
+    font-size: 1.8rem;
+  }
+  
+  .nextStayGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .dashboardWidgetsRow {
+    grid-template-columns: 1fr;
   }
 
   .bookingsContainer {
