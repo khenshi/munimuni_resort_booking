@@ -55,19 +55,19 @@ export default function CustomerDashboardPage() {
   }
 
   return (
-    <div className="customerDashboardPage">
+    <div className="customerDashboard">
       <LoginPageHeader />
       <FinancialWalletSection customerName={currentCustomer.fullName || currentCustomer.email} />
       <PreviousBookingsWidget />
       <DigitalConciergeSection />
-      <main className="customerDashboardMain">
-        <section className="customerDashboardShell" aria-label="Customer dashboard overview">
-          <div className="customerDashboardIntro">
-            <p className="customerDashboardKicker">Customer Dashboard</p>
-            <h1 className="customerDashboardTitle">
+      <main className="dashboardMain">
+        <section className="dashboardShell" aria-label="Customer dashboard overview">
+          <div className="dashboardIntro">
+            <p className="dashboardKicker">Customer Dashboard</p>
+            <h1 className="dashboardTitle">
               Welcome back, {currentCustomer.fullName || currentCustomer.email}.
             </h1>
-            <p className="customerDashboardCopy">
+            <p className="dashboardCopy">
               Manage balances, review recent receipts, and keep your stay history in one place.
             </p>
           </div>
