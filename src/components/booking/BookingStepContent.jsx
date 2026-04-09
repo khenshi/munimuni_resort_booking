@@ -7,6 +7,8 @@ export default function BookingStepContent({
   addOns,
   selectedAddOnLabels,
   availabilityMessage,
+  disabled = false,
+  restrictionMessage = '',
 }) {
   const formatCurrency = (value) => `PHP ${value.toLocaleString('en-US')}`
 
@@ -30,6 +32,7 @@ export default function BookingStepContent({
             value={formData.checkInDate}
             onChange={(e) => onChange('checkInDate', e.target.value)}
             required
+            disabled={disabled}
           />
         </div>
 
@@ -40,10 +43,12 @@ export default function BookingStepContent({
             type="date"
             value={formData.checkOutDate}
             onChange={(e) => onChange('checkOutDate', e.target.value)}
+            disabled={disabled}
           />
         </div>
 
         {availabilityMessage ? <p className="bookingInlineWarning">{availabilityMessage}</p> : null}
+        {restrictionMessage ? <p className="bookingInlineWarning">{restrictionMessage}</p> : null}
 
         <div className="bookingField">
           <label htmlFor="guests">Number of Guests</label>
@@ -55,6 +60,7 @@ export default function BookingStepContent({
             onChange={(e) => onChange('guests', e.target.value)}
             placeholder="Enter guest count"
             required
+            disabled={disabled}
           />
         </div>
 
@@ -66,6 +72,7 @@ export default function BookingStepContent({
             value={formData.specialRequest}
             onChange={(e) => onChange('specialRequest', e.target.value)}
             placeholder="Any setup requests, celebration notes, or reminders"
+            disabled={disabled}
           />
         </div>
       </div>
@@ -83,6 +90,7 @@ export default function BookingStepContent({
             value={formData.fullName}
             onChange={(e) => onChange('fullName', e.target.value)}
             required
+            disabled={disabled}
           />
         </div>
 
@@ -94,6 +102,7 @@ export default function BookingStepContent({
             value={formData.phone}
             onChange={(e) => onChange('phone', e.target.value)}
             required
+            disabled={disabled}
           />
         </div>
 
@@ -105,6 +114,7 @@ export default function BookingStepContent({
             value={formData.email}
             onChange={(e) => onChange('email', e.target.value)}
             required
+            disabled={disabled}
           />
         </div>
 
@@ -115,6 +125,7 @@ export default function BookingStepContent({
             type="text"
             value={formData.address}
             onChange={(e) => onChange('address', e.target.value)}
+            disabled={disabled}
           />
         </div>
       </div>
@@ -128,7 +139,12 @@ export default function BookingStepContent({
           const checked = formData.selectedAddOns.includes(item.id)
           return (
             <label key={item.id} className={`bookingAddOn ${checked ? 'isChecked' : ''}`}>
-              <input type="checkbox" checked={checked} onChange={() => toggleAddOn(item.id)} />
+              <input
+                type="checkbox"
+                checked={checked}
+                onChange={() => toggleAddOn(item.id)}
+                disabled={disabled}
+              />
               <span>
                 <strong>{item.title}</strong>
                 <small>{item.priceLabel}</small>
@@ -235,6 +251,7 @@ export default function BookingStepContent({
           type="checkbox"
           checked={formData.termsAccepted}
           onChange={(e) => onChange('termsAccepted', e.target.checked)}
+          disabled={disabled}
         />
         <span>I agree to the booking and cancellation policy.</span>
       </label>

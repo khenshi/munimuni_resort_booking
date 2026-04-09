@@ -5,10 +5,14 @@ import FinancialWalletSection from '../components/dashboard/sections/FinancialWa
 import { AUTH_CHANGED_EVENT, readCurrentCustomer } from '../components/login/auth-storage'
 import PreviousBookingsWidget from '../components/dashboard/PreviousBookingsWidget'
 import DigitalConciergeSection from '../components/dashboard/DigitalConciergeSection'
+import CustomerBookingsList from '../components/login/CustomerBookingsList'
+import { getCustomerBookingList, BOOKINGS_CHANGED_EVENT } from '../components/login/bookings-storage'
+import '../styles/pages/customer-dashboard-page.css'
 
 export default function CustomerDashboardPage() {
   const navigate = useNavigate()
   const [currentCustomer, setCurrentCustomer] = useState(() => readCurrentCustomer())
+  const [customerBookings, setCustomerBookings] = useState([])
 
   useEffect(() => {
     const syncCurrentCustomer = () => {
@@ -17,17 +21,34 @@ export default function CustomerDashboardPage() {
 
       if (!nextCustomer) {
         navigate('/customer/login', { replace: true })
+      } else {
+        const bookings = getCustomerBookingList(nextCustomer.id)
+        setCustomerBookings(bookings)
       }
+    }
+
+    const refreshBookings = () => {
+      if (currentCustomer?.id) {
+        const bookings = getCustomerBookingList(currentCustomer.id)
+        setCustomerBookings(bookings)
+      }
+    }
+
+    if (currentCustomer?.id) {
+      const bookings = getCustomerBookingList(currentCustomer.id)
+      setCustomerBookings(bookings)
     }
 
     window.addEventListener('storage', syncCurrentCustomer)
     window.addEventListener(AUTH_CHANGED_EVENT, syncCurrentCustomer)
+    window.addEventListener(BOOKINGS_CHANGED_EVENT, refreshBookings)
 
     return () => {
       window.removeEventListener('storage', syncCurrentCustomer)
       window.removeEventListener(AUTH_CHANGED_EVENT, syncCurrentCustomer)
+      window.removeEventListener(BOOKINGS_CHANGED_EVENT, refreshBookings)
     }
-  }, [navigate])
+  }, [navigate, currentCustomer?.id])
 
   if (!currentCustomer) {
     return <Navigate to="/customer/login" replace />

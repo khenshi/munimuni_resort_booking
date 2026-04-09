@@ -44,6 +44,7 @@ export default function CustomerLoginPage() {
       }
 
       const nextRecord = {
+        id: `cust-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`,
         fullName: fullName.trim(),
         email: normalizedEmail,
         password,
@@ -68,7 +69,19 @@ export default function CustomerLoginPage() {
       return
     }
 
+    // Generate ID if account doesn't have one (migration for old accounts)
+    const accountId = matchedAccount.id || `cust-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`
+    
+    // Update account with ID if it didn't have one
+    if (!matchedAccount.id) {
+      const updatedAccounts = accounts.map((acc) =>
+        acc.email === normalizedEmail ? { ...acc, id: accountId } : acc,
+      )
+      writeCustomerAccounts(updatedAccounts)
+    }
+
     writeCurrentCustomer({
+      id: accountId,
       fullName: matchedAccount.fullName,
       email: matchedAccount.email,
       signedInAt: new Date().toISOString(),

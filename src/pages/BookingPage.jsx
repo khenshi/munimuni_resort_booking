@@ -6,6 +6,8 @@ import BookingStepContent from '../components/booking/BookingStepContent'
 import BookingStepsIndicator from '../components/booking/BookingStepsIndicator'
 import { resolveSelectedOffer } from '../components/booking/booking-utils'
 import { isItemAvailableForDate } from '../components/packages'
+import { readCurrentCustomer } from '../components/login/auth-storage'
+import { addCustomerBooking, updateCustomerBooking } from '../components/login/bookings-storage'
 import { addOns, cottages, dayTourOffers, overnightOffers } from '../data/packages'
 import '../styles/pages/booking-page.css'
 
@@ -17,14 +19,35 @@ function generateBookingReference(selectedOffer) {
   return `MMR-${offerTypePrefix}-${dateCode}-${randomCode}`
 }
 
+function getDaysUntilISODate(isoDate) {
+  if (!isoDate) return Infinity
+  const [year, month, day] = isoDate.split('-').map(Number)
+  if (!year || !month || !day) return Infinity
+
+  const checkInUtc = Date.UTC(year, month - 1, day)
+  const today = new Date()
+  const todayUtc = Date.UTC(today.getFullYear(), today.getMonth(), today.getDate())
+
+  return Math.floor((checkInUtc - todayUtc) / (1000 * 60 * 60 * 24))
+}
+
 export default function BookingPage() {
   const location = useLocation()
   const query = new URLSearchParams(location.search)
   const offerType = query.get('offerType') ?? ''
   const offerId = query.get('offerId') ?? ''
-  const prefilledCheckInDate = location.state?.prefillStayDates?.checkInDate ?? query.get('checkInDate') ?? ''
-  const prefilledCheckOutDate = location.state?.prefillStayDates?.checkOutDate ?? query.get('checkOutDate') ?? ''
-  const prefilledGuests = location.state?.prefillGuestCount ?? query.get('guests') ?? ''
+  const isEditMode = location.state?.mode === 'edit' || query.get('mode') === 'edit'
+  const bookingData = location.state?.booking ?? null
+  const prefilledCheckInDate = bookingData?.checkInDate ?? location.state?.prefillStayDates?.checkInDate ?? query.get('checkInDate') ?? ''
+  const prefilledCheckOutDate = bookingData?.checkOutDate ?? location.state?.prefillStayDates?.checkOutDate ?? query.get('checkOutDate') ?? ''
+  const prefilledGuests = bookingData?.guests ?? location.state?.prefillGuestCount ?? query.get('guests') ?? ''
+  const prefilledFullName = bookingData?.fullName ?? ''
+  const prefilledPhone = bookingData?.phone ?? ''
+  const prefilledEmail = bookingData?.email ?? ''
+  const prefilledAddress = bookingData?.address ?? ''
+  const prefilledSpecialRequest = bookingData?.specialRequest ?? ''
+  const prefilledSelectedAddOns = bookingData?.selectedAddOns ?? []
+  const prefilledTermsAccepted = bookingData?.termsAccepted ?? false
 
   const selectedOffer = useMemo(() => {
     const fromState = location.state?.selectedOffer
@@ -62,13 +85,13 @@ export default function BookingPage() {
     checkInDate: prefilledCheckInDate,
     checkOutDate: prefilledCheckOutDate,
     guests: prefilledGuests,
-    specialRequest: '',
-    fullName: '',
-    phone: '',
-    email: '',
-    address: '',
-    selectedAddOns: [],
-    termsAccepted: false,
+    specialRequest: prefilledSpecialRequest,
+    fullName: prefilledFullName,
+    phone: prefilledPhone,
+    email: prefilledEmail,
+    address: prefilledAddress,
+    selectedAddOns: prefilledSelectedAddOns,
+    termsAccepted: prefilledTermsAccepted,
   })
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [bookingReference, setBookingReference] = useState('')
@@ -90,6 +113,8 @@ export default function BookingPage() {
   }
 
   const canProceed = () => {
+    if (isFormDisabled) return false
+
     if (step === 1) {
       const guestCount = Number.parseInt(formData.guests, 10)
       const hasBasicDetails = Boolean(formData.checkInDate) && Number.isFinite(guestCount) && guestCount > 0
@@ -113,6 +138,14 @@ export default function BookingPage() {
     formData.checkInDate && selectedAvailabilityItem && !isItemAvailableForDate(selectedAvailabilityItem, formData.checkInDate),
   )
 
+  const daysUntilCheckIn = getDaysUntilISODate(formData.checkInDate)
+  const editAllowed = !isEditMode || daysUntilCheckIn > 7
+  const editRestrictionMessage = isEditMode && formData.checkInDate && !editAllowed
+    ? `Booking edits are only allowed more than 7 days before check-in. Only ${Math.max(daysUntilCheckIn, 0)} day(s) remain until ${formData.checkInDate}.`
+    : ''
+  const isFormDisabled = isEditMode && !editAllowed
+  const pageHeading = isEditMode ? 'Edit Your Reservation' : 'Book Your Stay'
+
   const selectedAddOnLabels = formData.selectedAddOns
     .map((id) => addOns.find((item) => item.id === id)?.title)
     .filter(Boolean)
@@ -121,7 +154,41 @@ export default function BookingPage() {
     e.preventDefault()
     if (!canProceed()) return
 
-    setBookingReference(generateBookingReference(selectedOffer))
+    const reference = generateBookingReference(selectedOffer)
+    setBookingReference(reference)
+
+    // Save booking to storage
+    const currentCustomer = readCurrentCustomer()
+    
+    if (currentCustomer?.id) {
+      const bookingData = {
+        bookingReference: reference,
+        selectedOffer: {
+          title: selectedOffer?.title,
+          price: selectedOffer?.price,
+          offerType: selectedOffer?.offerType,
+          offerId: selectedOffer?.offerId,
+          priceInfo: selectedOffer?.priceInfo,
+        },
+        checkInDate: formData.checkInDate,
+        checkOutDate: formData.checkOutDate,
+        guests: formData.guests,
+        specialRequest: formData.specialRequest,
+        fullName: formData.fullName,
+        phone: formData.phone,
+        email: formData.email,
+        address: formData.address,
+        selectedAddOns: formData.selectedAddOns,
+        termsAccepted: formData.termsAccepted,
+      }
+
+      if (isEditMode && bookingData.bookingReference) {
+        updateCustomerBooking(currentCustomer.id, bookingData.bookingReference, bookingData)
+      } else {
+        addCustomerBooking(currentCustomer.id, bookingData)
+      }
+    }
+
     setIsSubmitted(true)
   }
 
@@ -131,7 +198,7 @@ export default function BookingPage() {
       <main className="bookingMain">
         <section className="bookingShell" aria-labelledby="booking-heading">
           <p className="bookingKicker">Reservation</p>
-          <h1 id="booking-heading">Book Your Stay</h1>
+          <h1 id="booking-heading">{pageHeading}</h1>
 
           {!selectedOffer ? (
             <BookingStateNotice
@@ -156,8 +223,8 @@ export default function BookingPage() {
             />
           ) : isSubmitted ? (
             <BookingStateNotice
-              title="Booking request submitted"
-              message={`Thank you, ${formData.fullName || 'guest'}. Your request for ${selectedOffer.title} is in our queue.
+              title={isEditMode ? 'Booking update submitted' : 'Booking request submitted'}
+              message={isEditMode ? `Thank you, ${formData.fullName || 'guest'}. Your update request for ${selectedOffer.title} is in our queue. Reference: ${bookingReference}. Our reservations team will contact you within 24 hours via ${formData.email || 'your contact details'} to confirm the final details.` : `Thank you, ${formData.fullName || 'guest'}. Your request for ${selectedOffer.title} is in our queue.
 Reference: ${bookingReference}
 Our reservations team will contact you within 24 hours via ${formData.email || 'your contact details'} to confirm availability and final payment details.`}
               actionTo="/packages"
@@ -168,6 +235,7 @@ Our reservations team will contact you within 24 hours via ${formData.email || '
               <BookingStepsIndicator step={step} />
 
               <div className="bookingPanel">
+                {editRestrictionMessage ? <p className="bookingInlineWarning">{editRestrictionMessage}</p> : null}
                 <BookingStepContent
                   step={step}
                   selectedOffer={selectedOffer}
@@ -179,6 +247,8 @@ Our reservations team will contact you within 24 hours via ${formData.email || '
                   availabilityMessage={
                     activeDateUnavailable ? `This offer is unavailable on ${formData.checkInDate}. Pick another check-in date to continue.` : ''
                   }
+                  disabled={isFormDisabled}
+                  restrictionMessage={editRestrictionMessage}
                 />
               </div>
 
@@ -186,7 +256,7 @@ Our reservations team will contact you within 24 hours via ${formData.email || '
                 <button
                   type="button"
                   className="bookingActionBtn"
-                  disabled={step === 1}
+                  disabled={step === 1 || isFormDisabled}
                   onClick={() => setStep((s) => Math.max(1, s - 1))}
                 >
                   Previous
