@@ -5,6 +5,7 @@ import PackagesPage from './pages/PackagesPage'
 import PackageOfferDetailsPage from './pages/PackageOfferDetailsPage'
 import CustomerLoginPage from './pages/CustomerLoginPage'
 import CustomerDashboardPage from './pages/CustomerDashboardPage'
+import CustomerHistoryPage from './pages/CustomerHistoryPage'
 
 export default function App() {
   return (
@@ -13,6 +14,7 @@ export default function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/customer/login" element={<CustomerLoginPage />} />
         <Route path="/customer/dashboard" element={<CustomerDashboardPage />} />
+        <Route path="/customer/history" element={<CustomerHistoryPage />} />
         <Route path="/booking" element={<BookingPage />} />
         <Route path="/packages">
           <Route index element={<PackagesPage />} />

@@ -87,6 +87,14 @@ export default function LoginPageHeader() {
                   <>
                     <p className="loginProfileDropdownTitle">{currentCustomer.fullName || currentCustomer.email}</p>
                     <Link
+                      to="/customer/history"
+                      className="loginProfileDropdownLink"
+                      role="menuitem"
+                      onClick={() => setProfileMenuOpen(false)}
+                    >
+                      History and Receipts
+                    </Link>
+                    <Link
                       to="/customer/dashboard"
                       className="loginProfileDropdownLink"
                       role="menuitem"
