@@ -57,6 +57,7 @@ export default function CustomerDashboardPage() {
   return (
     <div className="customerDashboardPage">
       <LoginPageHeader />
+      <FinancialWalletSection customerName={currentCustomer.fullName || currentCustomer.email} />
       <PreviousBookingsWidget />
       <DigitalConciergeSection />
       <main className="customerDashboardMain">
@@ -70,8 +71,8 @@ export default function CustomerDashboardPage() {
               Manage balances, review recent receipts, and keep your stay history in one place.
             </p>
           </div>
-
-          <FinancialWalletSection customerName={currentCustomer.fullName || currentCustomer.email} />
+          <CustomerBookingsList bookings={customerBookings} currentCustomerId={currentCustomer.id} />
+          
         </section>
       </main>
     </div>
