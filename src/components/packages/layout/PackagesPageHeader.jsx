@@ -102,6 +102,14 @@ export default function PackagesPageHeader({ activeTab, onTabChange }) {
                   <>
                     <p className="packagesProfileDropdownTitle">{currentCustomer.fullName || currentCustomer.email}</p>
                     <Link
+                      to="/customer/history"
+                      className="packagesProfileDropdownLink"
+                      role="menuitem"
+                      onClick={() => setProfileMenuOpen(false)}
+                    >
+                      History and Receipts
+                    </Link>
+                    <Link
                       to="/customer/dashboard"
                       className="packagesProfileDropdownLink"
                       role="menuitem"
