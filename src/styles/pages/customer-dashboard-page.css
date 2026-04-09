@@ -3,6 +3,7 @@
   flex-direction: column;
   min-height: 100vh;
   background: #f9f9f9;
+  margin-top: 30px;
   width: 100%;
 }
 
@@ -81,7 +82,6 @@
   margin-bottom: 1.5rem;
 }
 
-/* Next Stay Section styling */
 .nextStaySection {
   background: white;
   border-radius: 12px;
@@ -92,7 +92,7 @@
 
 .nextStayGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 1fr;
   gap: 1.5rem;
 }
 
@@ -102,7 +102,6 @@
   gap: 2rem;
 }
 
-/* Placeholders */
 .placeholderDiv {
   background: #fafafa;
   border: 2px dashed #d9d9d9;

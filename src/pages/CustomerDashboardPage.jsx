@@ -8,6 +8,7 @@ import DigitalConciergeSection from '../components/dashboard/DigitalConciergeSec
 import CustomerBookingsList from '../components/login/CustomerBookingsList'
 import { getCustomerBookingList, BOOKINGS_CHANGED_EVENT } from '../components/login/bookings-storage'
 import '../styles/pages/customer-dashboard-page.css'
+import LandingFooter from '../components/landing/layout/LandingFooter'
 
 export default function CustomerDashboardPage() {
   const navigate = useNavigate()
@@ -85,13 +86,12 @@ export default function CustomerDashboardPage() {
 
         <div className="dashboardContentStack">
           
-          {/* Next Stay Section Grid */}
           <section className="nextStaySection">
-            <h2 className="sectionTitle">Next Stay</h2>
+            {/* undecided pa ko sa design -ken */}
             {nextStay ? (
               <div className="nextStayGrid">
-                {/* Countdown Timer Placeholder */}
-                <div className="placeholderDiv">
+                <CustomerBookingsList bookings={customerBookings} currentCustomerId={currentCustomer.id} />
+                {/* <div className="placeholderDiv">
                   <span className="placeholderLabel">Countdown Timer</span>
                   <div className="dynamicData">
                     <strong>{Math.max(daysUntilCheckIn, 0)} Days</strong> 
@@ -99,30 +99,14 @@ export default function CustomerDashboardPage() {
                   </div>
                 </div>
 
-                {/* Upcoming Booking Card Placeholder */}
                 <div className="placeholderDiv">
                   <span className="placeholderLabel">Upcoming Booking</span>
                   <div className="dynamicData">
                     <strong style={{ textAlign: 'center' }}>{nextStay.selectedOffer?.title || 'Booking'}</strong>
                     <span style={{ fontSize: '0.9rem', color: '#666', marginTop: '0.25rem' }}>{nextStay.checkInDate}</span>
                   </div>
-                </div>
-
-                {/* Quick Actions Bar Placeholder */}
-                <div className="placeholderDiv">
-                  <span className="placeholderLabel">Quick Actions</span>
-                  <div className="dynamicData" style={{ flexDirection: 'row', gap: '0.75rem', marginTop: '0.5rem' }}>
-                    <button 
-                      className="bookingEditBtn isEnabled"
-                      onClick={() => navigate('/booking', { state: { mode: 'edit', booking: nextStay, selectedOffer: nextStay.selectedOffer } })}
-                    >
-                      Edit 
-                    </button>
-                    <button className="bookingEditBtn isEnabled" style={{ background: '#555' }}>
-                      View Details
-                    </button>
-                  </div>
-                </div>
+                </div> */}
+                
               </div>
             ) : (
               <div className="placeholderDiv fullWidthPlaceholder">
@@ -139,12 +123,12 @@ export default function CustomerDashboardPage() {
           <div className="dashboardWidgetsRow">
             <PreviousBookingsWidget />
             <DigitalConciergeSection />
-          </div>
-
-          <CustomerBookingsList bookings={customerBookings} currentCustomerId={currentCustomer.id} />
+          </div>       
           
         </div>
+        
       </main>
+      <LandingFooter />
     </div>
   )
 }
