@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Navigate, useNavigate } from 'react-router-dom'
 import LoginPageHeader from '../components/login/layout/LoginPageHeader'
+import FinancialWalletSection from '../components/dashboard/sections/FinancialWalletSection'
 import { AUTH_CHANGED_EVENT, readCurrentCustomer } from '../components/login/auth-storage'
 import PreviousBookingsWidget from '../components/dashboard/PreviousBookingsWidget'
 import DigitalConciergeSection from '../components/dashboard/DigitalConciergeSection'
@@ -33,10 +34,25 @@ export default function CustomerDashboardPage() {
   }
 
   return (
-    <div>
+    <div className="customerDashboardPage">
       <LoginPageHeader />
       <PreviousBookingsWidget />
       <DigitalConciergeSection />
+      <main className="customerDashboardMain">
+        <section className="customerDashboardShell" aria-label="Customer dashboard overview">
+          <div className="customerDashboardIntro">
+            <p className="customerDashboardKicker">Customer Dashboard</p>
+            <h1 className="customerDashboardTitle">
+              Welcome back, {currentCustomer.fullName || currentCustomer.email}.
+            </h1>
+            <p className="customerDashboardCopy">
+              Manage balances, review recent receipts, and keep your stay history in one place.
+            </p>
+          </div>
+
+          <FinancialWalletSection customerName={currentCustomer.fullName || currentCustomer.email} />
+        </section>
+      </main>
     </div>
   )
 }
