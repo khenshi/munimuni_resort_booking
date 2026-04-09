@@ -1,0 +1,293 @@
+.customerDashboardPage {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 10% 14%, rgba(var(--color-cyan-rgb), 0.12), transparent 34%),
+    radial-gradient(circle at 88% 86%, rgba(var(--color-cyan-rgb), 0.12), transparent 36%),
+    linear-gradient(165deg, #fefcf7 0%, #f7f2e7 60%, #f2ebdd 100%);
+}
+
+.customerDashboardMain {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 118px 20px 34px;
+}
+
+.customerDashboardShell {
+  display: grid;
+  gap: 1.35rem;
+}
+
+.customerDashboardIntro {
+  display: grid;
+  gap: 0.35rem;
+}
+
+.customerDashboardKicker {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: var(--color-cyan);
+}
+
+.customerDashboardTitle {
+  margin: 0;
+  font-family: var(--heading);
+  font-size: clamp(1.85rem, 4vw, 2.7rem);
+  line-height: 1.1;
+}
+
+.customerDashboardCopy {
+  margin: 0;
+  color: var(--color-ink-soft);
+}
+
+.dashboardWalletSection {
+  display: grid;
+  gap: 1.05rem;
+}
+
+.dashboardWalletHeader {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.85rem 1.4rem;
+}
+
+.dashboardSectionEyebrow {
+  margin: 0 0 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--color-cyan);
+}
+
+.dashboardSectionTitle {
+  margin: 0;
+  font-family: var(--heading);
+  font-size: clamp(1.45rem, 2.8vw, 2.1rem);
+  line-height: 1.12;
+}
+
+.dashboardSectionCopy {
+  max-width: 34rem;
+  margin: 0;
+  color: var(--color-ink-soft);
+}
+
+.dashboardWalletGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.dashboardWalletPanel {
+  border: 1px solid rgba(22, 32, 51, 0.12);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: 0 12px 30px rgba(22, 32, 51, 0.08);
+  padding: 1.15rem;
+}
+
+.dashboardWalletPanelHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.8rem;
+}
+
+.dashboardPanelLabel {
+  margin: 0 0 0.2rem;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-ink-soft);
+}
+
+.dashboardPanelTitle {
+  margin: 0;
+  font-size: 1.25rem;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.dashboardPanelSubcopy {
+  margin: 0;
+  color: var(--color-ink-soft);
+  font-size: 0.9rem;
+  text-align: right;
+}
+
+.dashboardBalancePill {
+  border-radius: 999px;
+  padding: 0.38rem 0.74rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.dashboardBalancePill.isDue {
+  background: rgba(199, 51, 51, 0.14);
+  color: #8e1f1f;
+}
+
+.dashboardBalancePill.isClear {
+  background: rgba(46, 132, 78, 0.13);
+  color: #2e844e;
+}
+
+.dashboardBalanceState {
+  display: grid;
+  gap: 0.9rem;
+  align-items: start;
+}
+
+.dashboardBalanceAmount {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 2.85rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.dashboardBalanceNote {
+  margin: 0.35rem 0 0;
+  color: var(--color-ink-soft);
+}
+
+.dashboardBalanceClearState {
+  padding: 0.3rem 0;
+}
+
+.dashboardPrimaryAction,
+.dashboardTextButton {
+  border: 0;
+  border-radius: 999px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.dashboardPrimaryAction {
+  width: fit-content;
+  padding: 0.78rem 1.15rem;
+  background: var(--color-ink);
+  color: #fff;
+  box-shadow: 0 10px 22px rgba(22, 32, 51, 0.15);
+}
+
+.dashboardPrimaryAction:hover {
+  background: #1d2940;
+}
+
+.dashboardReceiptsList {
+  list-style: none;
+  display: grid;
+  gap: 0.75rem;
+  padding: 0;
+  margin: 0;
+}
+
+.dashboardReceiptItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 0.9rem 1rem;
+  border-radius: 14px;
+  background: rgba(248, 246, 237, 0.85);
+  border: 1px solid rgba(22, 32, 51, 0.08);
+}
+
+.dashboardReceiptCopy {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.dashboardReceiptMetaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.dashboardReceiptInvoice {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--color-cyan);
+}
+
+.dashboardReceiptDate,
+.dashboardReceiptPaymentMethod {
+  color: var(--color-ink-soft);
+  font-size: 0.92rem;
+}
+
+.dashboardReceiptStay {
+  margin: 0;
+  font-weight: 700;
+  font-size: 1.03rem;
+}
+
+.dashboardReceiptActions {
+  display: grid;
+  gap: 0.45rem;
+  justify-items: end;
+  min-width: 7.8rem;
+}
+
+.dashboardReceiptAmount {
+  font-size: 1.02rem;
+}
+
+.dashboardTextButton {
+  padding: 0;
+  background: transparent;
+  color: var(--color-ink);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.dashboardTextButton:hover {
+  color: #121b2c;
+}
+
+@media (max-width: 980px) {
+  .dashboardWalletGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboardPanelSubcopy {
+    text-align: left;
+  }
+}
+
+@media (max-width: 640px) {
+  .customerDashboardMain {
+    padding: 104px 14px 24px;
+  }
+
+  .dashboardWalletPanel {
+    padding: 0.95rem;
+  }
+
+  .dashboardWalletPanelHeader {
+    flex-wrap: wrap;
+  }
+
+  .dashboardReceiptItem {
+    flex-direction: column;
+    gap: 0.7rem;
+  }
+
+  .dashboardReceiptActions {
+    justify-items: start;
+  }
+}
