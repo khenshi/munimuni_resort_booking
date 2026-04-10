@@ -1,7 +1,9 @@
 import { useMemo, useState } from 'react'
-import { Navigate } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 import LoginPageHeader from '../components/login/layout/LoginPageHeader'
 import { readCurrentCustomer } from '../components/login/auth-storage'
+import { previousBookings } from '../data/previous-bookings'
+import { resortReceipts } from '../data/receipts'
 import '../styles/pages/customer-history-page.css'
 
 const HISTORY_TABS = [
@@ -34,6 +36,46 @@ export default function CustomerHistoryPage() {
     () => ({ activeTab, searchQuery, selectedYear, selectedCategory, sortOrder }),
     [activeTab, searchQuery, selectedYear, selectedCategory, sortOrder]
   )
+
+  const bookingRecords = useMemo(() => {
+    return previousBookings
+      .filter((booking) => {
+        const normalizedQuery = searchQuery.trim().toLowerCase()
+        const matchesQuery = !normalizedQuery
+          || booking.propertyName.toLowerCase().includes(normalizedQuery)
+          || booking.bookingReference.toLowerCase().includes(normalizedQuery)
+
+        const bookingYear = booking.checkInDate.slice(0, 4)
+        const matchesYear = selectedYear === 'All' || bookingYear === selectedYear
+
+        return matchesQuery && matchesYear
+      })
+      .sort((left, right) => {
+        const leftDate = new Date(left.checkInDate)
+        const rightDate = new Date(right.checkInDate)
+        return sortOrder === 'newest' ? rightDate - leftDate : leftDate - rightDate
+      })
+  }, [searchQuery, selectedYear, sortOrder])
+
+  const receiptRecords = useMemo(() => {
+    return resortReceipts
+      .filter((receipt) => {
+        const normalizedQuery = searchQuery.trim().toLowerCase()
+        const matchesQuery = !normalizedQuery
+          || receipt.stayLabel.toLowerCase().includes(normalizedQuery)
+          || receipt.invoiceNumber.toLowerCase().includes(normalizedQuery)
+
+        const receiptYear = receipt.issuedDate.slice(0, 4)
+        const matchesYear = selectedYear === 'All' || receiptYear === selectedYear
+
+        return matchesQuery && matchesYear
+      })
+      .sort((left, right) => {
+        const leftDate = new Date(left.issuedDate)
+        const rightDate = new Date(right.issuedDate)
+        return sortOrder === 'newest' ? rightDate - leftDate : leftDate - rightDate
+      })
+  }, [searchQuery, selectedYear, sortOrder])
 
   if (!currentCustomer) {
     return <Navigate to="/customer/login" replace />
@@ -141,14 +183,51 @@ export default function CustomerHistoryPage() {
             </div>
 
             <div className="customerHistoryPlaceholder">
-              <p className="customerHistoryPlaceholderTitle">History renderer placeholder</p>
+              <p className="customerHistoryPlaceholderTitle">
+                {activeTab === 'bookings' ? 'Previous stay records' : 'Billing & receipt records'}
+              </p>
               <p className="customerHistoryPlaceholderText">
-                This is where member 5 will work
+                Showing {activeTab === 'bookings' ? bookingRecords.length : receiptRecords.length} matching record(s).
               </p>
-              <p className="customerHistoryPlaceholderText">  
-                Member 5 can consume these values to render the list:
-              </p>
-              <pre>{JSON.stringify(toolbarState, null, 2)}</pre>
+              {activeTab === 'bookings' ? (
+                <div className="customerHistoryResults">
+                  {bookingRecords.map((booking) => (
+                    <article key={booking.id} className="customerHistoryResultCard">
+                      <p className="customerHistoryResultTitle">{booking.propertyName}</p>
+                      <p className="customerHistoryResultMeta">{booking.bookingReference}</p>
+                      <p className="customerHistoryResultMeta">
+                        {booking.checkInDate} to {booking.checkOutDate}
+                      </p>
+                      <Link
+                        className="customerHistoryResultLink"
+                        to={`/customer/bookings/${encodeURIComponent(booking.id)}`}
+                      >
+                        View Booking Detail
+                      </Link>
+                    </article>
+                  ))}
+                </div>
+              ) : (
+                <div className="customerHistoryResults">
+                  {receiptRecords.map((receipt) => (
+                    <article key={receipt.id} className="customerHistoryResultCard">
+                      <p className="customerHistoryResultTitle">{receipt.invoiceNumber}</p>
+                      <p className="customerHistoryResultMeta">{receipt.stayLabel}</p>
+                      <p className="customerHistoryResultMeta">Issued: {receipt.issuedDate}</p>
+                      <Link
+                        className="customerHistoryResultLink"
+                        to={`/customer/receipts/${encodeURIComponent(receipt.id)}`}
+                      >
+                        View Receipt Detail
+                      </Link>
+                    </article>
+                  ))}
+                </div>
+              )}
+              <details>
+                <summary>Debug filter state</summary>
+                <pre>{JSON.stringify(toolbarState, null, 2)}</pre>
+              </details>
             </div>
           </div>
         </section>
