@@ -12,3 +12,5 @@
 
 2026-04-13 Improve History list item styling with status pills and row hover affordances for bookings and receipts.
 
+2026-04-13 Document History handoff requirements for Member 7 route patterns and URL parameter names.
+
