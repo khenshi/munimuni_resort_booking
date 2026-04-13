@@ -2,3 +2,5 @@
 
 2026-04-13 Add mock booking and receipt datasets to unblock History list mapping and filtering work.
 
+2026-04-13 Add History list row components for bookings and receipts with a route-agnostic View Details callback.
+
