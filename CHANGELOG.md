@@ -6,3 +6,5 @@
 
 2026-04-13 Add History list section components with loading and empty states for bookings and receipts tabs.
 
+2026-04-13 Wire History toolbar state into mock list mapping with search, year/category filters, and newest/oldest sorting.
+

@@ -150,25 +150,22 @@
   font-size: 0.98rem;
 }
 
-.customerHistoryPlaceholder {
-  padding: 1.5rem;
+.customerHistoryDebugPanel {
+  margin-top: 1.25rem;
+  padding: 1rem 1.25rem;
   border-radius: 18px;
   background: #f8fafc;
   border: 1px dashed #cbd5e1;
 }
 
-.customerHistoryPlaceholderTitle {
-  margin: 0 0 0.5rem;
+.customerHistoryDebugPanel summary {
+  cursor: pointer;
   color: #0f172a;
   font-weight: 700;
+  margin-bottom: 0.75rem;
 }
 
-.customerHistoryPlaceholderText {
-  margin: 0 0 1rem;
-  color: #475569;
-}
-
-.customerHistoryPlaceholder pre {
+.customerHistoryDebugPanel pre {
   margin: 0;
   padding: 1rem;
   border-radius: 14px;
@@ -176,4 +173,132 @@
   color: #0f172a;
   overflow: auto;
   font-size: 0.92rem;
+}
+
+.historyList {
+  display: block;
+}
+
+.historyListStack {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.historyBookingRow,
+.historyReceiptRow {
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  background: #ffffff;
+  padding: 1rem 1.25rem;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+}
+
+.historyRowMain {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.historyRowTitleGroup {
+  min-width: 0;
+}
+
+.historyRowTitle {
+  margin: 0 0 0.25rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.historyRowSubtle {
+  margin: 0;
+  color: #475569;
+  line-height: 1.4;
+}
+
+.historyRowMeta {
+  font-size: 0.95rem;
+}
+
+.historyRowAside {
+  display: grid;
+  justify-items: end;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.historyRowAmount {
+  margin: 0;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.historyRowAction {
+  border: 1px solid #0f172a;
+  border-radius: 999px;
+  padding: 0.6rem 0.95rem;
+  background: #0f172a;
+  color: #ffffff;
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.historyRowAction:hover {
+  background: #1f2937;
+}
+
+.historyRowAction:active {
+  transform: translateY(1px);
+}
+
+.historyEmptyState {
+  padding: 1.5rem;
+  border-radius: 18px;
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+}
+
+.historyEmptyTitle {
+  margin: 0 0 0.35rem;
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.historyEmptyText {
+  margin: 0;
+  color: #475569;
+}
+
+.historyListSkeleton {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.historySkeletonRow {
+  height: 86px;
+  border-radius: 18px;
+  border: 1px solid #e5e7eb;
+  background: linear-gradient(90deg, #f1f5f9 0%, #e2e8f0 40%, #f1f5f9 80%);
+  background-size: 200% 100%;
+  animation: historySkeletonPulse 1.2s ease-in-out infinite;
+}
+
+@keyframes historySkeletonPulse {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: -200% 0%;
+  }
+}
+
+@media (max-width: 680px) {
+  .historyRowMain {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .historyRowAside {
+    justify-items: start;
+  }
 }
