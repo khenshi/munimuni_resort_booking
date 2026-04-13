@@ -10,3 +10,5 @@
 
 2026-04-13 Add route-agnostic View Details notice to confirm click wiring before Member 7 detail routes are available.
 
+2026-04-13 Improve History list item styling with status pills and row hover affordances for bookings and receipts.
+

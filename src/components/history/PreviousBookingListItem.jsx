@@ -10,6 +10,11 @@
  * @returns {import('react').JSX.Element}
  */
 export default function PreviousBookingListItem({ booking, onViewDetails }) {
+  const statusVariant = String(booking.status ?? '')
+    .trim()
+    .toLowerCase()
+  const statusClassName = statusVariant ? `historyStatusPill ${statusVariant.replace(/\s+/g, '-')}` : ''
+
   return (
     <article className="historyBookingRow" aria-label={`Booking ${booking.id}`}>
       <div className="historyRowMain">
@@ -18,7 +23,12 @@ export default function PreviousBookingListItem({ booking, onViewDetails }) {
           <p className="historyRowSubtle">
             <span className="historyRowMeta">{booking.dateRange}</span>
             {booking.guests ? <span className="historyRowMeta"> • {booking.guests}</span> : null}
-            {booking.status ? <span className="historyRowMeta"> • {booking.status}</span> : null}
+            {booking.status ? (
+              <>
+                <span className="historyRowMeta"> • </span>
+                <span className={statusClassName}>{booking.status}</span>
+              </>
+            ) : null}
           </p>
         </div>
 

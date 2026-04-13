@@ -10,6 +10,11 @@
  * @returns {import('react').JSX.Element}
  */
 export default function BillingReceiptLedgerItem({ receipt, onViewDetails }) {
+  const statusVariant = String(receipt.status ?? '')
+    .trim()
+    .toLowerCase()
+  const statusClassName = statusVariant ? `historyStatusPill ${statusVariant.replace(/\s+/g, '-')}` : ''
+
   return (
     <article className="historyReceiptRow" aria-label={`Receipt ${receipt.id}`}>
       <div className="historyRowMain">
@@ -17,7 +22,12 @@ export default function BillingReceiptLedgerItem({ receipt, onViewDetails }) {
           <p className="historyRowTitle">{receipt.label}</p>
           <p className="historyRowSubtle">
             <span className="historyRowMeta">{receipt.date}</span>
-            {receipt.status ? <span className="historyRowMeta"> • {receipt.status}</span> : null}
+            {receipt.status ? (
+              <>
+                <span className="historyRowMeta"> • </span>
+                <span className={statusClassName}>{receipt.status}</span>
+              </>
+            ) : null}
             <span className="historyRowMeta"> • {receipt.id}</span>
           </p>
         </div>
