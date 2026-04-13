@@ -92,6 +92,7 @@ export default function CustomerHistoryPage() {
   const [selectedYear, setSelectedYear] = useState('All')
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [sortOrder, setSortOrder] = useState('newest')
+  const [viewDetailsNotice, setViewDetailsNotice] = useState(null)
 
   const normalizedSearchQuery = useMemo(() => normalizeSearchQuery(searchQuery), [searchQuery])
 
@@ -141,6 +142,9 @@ export default function CustomerHistoryPage() {
   const handleViewDetails = (record) => {
     // Route wiring will be added once Member 7 pages are finalized.
     console.log('History view details', record)
+    const recordType = activeTab === 'bookings' ? 'booking' : 'receipt'
+    const recordId = record?.id ? String(record.id) : '(missing id)'
+    setViewDetailsNotice({ recordType, recordId })
   }
 
   if (!currentCustomer) {
@@ -249,6 +253,22 @@ export default function CustomerHistoryPage() {
             </div>
 
             <div className="customerHistoryListRegion">
+              {viewDetailsNotice ? (
+                <div className="historyNotice" role="status">
+                  <p className="historyNoticeText">
+                    View Details clicked for {viewDetailsNotice.recordType}{' '}
+                    <strong>{viewDetailsNotice.recordId}</strong>. Routing will be added once Member 7 pages are ready.
+                  </p>
+                  <button
+                    type="button"
+                    className="historyNoticeDismiss"
+                    onClick={() => setViewDetailsNotice(null)}
+                    aria-label="Dismiss view details notice"
+                  >
+                    Dismiss
+                  </button>
+                </div>
+              ) : null}
               {activeTab === 'bookings' ? (
                 <PreviousBookingsList records={visibleBookings} onViewDetails={handleViewDetails} />
               ) : (

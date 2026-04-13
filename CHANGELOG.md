@@ -8,3 +8,5 @@
 
 2026-04-13 Wire History toolbar state into mock list mapping with search, year/category filters, and newest/oldest sorting.
 
+2026-04-13 Add route-agnostic View Details notice to confirm click wiring before Member 7 detail routes are available.
+
