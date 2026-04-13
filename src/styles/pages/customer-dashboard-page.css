@@ -9,25 +9,158 @@
 
 .dashboardMain {
   flex: 1;
-  padding: 80px 1rem 2rem 1rem; 
+  padding: 60px 1rem 3rem 1rem; 
   width: 100%;
   box-sizing: border-box;
   overflow-x: hidden;
 }
 
+.dashboardLayoutArea {
+  display: flex;
+  gap: 2.5rem;
+  max-width: 1280px;
+  margin: 0 auto;
+  align-items: flex-start;
+  padding: 0;
+}
+
+.dashboardSidebar {
+  width: 280px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.dashboardMainContent {
+  flex-grow: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Member Profile Card Styles */
+.memberProfileCard {
+  background: var(--color-ink, #162033);
+  color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+.memberProfileHeader {
+  display: flex;
+  justify-content: space-between;
+  padding: 1.25rem 1.25rem 0.5rem;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.memberIcon {
+  letter-spacing: 0.05em;
+  font-size: 0.85rem;
+  color: var(--color-cyan, #00d2d3);
+}
+
+.memberTier {
+  text-align: right;
+  font-size: 0.75rem;
+  opacity: 0.9;
+  line-height: 1.2;
+}
+
+.memberProfileBody {
+  padding: 0.5rem 1.25rem 1.5rem;
+}
+
+.memberPointLabel {
+  margin: 0 0 0.25rem;
+  font-size: 0.85rem;
+  opacity: 0.9;
+}
+
+.memberPointValue {
+  margin: 0 0 1rem;
+  font-size: 1.7rem;
+  font-weight: 700;
+}
+
+.memberSince, .memberId {
+  margin: 0 0 0.25rem;
+  font-size: 0.85rem;
+  opacity: 0.9;
+}
+
+.memberProfileFooter {
+  background: rgba(0,0,0,0.25);
+  padding: 0.75rem 1.25rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+/* Sidebar Nav Styles */
+.dashboardSidebarNav {
+  background: white;
+  border: 1px solid #ebebeb;
+  border-radius: 8px;
+  padding: 1.5rem 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+}
+
+.navSection {
+  margin-bottom: 1.5rem;
+}
+
+.navSection:last-child {
+  margin-bottom: 0;
+}
+
+.navSectionTitle {
+  font-weight: 700;
+  font-size: 0.8rem;
+  color: #333;
+  margin: 0 1.5rem 0.75rem;
+  letter-spacing: 0.05em;
+}
+
+.navList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.navItem {
+  padding: 0.75rem 1.5rem;
+  font-size: 0.95rem;
+  color: #555;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.navItem:hover {
+  background: #fdfdfd;
+  color: #000;
+}
+
+.navItem.isActive {
+  color: var(--color-cyan, #00d2d3);
+  font-weight: 600;
+  background: rgba(0, 210, 211, 0.05);
+  border-left: 3px solid var(--color-cyan, #00d2d3);
+}
+
 .dashboardIntro {
   margin-bottom: 2.5rem;
-  padding: 0 1rem;
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
+  padding: 0;
+  max-width: 100%;
 }
 
 .dashboardKicker {
   font-size: 0.85rem;
   font-weight: 700;
   text-transform: uppercase;
-  color: #666;
+  color: var(--color-cyan, #666);
   margin: 0 0 0.5rem 0;
   letter-spacing: 0.05em;
 }
@@ -48,7 +181,7 @@
 
 .createNewBookingBtn {
   display: inline-block;
-  background: #222;
+  background: var(--color-ink, #222);
   color: #fff;
   padding: 0.85rem 1.75rem;
   border-radius: 6px;
@@ -70,9 +203,8 @@
   display: flex;
   flex-direction: column;
   gap: 2.5rem;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 1rem;
+  max-width: 100%;
+  padding: 0;
 }
 
 .sectionTitle {
@@ -92,7 +224,14 @@
 
 .nextStayGrid {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.nextStaySidebar {
+  display: flex;
+  flex-direction: column;
   gap: 1.5rem;
 }
 
@@ -102,18 +241,29 @@
   gap: 2rem;
 }
 
-.placeholderDiv {
-  background: #fafafa;
-  border: 2px dashed #d9d9d9;
-  border-radius: 8px;
-  padding: 2rem 1.5rem;
-  text-align: center;
+.placeholderBox {
+  background: rgba(245, 245, 245, 0.8);
+  border: 1px dashed rgba(22, 32, 51, 0.2);
+  border-radius: 14px;
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   color: #555;
-  min-height: 120px;
+  text-align: center;
+}
+
+.placeholderBtn {
+  width: 100%;
+  padding: 0.75rem;
+  background: rgba(22, 32, 51, 0.05);
+  border: 1px dashed rgba(22, 32, 51, 0.2);
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: #555;
+  cursor: not-allowed;
+  font-weight: 600;
 }
 
 .fullWidthPlaceholder {
@@ -122,12 +272,12 @@
 }
 
 .placeholderLabel {
-  font-weight: 600;
+  font-weight: 700;
   margin-bottom: 0.75rem;
   text-transform: uppercase;
-  font-size: 0.85rem;
-  letter-spacing: 0.03em;
-  color: #777;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  color: var(--color-cyan, #777);
 }
 
 .dynamicData {
@@ -137,6 +287,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  width: 100%;
 }
 
 .bookingsList {
@@ -177,7 +328,7 @@
 
 .bookingsContainer {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 1.5rem;
 }
 
@@ -312,6 +463,18 @@
 @media (max-width: 1024px) {
   .nextStayGrid {
     grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 992px) {
+  .dashboardLayoutArea {
+    flex-direction: column;
+  }
+  .dashboardSidebar {
+    width: 100%;
+  }
+  .dashboardLayoutArea {
+    padding: 0 1rem;
   }
 }
 
