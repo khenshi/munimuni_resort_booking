@@ -4,3 +4,5 @@
 
 2026-04-13 Add History list row components for bookings and receipts with a route-agnostic View Details callback.
 
+2026-04-13 Add History list section components with loading and empty states for bookings and receipts tabs.
+
