@@ -13,7 +13,10 @@ import LandingFooter from '../components/landing/layout/LandingFooter'
 export default function CustomerDashboardPage() {
   const navigate = useNavigate()
   const [currentCustomer, setCurrentCustomer] = useState(() => readCurrentCustomer())
-  const [customerBookings, setCustomerBookings] = useState([])
+  const [customerBookings, setCustomerBookings] = useState(() => {
+    const initialCustomer = readCurrentCustomer()
+    return initialCustomer?.id ? getCustomerBookingList(initialCustomer.id) : []
+  })
 
   useEffect(() => {
     const syncCurrentCustomer = () => {
@@ -33,11 +36,6 @@ export default function CustomerDashboardPage() {
         const bookings = getCustomerBookingList(currentCustomer.id)
         setCustomerBookings(bookings)
       }
-    }
-
-    if (currentCustomer?.id) {
-      const bookings = getCustomerBookingList(currentCustomer.id)
-      setCustomerBookings(bookings)
     }
 
     window.addEventListener('storage', syncCurrentCustomer)
@@ -60,11 +58,6 @@ export default function CustomerDashboardPage() {
     .sort((a, b) => new Date(a.checkInDate) - new Date(b.checkInDate));
 
   const nextStay = upcomingBookings.length > 0 ? upcomingBookings[0] : null;
-
-  let daysUntilCheckIn = null;
-  if (nextStay?.checkInDate) {
-    daysUntilCheckIn = Math.ceil((new Date(nextStay.checkInDate) - new Date()) / (1000 * 60 * 60 * 24));
-  }
 
   return (
     <div className="customerDashboard">

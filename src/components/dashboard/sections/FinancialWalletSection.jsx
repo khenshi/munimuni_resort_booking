@@ -1,34 +1,6 @@
+import { Link } from 'react-router-dom'
+import { defaultWalletData } from '../../../data/receipts'
 import './FinancialWalletSection.css'
-
-const defaultWalletData = {
-  outstandingBalance: 1850,
-  recentReceipts: [
-    {
-      id: 'receipt-1029',
-      invoiceNumber: 'INV-1029',
-      stayLabel: 'Overnight Family Package',
-      dateLabel: 'Apr 08, 2026',
-      amountLabel: 'PHP 3,500',
-      paymentMethod: 'Cash on arrival',
-    },
-    {
-      id: 'receipt-1024',
-      invoiceNumber: 'INV-1024',
-      stayLabel: 'Cove Day Tour',
-      dateLabel: 'Mar 30, 2026',
-      amountLabel: 'PHP 2,000',
-      paymentMethod: 'GCash',
-    },
-    {
-      id: 'receipt-1018',
-      invoiceNumber: 'INV-1018',
-      stayLabel: 'Cliffside Overnight Stay',
-      dateLabel: 'Mar 18, 2026',
-      amountLabel: 'PHP 5,200',
-      paymentMethod: 'Bank transfer',
-    },
-  ],
-}
 
 export default function FinancialWalletSection({ customerName, walletData = defaultWalletData }) {
   const hasOutstandingBalance = Number(walletData.outstandingBalance) > 0
@@ -101,9 +73,13 @@ export default function FinancialWalletSection({ customerName, walletData = defa
 
                 <div className="dashboardReceiptActions">
                   <strong className="dashboardReceiptAmount">{receipt.amountLabel}</strong>
-                  <button type="button" className="dashboardTextButton" aria-label={`View details for ${receipt.invoiceNumber}`}>
+                  <Link
+                    to={`/customer/receipts/${encodeURIComponent(receipt.id)}`}
+                    className="dashboardTextButton"
+                    aria-label={`View details for ${receipt.invoiceNumber}`}
+                  >
                     View Details
-                  </button>
+                  </Link>
                 </div>
               </li>
             ))}
