@@ -1,12 +1,11 @@
 import { useMemo, useState } from 'react'
-import { Link, Navigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 import LoginPageHeader from '../components/login/layout/LoginPageHeader'
 import { readCurrentCustomer } from '../components/login/auth-storage'
 import { previousBookings } from '../data/previous-bookings'
 import { resortReceipts } from '../data/receipts'
 import BillingReceiptsList from '../components/history/BillingReceiptsList'
 import PreviousBookingsList from '../components/history/PreviousBookingsList'
-import { MOCK_BOOKINGS, MOCK_RECEIPTS } from './historyMockData'
 import '../styles/pages/customer-history-page.css'
 
 const HISTORY_TABS = [
@@ -27,65 +26,7 @@ const SORT_OPTIONS = [
   { id: 'oldest', label: 'Oldest first' },
 ]
 
-function normalizeSearchQuery(query) {
-  return String(query ?? '')
-    .trim()
-    .toLowerCase()
-}
 
-function matchesSearchFields(query, fields) {
-  if (!query) return true
-  return fields.some((field) => String(field ?? '').toLowerCase().includes(query))
-}
-
-function parseDateLike(input) {
-  if (!input) return 0
-  const normalized = String(input)
-    .replace(/[–—]/g, '-')
-    .replace(/\s+/g, ' ')
-    .trim()
-  const timestamp = Date.parse(normalized)
-  return Number.isFinite(timestamp) ? timestamp : 0
-}
-
-function bookingSortTimestamp(booking) {
-  const dateRange = String(booking?.dateRange ?? '')
-  const yearMatch = dateRange.match(/(\d{4})\s*$/)
-  const year = yearMatch ? yearMatch[1] : String(booking?.year ?? '')
-
-  const firstPart = dateRange.split(/[–-]/)[0]?.trim()
-  if (firstPart && year) {
-    const stamp = parseDateLike(`${firstPart}, ${year}`)
-    if (stamp) return stamp
-  }
-
-  return parseDateLike(dateRange)
-}
-
-function receiptSortTimestamp(receipt) {
-  return parseDateLike(receipt?.date)
-}
-
-function filterByYear(records, selectedYear) {
-  if (!selectedYear || selectedYear === 'All') return records
-  return records.filter((record) => String(record?.year ?? '') === String(selectedYear))
-}
-
-function filterBookingsByCategory(records, selectedCategory) {
-  if (!selectedCategory || selectedCategory === 'all') return records
-
-  // Member 4's current dropdown uses duplicated `id: "rooms"` for categories.
-  // Treat unknown category ids as "no-op" so the list doesn't disappear.
-  const allowed = new Set(['day-tour', 'overnight'])
-  if (!allowed.has(selectedCategory)) return records
-
-  return records.filter((booking) => booking?.category === selectedCategory)
-}
-
-function sortByTimestamp(records, sortOrder, getTimestamp) {
-  const direction = sortOrder === 'oldest' ? 1 : -1
-  return [...records].sort((a, b) => (getTimestamp(a) - getTimestamp(b)) * direction)
-}
 
 export default function CustomerHistoryPage() {
   const currentCustomer = readCurrentCustomer()
@@ -94,54 +35,10 @@ export default function CustomerHistoryPage() {
   const [selectedYear, setSelectedYear] = useState('All')
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [sortOrder, setSortOrder] = useState('newest')
-  const [viewDetailsNotice, setViewDetailsNotice] = useState(null)
 
-  const normalizedSearchQuery = useMemo(() => normalizeSearchQuery(searchQuery), [searchQuery])
+  const navigate = useNavigate()
 
   const visibleBookings = useMemo(() => {
-    let records = MOCK_BOOKINGS
-
-    records = filterByYear(records, selectedYear)
-    records = filterBookingsByCategory(records, selectedCategory)
-
-    records = records.filter((booking) =>
-      matchesSearchFields(normalizedSearchQuery, [
-        booking.id,
-        booking.title,
-        booking.dateRange,
-        booking.guests,
-        booking.status,
-        booking.total,
-      ])
-    )
-
-    return sortByTimestamp(records, sortOrder, bookingSortTimestamp)
-  }, [normalizedSearchQuery, selectedYear, selectedCategory, sortOrder])
-
-  const visibleReceipts = useMemo(() => {
-    let records = MOCK_RECEIPTS
-
-    records = filterByYear(records, selectedYear)
-
-    records = records.filter((receipt) =>
-      matchesSearchFields(normalizedSearchQuery, [
-        receipt.id,
-        receipt.label,
-        receipt.date,
-        receipt.status,
-        receipt.amount,
-      ])
-    )
-
-    return sortByTimestamp(records, sortOrder, receiptSortTimestamp)
-  }, [normalizedSearchQuery, selectedYear, sortOrder])
-
-  const toolbarState = useMemo(
-    () => ({ activeTab, searchQuery, selectedYear, selectedCategory, sortOrder }),
-    [activeTab, searchQuery, selectedYear, selectedCategory, sortOrder]
-  )
-
-  const bookingRecords = useMemo(() => {
     return previousBookings
       .filter((booking) => {
         const normalizedQuery = searchQuery.trim().toLowerCase()
@@ -154,6 +51,13 @@ export default function CustomerHistoryPage() {
 
         return matchesQuery && matchesYear
       })
+      .map((booking) => ({
+        ...booking,
+        title: booking.propertyName,
+        dateRange: `${booking.checkInDate} to ${booking.checkOutDate}`,
+        guests: booking.guestCount ? `${booking.guestCount} guests` : '',
+        total: `PHP ${booking.totalPaid}`,
+      }))
       .sort((left, right) => {
         const leftDate = new Date(left.checkInDate)
         const rightDate = new Date(right.checkInDate)
@@ -161,7 +65,7 @@ export default function CustomerHistoryPage() {
       })
   }, [searchQuery, selectedYear, sortOrder])
 
-  const receiptRecords = useMemo(() => {
+  const visibleReceipts = useMemo(() => {
     return resortReceipts
       .filter((receipt) => {
         const normalizedQuery = searchQuery.trim().toLowerCase()
@@ -174,6 +78,15 @@ export default function CustomerHistoryPage() {
 
         return matchesQuery && matchesYear
       })
+      .map((receipt) => ({
+        ...receipt,
+        label: receipt.stayLabel,
+        date: receipt.issuedDate,
+        status: receipt.paymentStatus,
+        amount: `PHP ${receipt.amountPaid}`,
+        id: receipt.invoiceNumber,
+        originalId: receipt.id,
+      }))
       .sort((left, right) => {
         const leftDate = new Date(left.issuedDate)
         const rightDate = new Date(right.issuedDate)
@@ -182,11 +95,12 @@ export default function CustomerHistoryPage() {
   }, [searchQuery, selectedYear, sortOrder])
 
   const handleViewDetails = (record) => {
-    // Route wiring will be added once Member 7 pages are finalized.
-    console.log('History view details', record)
-    const recordType = activeTab === 'bookings' ? 'booking' : 'receipt'
-    const recordId = record?.id ? String(record.id) : '(missing id)'
-    setViewDetailsNotice({ recordType, recordId })
+    const recordId = record.originalId || record.id || ''
+    if (activeTab === 'bookings') {
+      navigate(`/customer/bookings/${encodeURIComponent(recordId)}`)
+    } else {
+      navigate(`/customer/receipts/${encodeURIComponent(recordId)}`)
+    }
   }
 
   if (!currentCustomer) {
@@ -299,47 +213,20 @@ export default function CustomerHistoryPage() {
                 {activeTab === 'bookings' ? 'Previous stay records' : 'Billing & receipt records'}
               </p>
               <p className="customerHistoryPlaceholderText">
-                Showing {activeTab === 'bookings' ? bookingRecords.length : receiptRecords.length} matching record(s).
+                Showing {activeTab === 'bookings' ? visibleBookings.length : visibleReceipts.length} matching record(s).
               </p>
               {activeTab === 'bookings' ? (
-                <div className="customerHistoryResults">
-                  {bookingRecords.map((booking) => (
-                    <article key={booking.id} className="customerHistoryResultCard">
-                      <p className="customerHistoryResultTitle">{booking.propertyName}</p>
-                      <p className="customerHistoryResultMeta">{booking.bookingReference}</p>
-                      <p className="customerHistoryResultMeta">
-                        {booking.checkInDate} to {booking.checkOutDate}
-                      </p>
-                      <Link
-                        className="customerHistoryResultLink"
-                        to={`/customer/bookings/${encodeURIComponent(booking.id)}`}
-                      >
-                        View Booking Detail
-                      </Link>
-                    </article>
-                  ))}
-                </div>
+                <PreviousBookingsList
+                  records={visibleBookings}
+                  onViewDetails={handleViewDetails}
+                />
               ) : (
-                <div className="customerHistoryResults">
-                  {receiptRecords.map((receipt) => (
-                    <article key={receipt.id} className="customerHistoryResultCard">
-                      <p className="customerHistoryResultTitle">{receipt.invoiceNumber}</p>
-                      <p className="customerHistoryResultMeta">{receipt.stayLabel}</p>
-                      <p className="customerHistoryResultMeta">Issued: {receipt.issuedDate}</p>
-                      <Link
-                        className="customerHistoryResultLink"
-                        to={`/customer/receipts/${encodeURIComponent(receipt.id)}`}
-                      >
-                        View Receipt Detail
-                      </Link>
-                    </article>
-                  ))}
-                </div>
+                <BillingReceiptsList
+                  records={visibleReceipts}
+                  onViewDetails={handleViewDetails}
+                />
               )}
-              <details>
-                <summary>Debug filter state</summary>
-                <pre>{JSON.stringify(toolbarState, null, 2)}</pre>
-              </details>
+
             </div>
           </div>
         </section>
