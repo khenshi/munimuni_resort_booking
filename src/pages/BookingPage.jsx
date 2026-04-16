@@ -81,9 +81,12 @@ export default function BookingPage() {
   }, [offerType, offerId])
 
   const [step, setStep] = useState(1)
+  const stayTab = (selectedOffer?.offerType ?? offerType) === 'overnight' ? 'overnight' : 'daytour'
   const [formData, setFormData] = useState({
     checkInDate: prefilledCheckInDate,
-    checkOutDate: prefilledCheckOutDate,
+    checkOutDate: prefilledCheckInDate
+      ? resolveAutoCheckOutDate(prefilledCheckInDate, stayTab)
+      : prefilledCheckOutDate,
     guests: prefilledGuests,
     specialRequest: prefilledSpecialRequest,
     fullName: prefilledFullName,
@@ -95,8 +98,73 @@ export default function BookingPage() {
   })
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [bookingReference, setBookingReference] = useState('')
+  const todayISODate = getTodayISODate()
+  const minCheckInDate = addDaysToISODate(todayISODate, 1)
+
+  const getMaxAllowedGuests = () => {
+    if (selectedOffer?.offerType === 'daytour' && selectedOffer?.offerId === 'basic') {
+      const capacity = Number(selectedAvailabilityItem?.availability?.dailySlotCapacity)
+      if (!Number.isFinite(capacity) || capacity <= 0) return null
+
+      if (!formData.checkInDate) return capacity
+
+      const blockedDates = selectedAvailabilityItem?.availability?.unavailableCheckInDates ?? []
+      if (blockedDates.includes(formData.checkInDate)) return 0
+
+      const reservedGuestsByDate = selectedAvailabilityItem?.availability?.reservedGuestsByDate ?? {}
+      const reservedGuests = Number(reservedGuestsByDate[formData.checkInDate] ?? 0)
+      const safeReservedGuests = Number.isFinite(reservedGuests) ? reservedGuests : 0
+      return Math.max(0, capacity - safeReservedGuests)
+    }
+
+    const staticMaxGuests = Number(selectedOffer?.paxMax)
+    return Number.isFinite(staticMaxGuests) ? staticMaxGuests : null
+  }
+
+  const maxAllowedGuests = getMaxAllowedGuests()
 
   const onChange = (key, value) => {
+    if (key === 'checkOutDate') return
+
+    if (key === 'guests') {
+      const digitsOnly = String(value ?? '').replace(/\D/g, '').slice(0, 3)
+
+      if (!digitsOnly) {
+        setFormData((prev) => ({ ...prev, guests: '' }))
+        return
+      }
+
+      let nextGuestCount = Number.parseInt(digitsOnly, 10)
+      if (maxAllowedGuests !== null && maxAllowedGuests > 0) {
+        nextGuestCount = Math.min(nextGuestCount, maxAllowedGuests)
+      }
+
+      setFormData((prev) => ({ ...prev, guests: String(nextGuestCount) }))
+      return
+    }
+
+    if (key === 'phone') {
+      const rawValue = String(value ?? '')
+      if (rawValue.startsWith('+')) {
+        const digitsAfterPlus = rawValue.slice(1).replace(/\D/g, '').slice(0, 12)
+        setFormData((prev) => ({ ...prev, phone: `+${digitsAfterPlus}` }))
+        return
+      }
+
+      const digitsOnly = rawValue.replace(/\D/g, '').slice(0, 11)
+      setFormData((prev) => ({ ...prev, phone: digitsOnly }))
+      return
+    }
+
+    if (key === 'checkInDate') {
+      setFormData((prev) => ({
+        ...prev,
+        checkInDate: value,
+        checkOutDate: resolveAutoCheckOutDate(value, stayTab),
+      }))
+      return
+    }
+
     setFormData((prev) => ({ ...prev, [key]: value }))
   }
 
@@ -112,6 +180,64 @@ export default function BookingPage() {
     })
   }
 
+  const getGuestValidationMessage = () => {
+    const guestValue = String(formData.guests ?? '').trim()
+    if (!guestValue) return ''
+
+    const guestCount = Number.parseInt(guestValue, 10)
+    if (!Number.isFinite(guestCount) || guestCount <= 0) {
+      return 'Number of guests must be greater than 0.'
+    }
+
+    if (maxAllowedGuests === 0) {
+      return 'No available slots left for the selected date.'
+    }
+
+    if (maxAllowedGuests !== null && guestCount > maxAllowedGuests) {
+      return `Number of guests cannot exceed ${maxAllowedGuests} for this offer.`
+    }
+
+    return ''
+  }
+
+  const guestValidationMessage = getGuestValidationMessage()
+  const guestInfoErrors = {
+    firstName: '',
+    lastName: '',
+    phone: '',
+    email: '',
+  }
+
+  const firstNameValue = String(formData.firstName ?? '').trim()
+  if (firstNameValue && firstNameValue.length < 2) {
+    guestInfoErrors.firstName = 'First name must be at least 2 characters.'
+  } else if (firstNameValue && !/^[a-zA-Z .'-]+$/.test(firstNameValue)) {
+    guestInfoErrors.firstName = 'First name contains invalid characters.'
+  }
+
+  const lastNameValue = String(formData.lastName ?? '').trim()
+  if (lastNameValue && lastNameValue.length < 2) {
+    guestInfoErrors.lastName = 'Last name must be at least 2 characters.'
+  } else if (lastNameValue && !/^[a-zA-Z .'-]+$/.test(lastNameValue)) {
+    guestInfoErrors.lastName = 'Last name contains invalid characters.'
+  }
+
+  const phoneValue = String(formData.phone ?? '').trim()
+  if (phoneValue && !/^(09\d{9}|\+639\d{9})$/.test(phoneValue)) {
+    guestInfoErrors.phone = 'Use 11 digits (09XXXXXXXXX) or +639XXXXXXXXX.'
+  }
+
+  const emailValue = String(formData.email ?? '').trim()
+  if (emailValue && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue)) {
+    guestInfoErrors.email = 'Enter a valid email address.'
+  }
+
+  const hasGuestInfoErrors = Object.values(guestInfoErrors).some(Boolean)
+  const checkInValidationMessage =
+    formData.checkInDate && formData.checkInDate <= todayISODate
+      ? 'Check-in date cannot be today or in the past.'
+      : ''
+
   const canProceed = () => {
     if (isFormDisabled) return false
 
@@ -119,15 +245,21 @@ export default function BookingPage() {
       const guestCount = Number.parseInt(formData.guests, 10)
       const hasBasicDetails = Boolean(formData.checkInDate) && Number.isFinite(guestCount) && guestCount > 0
       if (!hasBasicDetails) return false
+      if (checkInValidationMessage) return false
+      if (guestValidationMessage) return false
 
       if (!selectedAvailabilityItem) return true
       return isItemAvailableForDate(selectedAvailabilityItem, formData.checkInDate)
     }
-    if (step === 2) return Boolean(formData.fullName && formData.phone && formData.email)
+    if (step === 2) {
+      return Boolean(formData.firstName && formData.lastName && formData.phone && formData.email) && !hasGuestInfoErrors
+    }
     if (step === 3) return true
     if (step === 4) return Boolean(formData.termsAccepted)
     return false
   }
+
+  const guestDisplayName = [formData.firstName, formData.lastName].map((value) => String(value ?? '').trim()).filter(Boolean).join(' ')
 
   const prefilledDateUnavailable = Boolean(
     prefilledCheckInDate && selectedAvailabilityItem && !isItemAvailableForDate(selectedAvailabilityItem, prefilledCheckInDate),
@@ -149,6 +281,13 @@ export default function BookingPage() {
   const selectedAddOnLabels = formData.selectedAddOns
     .map((id) => addOns.find((item) => item.id === id)?.title)
     .filter(Boolean)
+
+  const guestCapacityHint =
+    selectedOffer?.offerType === 'daytour' && selectedOffer?.offerId === 'basic' && formData.checkInDate && maxAllowedGuests !== null
+      ? maxAllowedGuests > 0
+        ? `${maxAllowedGuests} resort slot${maxAllowedGuests > 1 ? 's' : ''} available on selected date.`
+        : 'No resort slots left on selected date.'
+      : ''
 
   const submitBooking = (e) => {
     e.preventDefault()
@@ -225,6 +364,7 @@ export default function BookingPage() {
             <BookingStateNotice
               title={isEditMode ? 'Booking update submitted' : 'Booking request submitted'}
               message={isEditMode ? `Thank you, ${formData.fullName || 'guest'}. Your update request for ${selectedOffer.title} is in our queue. Reference: ${bookingReference}. Our reservations team will contact you within 24 hours via ${formData.email || 'your contact details'} to confirm the final details.` : `Thank you, ${formData.fullName || 'guest'}. Your request for ${selectedOffer.title} is in our queue.
+
 Reference: ${bookingReference}
 Our reservations team will contact you within 24 hours via ${formData.email || 'your contact details'} to confirm availability and final payment details.`}
               actionTo="/packages"
@@ -240,6 +380,12 @@ Our reservations team will contact you within 24 hours via ${formData.email || '
                   step={step}
                   selectedOffer={selectedOffer}
                   formData={formData}
+                  minCheckInDate={minCheckInDate}
+                  checkInValidationMessage={checkInValidationMessage}
+                  guestValidationMessage={guestValidationMessage}
+                  guestInfoErrors={guestInfoErrors}
+                  guestCapacityHint={guestCapacityHint}
+                  maxAllowedGuests={maxAllowedGuests}
                   onChange={onChange}
                   toggleAddOn={toggleAddOn}
                   addOns={addOns}
