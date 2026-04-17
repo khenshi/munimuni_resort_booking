@@ -66,12 +66,7 @@ export default function BookingStepContent({
             id="checkOutDate"
             type="date"
             value={formData.checkOutDate}
-<<<<<<< HEAD
-            onChange={(e) => onChange('checkOutDate', e.target.value)}
-            disabled={disabled}
-=======
             readOnly
->>>>>>> 43ef20c (log in)
           />
         </div>
 
