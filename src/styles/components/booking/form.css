@@ -2,6 +2,7 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
+  align-items: start;
 }
 
 .bookingField {
@@ -42,13 +43,42 @@
   color: #162033;
 }
 
+.bookingFieldError {
+  margin: 0;
+  color: rgba(179, 66, 0, 0.92);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.bookingFieldHint {
+  margin: 0;
+  color: rgba(22, 32, 51, 0.68);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
 .bookingStaticValue {
   border: 1px dashed rgba(var(--color-cyan-rgb), 0.4);
   border-radius: 10px;
   background: rgba(var(--color-cyan-rgb), 0.08);
   padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.bookingOfferPreviewImage {
+  width: 160px;
+  flex: 0 0 160px;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid rgba(22, 32, 51, 0.16);
+}
+
+.bookingOfferDetails {
   display: grid;
-  gap: 2px;
+  gap: 4px;
 }
 
 .bookingStaticValue strong {

@@ -90,6 +90,9 @@ export default function PackagesOffersSection({ activeTab }) {
   const getPaxMax = (item) => (Number.isFinite(item.paxMax) ? item.paxMax : Number.POSITIVE_INFINITY)
 
   const requiresStayDates = activeTab === 'overnight' || activeTab === 'daytour'
+  const todayISODate = getTodayISODate()
+  const minCheckInDate = addDaysToISODate(todayISODate, 1)
+  const isPastOrTodaySelected = Boolean(checkInDate) && checkInDate <= todayISODate
   const stayNights = getStayNightsByTab(activeTab)
   const checkOutDate = checkInDate ? addDaysToISODate(checkInDate, stayNights) : ''
   const prefillGuestCount = paxValue.trim()
@@ -207,6 +210,11 @@ export default function PackagesOffersSection({ activeTab }) {
       return false
     }
 
+    if (isPastOrTodaySelected) {
+      showBookingGuardPopup('Invalid Check-in Date', 'Check-in date must be a future date (starting tomorrow).')
+      return false
+    }
+
     if (isUnavailableForSelectedDate) {
       showBookingGuardPopup('Offer Unavailable', `${offerTitle} is not available on the selected date.`)
       return false
@@ -275,7 +283,7 @@ export default function PackagesOffersSection({ activeTab }) {
                 <input
                   id="offers-checkin"
                   type="date"
-                  min={getTodayISODate()}
+                  min={minCheckInDate}
                   className="offersRangeInput offersDateInput"
                   value={checkInDate}
                   onChange={(event) => updateActiveFilters({ checkInDate: event.target.value })}
@@ -319,6 +327,10 @@ export default function PackagesOffersSection({ activeTab }) {
 
       {requiresStayDates && !checkInDate ? (
         <p className="offersDateNotice">All offers are shown. Pick a check-in date to prioritize available options.</p>
+      ) : null}
+
+      {requiresStayDates && isPastOrTodaySelected ? (
+        <p className="offersDateNotice">Check-in date must be a future date (starting tomorrow).</p>
       ) : null}
 
       {requiresStayDates && checkInDate && activeTab === 'overnight' && overnightAvailableCount === 0 ? (

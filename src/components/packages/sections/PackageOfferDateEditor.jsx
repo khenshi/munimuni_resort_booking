@@ -14,23 +14,28 @@ export default function PackageOfferDateEditor({
 }) {
   const navigate = useNavigate()
   const [checkInDate, setCheckInDate] = useState(initialCheckInDate)
+  const todayISODate = getTodayISODate()
+  const minCheckInDate = addDaysToISODate(todayISODate, 1)
 
   const stayNights = getStayNightsByTab(offerType)
   const checkOutDate = useMemo(() => addDaysToISODate(checkInDate, stayNights), [checkInDate, stayNights])
 
   const isDateSelected = Boolean(checkInDate)
+  const isPastOrTodaySelected = isDateSelected && checkInDate <= todayISODate
   const isUnavailableForSelectedDate = Boolean(
-    isDateSelected && selectedAvailabilityItem && !isItemAvailableForDate(selectedAvailabilityItem, checkInDate),
+    isDateSelected && !isPastOrTodaySelected && selectedAvailabilityItem && !isItemAvailableForDate(selectedAvailabilityItem, checkInDate),
   )
 
   const statusMessage = !isDateSelected
     ? 'Pick a check-in date to continue booking this offer.'
+    : isPastOrTodaySelected
+      ? 'Check-in date must be a future date (starting tomorrow).'
     : isUnavailableForSelectedDate
       ? `This offer is unavailable on ${checkInDate}. Choose another date to continue.`
       : 'Your booking will continue with the selected date.'
 
   const handleBookNow = () => {
-    if (!isDateSelected || isUnavailableForSelectedDate) return
+    if (!isDateSelected || isPastOrTodaySelected || isUnavailableForSelectedDate) return
 
     const params = new URLSearchParams({
       offerType,
@@ -82,7 +87,7 @@ export default function PackageOfferDateEditor({
           <input
             id="offer-details-checkin"
             type="date"
-            min={getTodayISODate()}
+            min={minCheckInDate}
             className="offersRangeInput offersDateInput offerDetailsDateInput"
             value={checkInDate}
             onChange={(event) => setCheckInDate(event.target.value)}
@@ -109,7 +114,12 @@ export default function PackageOfferDateEditor({
       </p>
 
       <div className="offerDetailsBookingActions">
-        <button type="button" className="cottageSelectBtn" onClick={handleBookNow} disabled={!isDateSelected || isUnavailableForSelectedDate}>
+        <button
+          type="button"
+          className="cottageSelectBtn"
+          onClick={handleBookNow}
+          disabled={!isDateSelected || isPastOrTodaySelected || isUnavailableForSelectedDate}
+        >
           Book now
         </button>
       </div>

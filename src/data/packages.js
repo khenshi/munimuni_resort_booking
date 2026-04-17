@@ -226,6 +226,16 @@ export const dayTourOffers = [
     description: 'Includes free use of tables and chairs.',
     imageUrl: galleryImage1,
     availability: {
+      dailySlotCapacity: 120,
+      reservedGuestsByDate: {
+        '2026-04-08': 38,
+        '2026-04-09': 55,
+        '2026-04-10': 74,
+        '2026-04-11': 102,
+        '2026-04-12': 118,
+        '2026-04-13': 46,
+        '2026-04-14': 67,
+      },
       unavailableCheckInDates: ['2026-04-04', '2026-04-14', '2026-04-24'],
     },
     details: [

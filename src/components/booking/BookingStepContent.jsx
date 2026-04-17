@@ -2,6 +2,12 @@ export default function BookingStepContent({
   step,
   selectedOffer,
   formData,
+  minCheckInDate,
+  checkInValidationMessage,
+  guestValidationMessage,
+  guestInfoErrors,
+  guestCapacityHint,
+  maxAllowedGuests,
   onChange,
   toggleAddOn,
   addOns,
@@ -11,6 +17,7 @@ export default function BookingStepContent({
   restrictionMessage = '',
 }) {
   const formatCurrency = (value) => `PHP ${value.toLocaleString('en-US')}`
+  const maxGuests = Number.isFinite(Number(maxAllowedGuests)) ? Number(maxAllowedGuests) : undefined
 
   if (step === 1) {
     return (
@@ -18,9 +25,24 @@ export default function BookingStepContent({
         <div className="bookingField isFull">
           <label>Selected Offer</label>
           <div className="bookingStaticValue">
-            <strong>{selectedOffer.title}</strong>
-            <span>{selectedOffer.priceInfo}</span>
-            <span>{selectedOffer.subtitle}</span>
+            {selectedOffer.imageUrl ? (
+              <img
+                className="bookingOfferPreviewImage"
+                src={selectedOffer.imageUrl}
+                alt={`${selectedOffer.title} preview`}
+              />
+            ) : null}
+            <div className="bookingOfferDetails">
+              <span>
+                <strong>Name:</strong> {selectedOffer.title}
+              </span>
+              <span>
+                <strong>Price:</strong> {selectedOffer.priceInfo}
+              </span>
+              <span>
+                <strong>Number of Pax:</strong> {selectedOffer.paxLabel || 'Not specified'}
+              </span>
+            </div>
           </div>
         </div>
 
@@ -29,21 +51,27 @@ export default function BookingStepContent({
           <input
             id="checkInDate"
             type="date"
+            min={minCheckInDate}
             value={formData.checkInDate}
             onChange={(e) => onChange('checkInDate', e.target.value)}
             required
             disabled={disabled}
           />
+          {checkInValidationMessage ? <p className="bookingFieldError">{checkInValidationMessage}</p> : null}
         </div>
 
         <div className="bookingField">
-          <label htmlFor="checkOutDate">Check-out Date (Optional)</label>
+          <label htmlFor="checkOutDate">Check-out Date</label>
           <input
             id="checkOutDate"
             type="date"
             value={formData.checkOutDate}
+<<<<<<< HEAD
             onChange={(e) => onChange('checkOutDate', e.target.value)}
             disabled={disabled}
+=======
+            readOnly
+>>>>>>> 43ef20c (log in)
           />
         </div>
 
@@ -56,12 +84,15 @@ export default function BookingStepContent({
             id="guests"
             type="number"
             min="1"
+            max={maxGuests}
             value={formData.guests}
             onChange={(e) => onChange('guests', e.target.value)}
             placeholder="Enter guest count"
             required
             disabled={disabled}
           />
+          {guestValidationMessage ? <p className="bookingFieldError">{guestValidationMessage}</p> : null}
+          {guestCapacityHint ? <p className="bookingFieldHint">{guestCapacityHint}</p> : null}
         </div>
 
         <div className="bookingField isFull">
@@ -83,15 +114,28 @@ export default function BookingStepContent({
     return (
       <div className="bookingGrid">
         <div className="bookingField">
-          <label htmlFor="fullName">Full Name</label>
+          <label htmlFor="firstName">First Name</label>
           <input
-            id="fullName"
+            id="firstName"
             type="text"
-            value={formData.fullName}
-            onChange={(e) => onChange('fullName', e.target.value)}
+            value={formData.firstName}
+            onChange={(e) => onChange('firstName', e.target.value)}
             required
             disabled={disabled}
           />
+          {guestInfoErrors?.firstName ? <p className="bookingFieldError">{guestInfoErrors.firstName}</p> : null}
+        </div>
+
+        <div className="bookingField">
+          <label htmlFor="lastName">Last Name</label>
+          <input
+            id="lastName"
+            type="text"
+            value={formData.lastName}
+            onChange={(e) => onChange('lastName', e.target.value)}
+            required
+          />
+          {guestInfoErrors?.lastName ? <p className="bookingFieldError">{guestInfoErrors.lastName}</p> : null}
         </div>
 
         <div className="bookingField">
@@ -99,11 +143,15 @@ export default function BookingStepContent({
           <input
             id="phone"
             type="tel"
+            inputMode="numeric"
+            maxLength={13}
             value={formData.phone}
             onChange={(e) => onChange('phone', e.target.value)}
+            placeholder="09XXXXXXXXX"
             required
             disabled={disabled}
           />
+          {guestInfoErrors?.phone ? <p className="bookingFieldError">{guestInfoErrors.phone}</p> : null}
         </div>
 
         <div className="bookingField">
@@ -116,6 +164,7 @@ export default function BookingStepContent({
             required
             disabled={disabled}
           />
+          {guestInfoErrors?.email ? <p className="bookingFieldError">{guestInfoErrors.email}</p> : null}
         </div>
 
         <div className="bookingField isFull">
@@ -192,6 +241,7 @@ export default function BookingStepContent({
   }
 
   const { offerLabel, offerCost, addOnsCost, addOnCostLines, totalCost } = calculateCostBreakdown()
+  const guestDisplayName = [formData.firstName, formData.lastName].map((value) => String(value ?? '').trim()).filter(Boolean).join(' ')
 
   return (
     <div className="bookingReview">
@@ -210,7 +260,7 @@ export default function BookingStepContent({
         <strong>Guests:</strong> {formData.guests || 'Not set'}
       </p>
       <p>
-        <strong>Guest Name:</strong> {formData.fullName || 'Not set'}
+        <strong>Guest Name:</strong> {guestDisplayName || 'Not set'}
       </p>
       <p>
         <strong>Email:</strong> {formData.email || 'Not set'}

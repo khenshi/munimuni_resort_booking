@@ -11,6 +11,17 @@
     grid-template-columns: 1fr;
   }
 
+  .bookingStaticValue {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .bookingOfferPreviewImage {
+    width: 100%;
+    max-width: 260px;
+    flex-basis: auto;
+  }
+
   .bookingActions {
     flex-direction: column;
   }
