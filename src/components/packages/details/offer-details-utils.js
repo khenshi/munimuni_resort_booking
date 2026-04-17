@@ -1,0 +1,81 @@
+import { addOns, cottages, dayTourOffers, overnightOffers } from '../../../data/packages'
+
+export const tabByType = {
+  daytour: 'daytour',
+  overnight: 'overnight',
+  addons: 'addons',
+}
+
+export const gallerySlots = ['Front view', 'Cottage view', 'Dining area', 'Evening view']
+
+export function resolveOfferDetail(offerType, offerId) {
+  if (offerType === 'daytour' && offerId === 'basic') {
+    return {
+      title: 'Basic Type - Entrance Fee',
+      subtitle: 'Entrance & facilities access',
+      details: [
+        'Monday to Thursday: PHP 275 per person',
+        'Friday to Sunday and Holidays: PHP 325 per person',
+        'Hours: 8:00 AM to 5:00 PM',
+        'Includes free use of tables and chairs',
+        'Walk-ins welcome, subject to availability',
+      ],
+    }
+  }
+
+  if (offerType === 'daytour' && offerId?.startsWith('cottage-')) {
+    const cottageId = offerId.replace('cottage-', '')
+    const cottage = cottages.find((item) => item.id === cottageId)
+    if (!cottage) return null
+
+    return {
+      title: cottage.name,
+      subtitle: cottage.description,
+      priceInfo: `${cottage.priceLabel} (${cottage.paxLabel})`,
+      details: cottage.details,
+    }
+  }
+
+  if (offerType === 'overnight') {
+    const offer = overnightOffers.find((item) => item.id === offerId)
+    if (!offer) return null
+
+    return {
+      title: offer.title,
+      subtitle: offer.description,
+      priceInfo: offer.priceLabel,
+      details: offer.details,
+    }
+  }
+
+  if (offerType === 'addons') {
+    const addOn = addOns.find((item) => item.id === offerId)
+    if (!addOn) return null
+
+    return {
+      title: addOn.title,
+      subtitle: addOn.description,
+      priceInfo: addOn.priceLabel,
+      details: addOn.details,
+    }
+  }
+
+  return null
+}
+
+export function resolveSelectedAvailabilityItem(offerType, offerId) {
+  if (offerType === 'daytour' && offerId === 'basic') {
+    return dayTourOffers.find((item) => item.id === 'basic') ?? null
+  }
+
+  if (offerType === 'daytour' && offerId?.startsWith('cottage-')) {
+    const cottageId = offerId.replace('cottage-', '')
+    return cottages.find((item) => item.id === cottageId) ?? null
+  }
+
+  if (offerType === 'overnight') {
+    return overnightOffers.find((item) => item.id === offerId) ?? null
+  }
+
+  return null
+}

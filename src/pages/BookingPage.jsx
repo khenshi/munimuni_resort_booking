@@ -4,7 +4,8 @@ import BookingPageHeader from '../components/booking/BookingPageHeader'
 import BookingStateNotice from '../components/booking/BookingStateNotice'
 import BookingStepContent from '../components/booking/BookingStepContent'
 import BookingStepsIndicator from '../components/booking/BookingStepsIndicator'
-import { resolveSelectedOffer } from '../components/booking/booking-utils'
+import { resolveSelectedOffer, resolveAutoCheckOutDate } from '../components/booking/booking-utils'
+import { addDaysToISODate, getTodayISODate } from '../components/packages/utils/availability-utils'
 import { isItemAvailableForDate } from '../components/packages'
 import { readCurrentCustomer } from '../components/login/auth-storage'
 import { addCustomerBooking, updateCustomerBooking } from '../components/login/bookings-storage'
@@ -34,13 +35,17 @@ function getDaysUntilISODate(isoDate) {
 export default function BookingPage() {
   const location = useLocation()
   const query = new URLSearchParams(location.search)
+  const navigationState = location.state ?? {}
+  const prefillStayDates = navigationState.prefillStayDates ?? {}
+  const bookingData = navigationState.booking ?? null
+  const selectedOfferFromState = navigationState.selectedOffer
+
   const offerType = query.get('offerType') ?? ''
   const offerId = query.get('offerId') ?? ''
-  const isEditMode = location.state?.mode === 'edit' || query.get('mode') === 'edit'
-  const bookingData = location.state?.booking ?? null
-  const prefilledCheckInDate = bookingData?.checkInDate ?? location.state?.prefillStayDates?.checkInDate ?? query.get('checkInDate') ?? ''
-  const prefilledCheckOutDate = bookingData?.checkOutDate ?? location.state?.prefillStayDates?.checkOutDate ?? query.get('checkOutDate') ?? ''
-  const prefilledGuests = bookingData?.guests ?? location.state?.prefillGuestCount ?? query.get('guests') ?? ''
+  const isEditMode = navigationState.mode === 'edit' || query.get('mode') === 'edit'
+  const prefilledCheckInDate = bookingData?.checkInDate ?? prefillStayDates.checkInDate ?? query.get('checkInDate') ?? ''
+  const prefilledCheckOutDate = bookingData?.checkOutDate ?? prefillStayDates.checkOutDate ?? query.get('checkOutDate') ?? ''
+  const prefilledGuests = bookingData?.guests ?? navigationState.prefillGuestCount ?? query.get('guests') ?? ''
   const prefilledFullName = bookingData?.fullName ?? ''
   const prefilledPhone = bookingData?.phone ?? ''
   const prefilledEmail = bookingData?.email ?? ''
@@ -50,10 +55,9 @@ export default function BookingPage() {
   const prefilledTermsAccepted = bookingData?.termsAccepted ?? false
 
   const selectedOffer = useMemo(() => {
-    const fromState = location.state?.selectedOffer
-    if (fromState?.title) return fromState
+    if (selectedOfferFromState?.title) return selectedOfferFromState
     return resolveSelectedOffer(offerType, offerId)
-  }, [location.state, offerId, offerType])
+  }, [selectedOfferFromState, offerId, offerType])
 
   const detailsTo = useMemo(() => {
     const detailOfferType = selectedOffer?.offerType ?? offerType
@@ -258,8 +262,6 @@ export default function BookingPage() {
     if (step === 4) return Boolean(formData.termsAccepted)
     return false
   }
-
-  const guestDisplayName = [formData.firstName, formData.lastName].map((value) => String(value ?? '').trim()).filter(Boolean).join(' ')
 
   const prefilledDateUnavailable = Boolean(
     prefilledCheckInDate && selectedAvailabilityItem && !isItemAvailableForDate(selectedAvailabilityItem, prefilledCheckInDate),
