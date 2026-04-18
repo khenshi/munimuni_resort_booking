@@ -1,0 +1,125 @@
+import BookingStateNotice from './BookingStateNotice'
+import BookingStepContent from './BookingStepContent'
+import BookingStepsIndicator from './BookingStepsIndicator'
+import { addOns } from '../../data/packages'
+import { buildFullName } from './booking-form-utils'
+
+export default function BookingPageFlow({
+  pageHeading,
+  selectedOffer,
+  prefilledCheckInDate,
+  isMissingPrefilledDate,
+  prefilledDateUnavailable,
+  isSubmitted,
+  formData,
+  bookingReference,
+  step,
+  setStep,
+  submitBooking,
+  canProceed,
+  minCheckInDate,
+  checkInValidationMessage,
+  guestValidationMessage,
+  guestInfoErrors,
+  guestCapacityHint,
+  maxAllowedGuests,
+  onChange,
+  toggleAddOn,
+  selectedAddOnLabels,
+  activeDateUnavailable,
+}) {
+  const submittedGuestName = buildFullName(formData.firstName, formData.lastName) || 'guest'
+
+  return (
+    <main className="bookingMain">
+      <section className="bookingShell" aria-labelledby="booking-heading">
+        <p className="bookingKicker">Reservation</p>
+        <h1 id="booking-heading">{pageHeading}</h1>
+
+        {!selectedOffer ? (
+          <BookingStateNotice
+            title="No selected offer yet"
+            message="Please choose an offer first so we can pre-fill your booking details."
+            actionTo="/packages"
+            actionLabel="Browse Offers"
+          />
+        ) : isMissingPrefilledDate ? (
+          <BookingStateNotice
+            title="Select date first"
+            message="Please choose a check-in date from the offers page before continuing to booking."
+            actionTo="/packages"
+            actionLabel="Choose Date"
+          />
+        ) : prefilledDateUnavailable ? (
+          <BookingStateNotice
+            title="Selected date is unavailable"
+            message={`The selected offer is not available on ${prefilledCheckInDate}. Please choose another date before booking.`}
+            actionTo="/packages"
+            actionLabel="Choose Another Date"
+          />
+        ) : isSubmitted ? (
+          <BookingStateNotice
+            title="Booking request submitted"
+            message={`Thank you, ${submittedGuestName}. Your request for ${selectedOffer.title} is in our queue.
+
+Reference: ${bookingReference}
+Our reservations team will contact you within 24 hours via ${formData.email || 'your contact details'} to confirm availability and final payment details.`}
+            actionTo="/packages"
+            actionLabel="Back to Offers"
+          />
+        ) : (
+          <form className="bookingForm" onSubmit={submitBooking}>
+            <BookingStepsIndicator step={step} />
+
+            <div className="bookingPanel">
+              <BookingStepContent
+                step={step}
+                selectedOffer={selectedOffer}
+                formData={formData}
+                minCheckInDate={minCheckInDate}
+                checkInValidationMessage={checkInValidationMessage}
+                guestValidationMessage={guestValidationMessage}
+                guestInfoErrors={guestInfoErrors}
+                guestCapacityHint={guestCapacityHint}
+                maxAllowedGuests={maxAllowedGuests}
+                onChange={onChange}
+                toggleAddOn={toggleAddOn}
+                addOns={addOns}
+                selectedAddOnLabels={selectedAddOnLabels}
+                availabilityMessage={
+                  activeDateUnavailable ? `This offer is unavailable on ${formData.checkInDate}. Pick another check-in date to continue.` : ''
+                }
+              />
+            </div>
+
+            <div className="bookingActions">
+              <button
+                type="button"
+                className="bookingActionBtn"
+                disabled={step === 1}
+                onClick={() => setStep((s) => Math.max(1, s - 1))}
+              >
+                Previous
+              </button>
+
+              {step < 4 ? (
+                <button
+                  type="button"
+                  className="bookingActionBtn isPrimary"
+                  disabled={!canProceed}
+                  onClick={() => setStep((s) => Math.min(4, s + 1))}
+                >
+                  Next Step
+                </button>
+              ) : (
+                <button type="submit" className="bookingActionBtn isPrimary" disabled={!canProceed}>
+                  Confirm Booking
+                </button>
+              )}
+            </div>
+          </form>
+        )}
+      </section>
+    </main>
+  )
+}
