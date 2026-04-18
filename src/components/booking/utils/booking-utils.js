@@ -1,13 +1,11 @@
-import { cottages, dayTourOffers, overnightOffers } from '../../data/packages'
-import { addDaysToISODate } from '../packages/utils/availability-utils'
+import { cottages, dayTourOffers, overnightOffers } from '../../../data/packages'
+import { addDaysToISODate } from '../../packages/utils/availability-utils'
 
 export const stepLabels = ['Stay Details', 'Guest Info', 'Add-ons', 'Review']
 
 export function resolveAutoCheckOutDate(checkInDate, stayTab) {
   if (!checkInDate) return ''
-  
-  // For overnight stays, checkout is next day (1 night)
-  // For day tours, checkout is the same day
+
   const daysToAdd = stayTab === 'overnight' ? 1 : 0
   return addDaysToISODate(checkInDate, daysToAdd)
 }

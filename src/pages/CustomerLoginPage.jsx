@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Navigate, useNavigate } from 'react-router-dom'
+import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import LoginPageHeader from '../components/login/layout/LoginPageHeader'
 import CustomerLoginFormCard from '../components/login/sections/CustomerLoginFormCard'
 import {
@@ -12,8 +12,11 @@ import '../styles/pages/customer-login-page.css'
 
 export default function CustomerLoginPage() {
   const currentCustomer = readCurrentCustomer()
+  const location = useLocation()
   const navigate = useNavigate()
-  const [authMode, setAuthMode] = useState('signin')
+  const loginState = location.state ?? {}
+  const returnTo = typeof loginState.returnTo === 'string' && loginState.returnTo ? loginState.returnTo : '/customer/dashboard'
+  const [authMode, setAuthMode] = useState(loginState.authMode === 'signup' ? 'signup' : 'signin')
   const [fullName, setFullName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -22,7 +25,7 @@ export default function CustomerLoginPage() {
   const [submitNotice, setSubmitNotice] = useState('')
 
   if (currentCustomer) {
-    return <Navigate to="/customer/dashboard" replace />
+    return <Navigate to={returnTo} replace />
   }
 
   const handleSubmit = (event) => {
@@ -54,9 +57,15 @@ export default function CustomerLoginPage() {
       const nextAccounts = [...existing, nextRecord]
 
       writeCustomerAccounts(nextAccounts)
-      setSubmitNotice(`Account created for ${normalizedEmail}. You can now sign in.`)
-      setAuthMode('signin')
+      writeCurrentCustomer({
+        id: nextRecord.id,
+        fullName: nextRecord.fullName,
+        email: nextRecord.email,
+        signedInAt: new Date().toISOString(),
+      })
+      setSubmitNotice(`Account created for ${normalizedEmail}. You are now signed in.`)
       setConfirmPassword('')
+      navigate(returnTo, { replace: true })
       return
     }
 
@@ -87,7 +96,7 @@ export default function CustomerLoginPage() {
       signedInAt: new Date().toISOString(),
     })
 
-    navigate('/customer/dashboard')
+    navigate(returnTo, { replace: true })
   }
 
   return (

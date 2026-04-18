@@ -5,12 +5,13 @@ export default function BookingStateNotice({
   message,
   actionTo,
   actionLabel,
+  actionState,
 }) {
   return (
     <div className="bookingNotice" role="status" aria-live="polite">
       <h2>{title}</h2>
       <p>{message}</p>
-      <Link to={actionTo} className="bookingActionBtn isPrimary">
+      <Link to={actionTo} state={actionState} className="bookingActionBtn isPrimary">
         {actionLabel}
       </Link>
     </div>

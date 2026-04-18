@@ -1,8 +1,8 @@
 import BookingStateNotice from './BookingStateNotice'
 import BookingStepContent from './BookingStepContent'
-import BookingStepsIndicator from './BookingStepsIndicator'
-import { addOns } from '../../data/packages'
-import { buildFullName } from './booking-form-utils'
+import BookingStepsIndicator from '../layout/BookingStepsIndicator'
+import { addOns } from '../../../data/packages'
+import { buildFullName } from '../utils/booking-form-utils'
 
 export default function BookingPageFlow({
   pageHeading,
@@ -27,6 +27,8 @@ export default function BookingPageFlow({
   toggleAddOn,
   selectedAddOnLabels,
   activeDateUnavailable,
+  isAuthenticated,
+  loginActionState,
 }) {
   const submittedGuestName = buildFullName(formData.firstName, formData.lastName) || 'guest'
 
@@ -36,7 +38,15 @@ export default function BookingPageFlow({
         <p className="bookingKicker">Reservation</p>
         <h1 id="booking-heading">{pageHeading}</h1>
 
-        {!selectedOffer ? (
+        {!isAuthenticated ? (
+          <BookingStateNotice
+            title="Sign in required"
+            message="Please sign in or create an account to continue with your booking. Your booking page will reopen after you finish."
+            actionTo="/customer/login"
+            actionState={loginActionState}
+            actionLabel="Sign In or Sign Up"
+          />
+        ) : !selectedOffer ? (
           <BookingStateNotice
             title="No selected offer yet"
             message="Please choose an offer first so we can pre-fill your booking details."

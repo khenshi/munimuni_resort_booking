@@ -1,4 +1,4 @@
-import { stepLabels } from './booking-utils'
+import { stepLabels } from '../utils/booking-utils'
 
 export default function BookingStepsIndicator({ step }) {
   return (

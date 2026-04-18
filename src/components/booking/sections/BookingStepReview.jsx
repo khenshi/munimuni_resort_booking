@@ -1,4 +1,4 @@
-import { buildFullName } from './booking-form-utils'
+import { buildFullName } from '../utils/booking-form-utils'
 
 function formatCurrency(value) {
   return `PHP ${value.toLocaleString('en-US')}`
