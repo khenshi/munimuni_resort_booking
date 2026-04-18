@@ -1,0 +1,273 @@
+import { useMemo, useState } from 'react'
+import { useLocation } from 'react-router-dom'
+import { resolveAutoCheckOutDate, resolveSelectedOffer } from './booking-utils'
+import { addDaysToISODate, getTodayISODate } from '../packages/utils/availability-utils'
+import { isItemAvailableForDate } from '../packages'
+import { readCurrentCustomer } from '../login/auth-storage'
+import { addCustomerBooking } from '../login/bookings-storage'
+import { addOns, cottages, dayTourOffers, overnightOffers } from '../../data/packages'
+import {
+  buildFullName,
+  createInitialBookingFormData,
+  getGuestCapacityHint,
+  getGuestInfoErrors,
+  getGuestValidationMessage,
+  getSelectedAddOnLabels,
+  sanitizeGuestCountInput,
+  sanitizePhoneInput,
+} from './booking-form-utils'
+
+function generateBookingReference(selectedOffer) {
+  const offerTypePrefix = (selectedOffer?.offerType ?? 'gen').slice(0, 3).toUpperCase()
+  const randomCode = Math.floor(1000 + Math.random() * 9000)
+  const dateCode = new Date().toISOString().slice(2, 10).replace(/-/g, '')
+
+  return `MMR-${offerTypePrefix}-${dateCode}-${randomCode}`
+}
+
+export default function useBookingPageLogic() {
+  const location = useLocation()
+  const query = new URLSearchParams(location.search)
+  const navigationState = location.state ?? {}
+  const prefillStayDates = navigationState.prefillStayDates ?? {}
+  const selectedOfferFromState = navigationState.selectedOffer
+
+  const offerType = query.get('offerType') ?? ''
+  const offerId = query.get('offerId') ?? ''
+  const prefilledCheckInDate = prefillStayDates.checkInDate ?? query.get('checkInDate') ?? ''
+  const prefilledCheckOutDate = prefillStayDates.checkOutDate ?? query.get('checkOutDate') ?? ''
+  const prefilledGuests = navigationState.prefillGuestCount ?? query.get('guests') ?? ''
+
+  const selectedOffer = useMemo(() => {
+    if (selectedOfferFromState?.title) return selectedOfferFromState
+    return resolveSelectedOffer(offerType, offerId)
+  }, [selectedOfferFromState, offerId, offerType])
+
+  const detailsTo = useMemo(() => {
+    const detailOfferType = selectedOffer?.offerType ?? offerType
+    const detailOfferId = selectedOffer?.offerId ?? offerId
+
+    if (!detailOfferType || !detailOfferId) return '/packages'
+    return `/packages/offers/${detailOfferType}/${detailOfferId}`
+  }, [selectedOffer, offerType, offerId])
+
+  const availabilityOfferType = selectedOffer?.offerType ?? offerType
+  const availabilityOfferId = selectedOffer?.offerId ?? offerId
+
+  const selectedAvailabilityItem = useMemo(() => {
+    if (availabilityOfferType === 'daytour' && availabilityOfferId === 'basic') {
+      return dayTourOffers.find((item) => item.id === 'basic') ?? null
+    }
+
+    if (availabilityOfferType === 'daytour' && availabilityOfferId.startsWith('cottage-')) {
+      const cottageId = availabilityOfferId.replace('cottage-', '')
+      return cottages.find((item) => item.id === cottageId) ?? null
+    }
+
+    if (availabilityOfferType === 'overnight') {
+      return overnightOffers.find((item) => item.id === availabilityOfferId) ?? null
+    }
+
+    return null
+  }, [availabilityOfferType, availabilityOfferId])
+
+  const [step, setStep] = useState(1)
+  const stayTab = (selectedOffer?.offerType ?? offerType) === 'overnight' ? 'overnight' : 'daytour'
+  const [formData, setFormData] = useState(() => createInitialBookingFormData({
+    prefilledCheckInDate,
+    prefilledCheckOutDate,
+    prefilledGuests,
+    stayTab,
+  }))
+  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [bookingReference, setBookingReference] = useState('')
+  const todayISODate = getTodayISODate()
+  const minCheckInDate = addDaysToISODate(todayISODate, 1)
+
+  const maxAllowedGuests = useMemo(() => {
+    if (selectedOffer?.offerType === 'daytour' && selectedOffer?.offerId === 'basic') {
+      const capacity = Number(selectedAvailabilityItem?.availability?.dailySlotCapacity)
+      if (!Number.isFinite(capacity) || capacity <= 0) return null
+
+      if (!formData.checkInDate) return capacity
+
+      const blockedDates = selectedAvailabilityItem?.availability?.unavailableCheckInDates ?? []
+      if (blockedDates.includes(formData.checkInDate)) return 0
+
+      const reservedGuestsByDate = selectedAvailabilityItem?.availability?.reservedGuestsByDate ?? {}
+      const reservedGuests = Number(reservedGuestsByDate[formData.checkInDate] ?? 0)
+      const safeReservedGuests = Number.isFinite(reservedGuests) ? reservedGuests : 0
+      return Math.max(0, capacity - safeReservedGuests)
+    }
+
+    const staticMaxGuests = Number(selectedOffer?.paxMax)
+    return Number.isFinite(staticMaxGuests) ? staticMaxGuests : null
+  }, [selectedOffer, selectedAvailabilityItem, formData.checkInDate])
+
+  const onChange = (key, value) => {
+    if (key === 'checkOutDate') return
+
+    if (key === 'guests') {
+      const sanitizedGuests = sanitizeGuestCountInput(value, maxAllowedGuests)
+      setFormData((prev) => ({ ...prev, guests: sanitizedGuests }))
+      return
+    }
+
+    if (key === 'phone') {
+      const sanitizedPhone = sanitizePhoneInput(value)
+      setFormData((prev) => ({ ...prev, phone: sanitizedPhone }))
+      return
+    }
+
+    if (key === 'checkInDate') {
+      setFormData((prev) => ({
+        ...prev,
+        checkInDate: value,
+        checkOutDate: resolveAutoCheckOutDate(value, stayTab),
+      }))
+      return
+    }
+
+    setFormData((prev) => ({ ...prev, [key]: value }))
+  }
+
+  const toggleAddOn = (addOnId) => {
+    setFormData((prev) => {
+      const alreadySelected = prev.selectedAddOns.includes(addOnId)
+      return {
+        ...prev,
+        selectedAddOns: alreadySelected
+          ? prev.selectedAddOns.filter((id) => id !== addOnId)
+          : [...prev.selectedAddOns, addOnId],
+      }
+    })
+  }
+
+  const guestValidationMessage = useMemo(
+    () => getGuestValidationMessage(formData.guests, maxAllowedGuests),
+    [formData.guests, maxAllowedGuests],
+  )
+  const guestInfoErrors = useMemo(
+    () => getGuestInfoErrors(formData),
+    [formData],
+  )
+  const hasGuestInfoErrors = Object.values(guestInfoErrors).some(Boolean)
+  const checkInValidationMessage = useMemo(() => {
+    if (!formData.checkInDate) return ''
+    return formData.checkInDate <= todayISODate
+      ? 'Check-in date cannot be today or in the past.'
+      : ''
+  }, [formData.checkInDate, todayISODate])
+
+  const prefilledDateUnavailable = useMemo(
+    () => Boolean(prefilledCheckInDate && selectedAvailabilityItem && !isItemAvailableForDate(selectedAvailabilityItem, prefilledCheckInDate)),
+    [prefilledCheckInDate, selectedAvailabilityItem],
+  )
+  const isMissingPrefilledDate = Boolean(selectedAvailabilityItem) && !prefilledCheckInDate
+  const activeDateUnavailable = useMemo(
+    () => Boolean(formData.checkInDate && selectedAvailabilityItem && !isItemAvailableForDate(selectedAvailabilityItem, formData.checkInDate)),
+    [formData.checkInDate, selectedAvailabilityItem],
+  )
+
+  const pageHeading = 'Book Your Stay'
+
+  const selectedAddOnLabels = useMemo(
+    () => getSelectedAddOnLabels(formData.selectedAddOns, addOns),
+    [formData.selectedAddOns],
+  )
+
+  const guestCapacityHint = useMemo(
+    () => getGuestCapacityHint(selectedOffer, formData.checkInDate, maxAllowedGuests),
+    [selectedOffer, formData.checkInDate, maxAllowedGuests],
+  )
+
+  const canProceed = useMemo(() => {
+    if (step === 1) {
+      const guestCount = Number.parseInt(formData.guests, 10)
+      const hasBasicDetails = Boolean(formData.checkInDate) && Number.isFinite(guestCount) && guestCount > 0
+      if (!hasBasicDetails) return false
+      if (checkInValidationMessage) return false
+      if (guestValidationMessage) return false
+
+      if (!selectedAvailabilityItem) return true
+      return isItemAvailableForDate(selectedAvailabilityItem, formData.checkInDate)
+    }
+    if (step === 2) {
+      return Boolean(formData.firstName && formData.lastName && formData.phone && formData.email) && !hasGuestInfoErrors
+    }
+    if (step === 3) return true
+    if (step === 4) return Boolean(formData.termsAccepted)
+    return false
+  }, [
+    step,
+    formData,
+    checkInValidationMessage,
+    guestValidationMessage,
+    selectedAvailabilityItem,
+    hasGuestInfoErrors,
+  ])
+
+  const submitBooking = (e) => {
+    e.preventDefault()
+    if (!canProceed) return
+
+    const reference = generateBookingReference(selectedOffer)
+    setBookingReference(reference)
+    const fullName = buildFullName(formData.firstName, formData.lastName)
+
+    const currentCustomer = readCurrentCustomer()
+
+    if (currentCustomer?.id) {
+      const bookingPayload = {
+        bookingReference: reference,
+        selectedOffer: {
+          title: selectedOffer?.title,
+          price: selectedOffer?.price,
+          offerType: selectedOffer?.offerType,
+          offerId: selectedOffer?.offerId,
+          priceInfo: selectedOffer?.priceInfo,
+        },
+        checkInDate: formData.checkInDate,
+        checkOutDate: formData.checkOutDate,
+        guests: formData.guests,
+        specialRequest: formData.specialRequest,
+        fullName,
+        phone: formData.phone,
+        email: formData.email,
+        address: formData.address,
+        selectedAddOns: formData.selectedAddOns,
+        termsAccepted: formData.termsAccepted,
+      }
+
+      addCustomerBooking(currentCustomer.id, bookingPayload)
+    }
+
+    setIsSubmitted(true)
+  }
+
+  return {
+    detailsTo,
+    pageHeading,
+    selectedOffer,
+    prefilledCheckInDate,
+    isMissingPrefilledDate,
+    prefilledDateUnavailable,
+    isSubmitted,
+    formData,
+    bookingReference,
+    step,
+    setStep,
+    submitBooking,
+    canProceed,
+    onChange,
+    toggleAddOn,
+    minCheckInDate,
+    checkInValidationMessage,
+    guestValidationMessage,
+    guestInfoErrors,
+    guestCapacityHint,
+    maxAllowedGuests,
+    selectedAddOnLabels,
+    activeDateUnavailable,
+  }
+}

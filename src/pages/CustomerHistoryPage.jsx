@@ -1,7 +1,11 @@
 import { useMemo, useState } from 'react'
-import { Navigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 import LoginPageHeader from '../components/login/layout/LoginPageHeader'
 import { readCurrentCustomer } from '../components/login/auth-storage'
+import { previousBookings } from '../data/previous-bookings'
+import { resortReceipts } from '../data/receipts'
+import BillingReceiptsList from '../components/history/BillingReceiptsList'
+import PreviousBookingsList from '../components/history/PreviousBookingsList'
 import '../styles/pages/customer-history-page.css'
 
 const HISTORY_TABS = [
@@ -22,6 +26,8 @@ const SORT_OPTIONS = [
   { id: 'oldest', label: 'Oldest first' },
 ]
 
+
+
 export default function CustomerHistoryPage() {
   const currentCustomer = readCurrentCustomer()
   const [activeTab, setActiveTab] = useState('bookings')
@@ -30,10 +36,72 @@ export default function CustomerHistoryPage() {
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [sortOrder, setSortOrder] = useState('newest')
 
-  const toolbarState = useMemo(
-    () => ({ activeTab, searchQuery, selectedYear, selectedCategory, sortOrder }),
-    [activeTab, searchQuery, selectedYear, selectedCategory, sortOrder]
-  )
+  const navigate = useNavigate()
+
+  const visibleBookings = useMemo(() => {
+    return previousBookings
+      .filter((booking) => {
+        const normalizedQuery = searchQuery.trim().toLowerCase()
+        const matchesQuery = !normalizedQuery
+          || booking.propertyName.toLowerCase().includes(normalizedQuery)
+          || booking.bookingReference.toLowerCase().includes(normalizedQuery)
+
+        const bookingYear = booking.checkInDate.slice(0, 4)
+        const matchesYear = selectedYear === 'All' || bookingYear === selectedYear
+
+        return matchesQuery && matchesYear
+      })
+      .map((booking) => ({
+        ...booking,
+        title: booking.propertyName,
+        dateRange: `${booking.checkInDate} to ${booking.checkOutDate}`,
+        guests: booking.guestCount ? `${booking.guestCount} guests` : '',
+        total: `PHP ${booking.totalPaid}`,
+      }))
+      .sort((left, right) => {
+        const leftDate = new Date(left.checkInDate)
+        const rightDate = new Date(right.checkInDate)
+        return sortOrder === 'newest' ? rightDate - leftDate : leftDate - rightDate
+      })
+  }, [searchQuery, selectedYear, sortOrder])
+
+  const visibleReceipts = useMemo(() => {
+    return resortReceipts
+      .filter((receipt) => {
+        const normalizedQuery = searchQuery.trim().toLowerCase()
+        const matchesQuery = !normalizedQuery
+          || receipt.stayLabel.toLowerCase().includes(normalizedQuery)
+          || receipt.invoiceNumber.toLowerCase().includes(normalizedQuery)
+
+        const receiptYear = receipt.issuedDate.slice(0, 4)
+        const matchesYear = selectedYear === 'All' || receiptYear === selectedYear
+
+        return matchesQuery && matchesYear
+      })
+      .map((receipt) => ({
+        ...receipt,
+        label: receipt.stayLabel,
+        date: receipt.issuedDate,
+        status: receipt.paymentStatus,
+        amount: `PHP ${receipt.amountPaid}`,
+        id: receipt.invoiceNumber,
+        originalId: receipt.id,
+      }))
+      .sort((left, right) => {
+        const leftDate = new Date(left.issuedDate)
+        const rightDate = new Date(right.issuedDate)
+        return sortOrder === 'newest' ? rightDate - leftDate : leftDate - rightDate
+      })
+  }, [searchQuery, selectedYear, sortOrder])
+
+  const handleViewDetails = (record) => {
+    const recordId = record.originalId || record.id || ''
+    if (activeTab === 'bookings') {
+      navigate(`/customer/bookings/${encodeURIComponent(recordId)}`)
+    } else {
+      navigate(`/customer/receipts/${encodeURIComponent(recordId)}`)
+    }
+  }
 
   if (!currentCustomer) {
     return <Navigate to="/customer/login" replace />
@@ -141,14 +209,24 @@ export default function CustomerHistoryPage() {
             </div>
 
             <div className="customerHistoryPlaceholder">
-              <p className="customerHistoryPlaceholderTitle">History renderer placeholder</p>
+              <p className="customerHistoryPlaceholderTitle">
+                {activeTab === 'bookings' ? 'Previous stay records' : 'Billing & receipt records'}
+              </p>
               <p className="customerHistoryPlaceholderText">
-                This is where member 5 will work
+                Showing {activeTab === 'bookings' ? visibleBookings.length : visibleReceipts.length} matching record(s).
               </p>
-              <p className="customerHistoryPlaceholderText">  
-                Member 5 can consume these values to render the list:
-              </p>
-              <pre>{JSON.stringify(toolbarState, null, 2)}</pre>
+              {activeTab === 'bookings' ? (
+                <PreviousBookingsList
+                  records={visibleBookings}
+                  onViewDetails={handleViewDetails}
+                />
+              ) : (
+                <BillingReceiptsList
+                  records={visibleReceipts}
+                  onViewDetails={handleViewDetails}
+                />
+              )}
+
             </div>
           </div>
         </section>

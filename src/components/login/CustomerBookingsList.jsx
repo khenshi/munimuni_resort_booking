@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom'
 
-export default function CustomerBookingsList({ bookings, currentCustomerId }) {
+export default function CustomerBookingsList({ bookings }) {
   const navigate = useNavigate()
 
   if (!bookings || bookings.length === 0) {
@@ -87,6 +87,12 @@ export default function CustomerBookingsList({ bookings, currentCustomerId }) {
               )}
 
               <div className="bookingCardActions">
+                <Link
+                  to={`/customer/bookings/${encodeURIComponent(booking.bookingReference)}`}
+                  className="bookingsEmptyLink"
+                >
+                  View Details
+                </Link>
                 <button
                   onClick={() => handleEdit(booking)}
                   disabled={!canEdit}

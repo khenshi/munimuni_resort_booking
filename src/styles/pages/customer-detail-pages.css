@@ -1,0 +1,197 @@
+.customerDetailPage {
+  min-height: 100vh;
+  background: #f8fafc;
+}
+
+.customerDetailMain {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 3rem;
+}
+
+.customerDetailCard {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 24px;
+  padding: 2rem;
+  box-shadow: 0 24px 64px rgba(15, 23, 42, 0.08);
+}
+
+.customerDetailKicker {
+  margin: 0 0 0.5rem;
+  color: #334155;
+  font-size: 0.82rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.customerDetailTitle {
+  margin: 0;
+  color: #0f172a;
+  font-size: clamp(1.8rem, 2.7vw, 2.35rem);
+  line-height: 1.1;
+}
+
+.customerDetailDescription {
+  margin: 0.85rem 0 1.75rem;
+  color: #475569;
+  line-height: 1.7;
+}
+
+.customerDetailGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+.customerDetailGrid.singleColumn {
+  grid-template-columns: 1fr;
+}
+
+.customerDetailPanel {
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 1rem 1rem 1.15rem;
+  background: #f8fafc;
+}
+
+.customerDetailPanel h2 {
+  margin: 0 0 0.9rem;
+  color: #0f172a;
+  font-size: 1.03rem;
+}
+
+.customerDetailRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px dashed #dbe2ea;
+}
+
+.customerDetailRow:last-child {
+  border-bottom: 0;
+}
+
+.customerDetailRow span {
+  color: #475569;
+  font-size: 0.92rem;
+}
+
+.customerDetailRow strong {
+  color: #0f172a;
+  text-align: right;
+}
+
+.customerDetailRow.emphasis {
+  margin-top: 0.35rem;
+  border-top: 1px solid #cbd5e1;
+  border-bottom: 0;
+  padding-top: 0.85rem;
+}
+
+.customerDetailBadge {
+  border-radius: 999px;
+  background: #dbeafe;
+  color: #1e3a8a;
+  padding: 0.22rem 0.65rem;
+  text-transform: capitalize;
+  font-size: 0.8rem;
+}
+
+.customerDetailStackedRow {
+  margin-top: 0.75rem;
+  padding-top: 0.65rem;
+  border-top: 1px dashed #dbe2ea;
+}
+
+.customerDetailStackedRow > span {
+  display: block;
+  margin-bottom: 0.4rem;
+  color: #475569;
+  font-size: 0.92rem;
+}
+
+.customerDetailStackedRow ul,
+.customerDetailStackedRow p {
+  margin: 0;
+  color: #0f172a;
+  padding-left: 1rem;
+}
+
+.customerDetailActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.customerDetailBtn {
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #0f172a;
+  border-radius: 12px;
+  padding: 0.7rem 1.05rem;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.customerDetailBtn.isPrimary {
+  background: #0f172a;
+  border-color: #0f172a;
+  color: #ffffff;
+}
+
+.customerReceiptTable {
+  border: 1px solid #d7e1eb;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.customerReceiptTableHeader,
+.customerReceiptTableRow {
+  display: grid;
+  grid-template-columns: 2fr 0.6fr 1fr 1fr;
+  gap: 0.75rem;
+  padding: 0.7rem 0.9rem;
+  align-items: center;
+}
+
+.customerReceiptTableHeader {
+  background: #e2e8f0;
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.customerReceiptTableRow {
+  background: #ffffff;
+  border-top: 1px solid #edf2f7;
+  color: #1e293b;
+}
+
+.customerReceiptTableRow span:nth-child(n + 2) {
+  text-align: right;
+}
+
+.customerReceiptTotals {
+  margin-top: 1rem;
+}
+
+@media (max-width: 900px) {
+  .customerDetailGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .customerDetailCard {
+    padding: 1.35rem;
+  }
+
+  .customerReceiptTableHeader,
+  .customerReceiptTableRow {
+    grid-template-columns: 1.7fr 0.55fr 1fr 1fr;
+    font-size: 0.85rem;
+  }
+}

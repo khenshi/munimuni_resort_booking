@@ -34,6 +34,9 @@ export default function PreviousBookingsWidget() {
               <p className="bookingDates">
                 {booking.checkInDate} – {booking.checkOutDate}
               </p>
+              <Link className="dashboardWidgetAction" to={`/customer/bookings/${encodeURIComponent(booking.id)}`}>
+                View Booking Detail
+              </Link>
             </div>
             <div className="bookingOverviewMeta">
               <span>{booking.nights} night{booking.nights === 1 ? '' : 's'}</span>

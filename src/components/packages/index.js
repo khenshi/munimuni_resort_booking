@@ -1,7 +1,6 @@
 export { default as PackagesPageHeader } from './layout/PackagesPageHeader'
 export { default as PackagesInfoSection } from './sections/PackagesInfoSection'
-export { default as PackagesOffersSection } from './sections/PackagesOffersSection'
-export { default as PackageOfferDateEditor } from './sections/PackageOfferDateEditor'
+export { default as PackagesOffersSection } from './sections/packagesOfferSection/PackagesOffersSection'
 export { default as PackageOfferCard } from './cards/PackageOfferCard'
 export { default as BookingGuardPopup } from './feedback/BookingGuardPopup'
 export { readPackagesViewState, writePackagesViewState } from './state/packages-view-state'

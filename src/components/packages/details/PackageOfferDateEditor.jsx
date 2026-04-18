@@ -30,9 +30,9 @@ export default function PackageOfferDateEditor({
     ? 'Pick a check-in date to continue booking this offer.'
     : isPastOrTodaySelected
       ? 'Check-in date must be a future date (starting tomorrow).'
-    : isUnavailableForSelectedDate
-      ? `This offer is unavailable on ${checkInDate}. Choose another date to continue.`
-      : 'Your booking will continue with the selected date.'
+      : isUnavailableForSelectedDate
+        ? `This offer is unavailable on ${checkInDate}. Choose another date to continue.`
+        : 'Your booking will continue with the selected date.'
 
   const handleBookNow = () => {
     if (!isDateSelected || isPastOrTodaySelected || isUnavailableForSelectedDate) return
