@@ -1,132 +1,191 @@
-.customerProfilePage {
-  --brand-cyan-rgb: var(--color-cyan-rgb);
-  min-height: 100vh;
-  background: linear-gradient(180deg, #f7f7f2 0%, #f1f5ef 52%, #edf3ef 100%);
-}
-
-.customerProfileMain {
-  max-width: 1120px;
-  margin: 0 auto;
-  padding: 2.5rem 1.5rem 4rem;
-}
-
 .customerProfileShell {
-  background: rgba(255, 255, 255, 0.88);
-  border: 1px solid rgba(24, 55, 38, 0.15);
-  border-radius: 1.5rem;
-  box-shadow: 0 24px 64px rgba(24, 55, 38, 0.1);
-  padding: 2rem;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 24px 64px rgba(15, 23, 42, 0.08);
 }
 
 .customerProfileHero {
-  margin-bottom: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1.75rem;
+  padding: 2rem;
+  border-bottom: 1px solid #e5e7eb;
+  background: #f8fafc;
 }
 
 .customerProfileKicker {
-  margin: 0;
-  font-size: 0.75rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: #2f6a46;
+  margin: 0 0 0.75rem;
+  font-size: 0.85rem;
   font-weight: 700;
+  text-transform: uppercase;
+  color: var(--color-cyan, #00d2d3);
+  letter-spacing: 0.12em;
 }
 
 .customerProfileHero h1 {
-  margin: 0.45rem 0;
-  font-size: clamp(1.45rem, 1.7vw + 1rem, 2.2rem);
-  color: #173924;
+  margin: 0 0 0.75rem;
+  font-size: clamp(2rem, 2.5vw, 2.75rem);
+  line-height: 1.05;
+  color: var(--color-ink, #162033);
+  font-weight: 700;
 }
 
-.customerProfileHero p {
+.customerProfileDescription {
   margin: 0;
-  color: #2e4a38;
+  color: #4b5563;
+  font-size: 1rem;
+  line-height: 1.75;
+  max-width: 760px;
 }
 
 .customerProfileGrid {
   display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  padding: 2rem;
+  align-items: start;
 }
 
 .customerProfileCard {
-  border: 1px solid rgba(23, 57, 36, 0.12);
-  border-radius: 1rem;
-  padding: 1rem;
-  background: #fff;
+  background: white;
+  border-radius: 20px;
+  padding: 1.75rem;
+  border: 1px solid #f1f5f9;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.03);
 }
 
-.customerProfileCard h2 {
-  margin: 0 0 0.85rem;
-  color: #173924;
-  font-size: 1.05rem;
+.cardHeader {
+  margin-bottom: 1.5rem;
+}
+
+.cardTitle {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--color-ink, #162033);
+  margin: 0 0 0.25rem 0;
+}
+
+.cardDescription {
+  font-size: 0.9rem;
+  color: #64748b;
+  margin: 0;
 }
 
 .customerProfileForm {
   display: grid;
-  gap: 0.62rem;
+  gap: 1.25rem;
 }
 
-.customerProfileForm label {
-  font-size: 0.85rem;
-  color: #304b3a;
-  font-weight: 600;
+.formField {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.formField label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .customerProfileForm input,
 .customerProfileForm textarea {
-  border: 1px solid rgba(30, 66, 44, 0.25);
-  border-radius: 0.68rem;
-  padding: 0.62rem 0.7rem;
-  font-size: 0.92rem;
-  color: #1b3024;
-  background: #fbfefa;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 0.75rem 0.9rem;
+  font-size: 0.95rem;
+  color: var(--color-ink, #162033);
+  background: #f8fafc;
+  transition: all 0.2s ease;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .customerProfileForm input:focus,
 .customerProfileForm textarea:focus {
-  outline: 2px solid rgba(67, 128, 84, 0.35);
-  outline-offset: 1px;
+  outline: none;
+  border-color: var(--color-cyan, #00d2d3);
+  background: white;
+  box-shadow: 0 0 0 4px rgba(0, 210, 211, 0.1);
 }
 
-.customerProfileForm button {
-  border: 0;
-  border-radius: 0.72rem;
-  background: #000;
-  color: #fff;
+.formActions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.saveProfileBtn {
+  background: var(--color-ink, #162033);
+  color: white;
+  border: none;
+  padding: 0.85rem;
+  border-radius: 10px;
+  font-size: 0.95rem;
   font-weight: 700;
-  padding: 0.7rem 0.95rem;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: all 0.2s;
 }
 
-@media (hover: hover) {
-  .customerProfileForm button:hover {
-    background: rgb(var(--brand-cyan-rgb));
-  }
+.saveProfileBtn:hover {
+  background: var(--color-cyan, #00d2d3);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 210, 211, 0.2);
 }
 
-.customerProfileHint {
-  margin: 0;
-  color: #234431;
+.saveProfileBtn.secondary {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.saveProfileBtn.secondary:hover {
+  background: #e2e8f0;
+  color: var(--color-ink, #162033);
 }
 
 .customerProfileNotice {
-  margin: 0.2rem 0 0;
-  font-size: 0.85rem;
-  color: #24503b;
-  background: rgba(158, 221, 178, 0.28);
-  border: 1px solid rgba(57, 130, 81, 0.25);
-  border-radius: 0.6rem;
-  padding: 0.48rem 0.6rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.75rem 0.9rem;
+  border-radius: 8px;
+  margin: 0;
+}
+
+.customerProfileNotice.success {
+  background: #f0fdf4;
+  color: #166534;
+  border: 1px solid #dcfce7;
+}
+
+.customerProfileNotice.error {
+  background: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fee2e2;
+}
+
+@media (max-width: 1100px) {
+  .customerProfileGrid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 768px) {
-  .customerProfileMain {
-    padding: 1.2rem 0.8rem 2.6rem;
+  .customerProfileHero {
+    padding: 1.5rem;
+  }
+  
+  .customerProfileGrid {
+    padding: 1.5rem;
+    gap: 1.5rem;
   }
 
-  .customerProfileShell {
-    padding: 1rem;
-    border-radius: 1rem;
+  .customerProfileCard {
+    padding: 1.25rem;
   }
 }

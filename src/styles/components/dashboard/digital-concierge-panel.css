@@ -53,3 +53,8 @@
 .conciergeSocialLinks a:hover {
   text-decoration: underline;
 }
+
+.conciergeCardWrapper {
+  display: flex;
+  flex-direction: column;
+}

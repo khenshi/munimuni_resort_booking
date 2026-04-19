@@ -79,13 +79,14 @@ export default function CustomerDashboardPage() {
 
   const upcomingBookings = customerBookings
     .filter((b) => b.checkInDate && new Date(b.checkInDate) > new Date())
-    .sort((a, b) => new Date(a.checkInDate) - new Date(b.checkInDate));
+    .sort((a, b) => new Date(a.checkInDate) - new Date(b.checkInDate))
+    .slice(0, 2);
 
   return (
     <AccountLayout>
       <header className="dashboardIntro">
         <div className="dashboardIntroText">
-          <p className="dashboardKicker">Customer Dashboard</p>
+          {/* <p className="dashboardKicker">Customer Dashboard</p> */}
           <h1 className="dashboardTitle">
             Welcome back, {currentCustomer.fullName || currentCustomer.email}.
           </h1>
@@ -99,7 +100,6 @@ export default function CustomerDashboardPage() {
       </header>
 
       <div className="dashboardContentStack">
-        {/* Top Priority Section: Financial Summary */}
         <div className="dashboardTopGrid">
           <FinancialWalletSection
             customerName={currentCustomer.fullName || currentCustomer.email}
@@ -129,15 +129,11 @@ export default function CustomerDashboardPage() {
           )}
         </section>
 
-        {/* Secondary Section: History & Concierge */}
         <div className="dashboardBottomGrid">
           <div className="dashboardGridColumn">
             <PreviousBookingsWidget />
           </div>
-          <div className="dashboardGridColumn conciergeGroup">
-            <div className="sectionHeader">
-              <h2 className="sectionTitle">Resort Services</h2>
-            </div>
+          <div className="dashboardGridColumn">
             <DigitalConciergeSection />
             <DigitalConciergePanel />
           </div>

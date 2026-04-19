@@ -1,6 +1,4 @@
-
-
-import '../../styles/components/dashboard/dashboard-widgets.css';
+import '../../styles/components/dashboard/digital-concierge-panel.css';
 
 export default function DigitalConciergePanel() {
   const mapLink = 'https://maps.app.goo.gl/Ukzys2Q58NGMzrad7';

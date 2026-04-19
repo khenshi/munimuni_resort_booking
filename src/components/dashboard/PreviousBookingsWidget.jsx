@@ -1,54 +1,70 @@
 import { Link } from 'react-router-dom'
-import { previousBookings } from '../../data/previous-bookings'
+import { readCurrentCustomer } from '../login/auth-storage'
+import { getCustomerBookingList } from '../login/bookings-storage'
 import '../../styles/components/dashboard/dashboard-widgets.css'
 
-/**
- * @typedef {import('../../types/booking').BookingHistoryEntry} BookingHistoryEntry
- */
-
 export default function PreviousBookingsWidget() {
-  const recentBookings = [...previousBookings]
-    .sort((a, b) => new Date(b.checkOutDate) - new Date(a.checkOutDate))
-    .slice(0, 3)
+  const currentCustomer = readCurrentCustomer()
+  const allBookings = currentCustomer?.id ? getCustomerBookingList(currentCustomer.id) : []
 
-  const totalNightsStayed = previousBookings.reduce((total, booking) => {
-    const nights = Number(booking.nights)
-    return total + (Number.isFinite(nights) && nights > 0 ? nights : 0)
+  // Filter for completed/past bookings (check-out date is in the past)
+  const completedBookings = allBookings.filter((booking) => {
+    if (!booking.checkOutDate) return false
+    return new Date(booking.checkOutDate) < new Date()
+  }).sort((a, b) => new Date(b.checkOutDate) - new Date(a.checkOutDate))
+
+  const recentBookings = completedBookings.slice(0, 3)
+
+  const totalNightsStayed = completedBookings.reduce((total, booking) => {
+    const checkIn = new Date(booking.checkInDate)
+    const checkOut = new Date(booking.checkOutDate)
+    if (isNaN(checkIn) || isNaN(checkOut)) return total
+    const nights = Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24))
+    return total + (nights > 0 ? nights : 0)
   }, 0)
 
   return (
     <section className="dashboardCard dashboardBookingsCard" aria-labelledby="previous-bookings-heading">
       <div className="dashboardCardHeader">
         <div>
-          <p className="dashboardKicker">Previous bookings</p>
+          <p className="dashboardKicker">Stay History</p>
           <h2 id="previous-bookings-heading">Total Nights Stayed</h2>
         </div>
         <div className="dashboardStatValue">{totalNightsStayed}</div>
       </div>
 
       <div className="bookingOverviewList">
-        {recentBookings.map((booking) => (
-          <article key={booking.id} className="bookingOverviewItem">
-            <div className="bookingOverviewPrimary">
-              <p className="bookingPropertyName">{booking.propertyName}</p>
-              <p className="bookingDates">
-                {booking.checkInDate} – {booking.checkOutDate}
-              </p>
-              <Link className="dashboardWidgetAction" to={`/customer/bookings/${encodeURIComponent(booking.id)}`}>
-                View Booking Detail
-              </Link>
-            </div>
-            <div className="bookingOverviewMeta">
-              <span>{booking.nights} night{booking.nights === 1 ? '' : 's'}</span>
-              <span>{booking.guestCount} guest{booking.guestCount === 1 ? '' : 's'}</span>
-            </div>
-          </article>
-        ))}
+        {recentBookings.length > 0 ? (
+          recentBookings.map((booking) => (
+            <article key={booking.bookingReference} className="bookingOverviewItem">
+              <div className="bookingOverviewPrimary">
+                <p className="bookingPropertyName">{booking.selectedOffer?.title || 'Resort Stay'}</p>
+                <p className="bookingDates">
+                  {booking.checkInDate} – {booking.checkOutDate}
+                </p>
+                <Link 
+                  className="dashboardWidgetAction" 
+                  to={`/customer/bookings/${encodeURIComponent(booking.bookingReference)}`}
+                >
+                  View Details
+                </Link>
+              </div>
+              <div className="bookingOverviewMeta">
+                <span>Ref: {booking.bookingReference}</span>
+                <span>{booking.guests} guest{booking.guests === 1 ? '' : 's'}</span>
+              </div>
+            </article>
+          ))
+        ) : (
+          <div className="emptyWidgetState">
+            <p>No past stays recorded yet.</p>
+          </div>
+        )}
       </div>
 
       <div className="dashboardCardFooter">
-        <Link className="dashboardWidgetAction primaryCta" to="/customer/history">
-          View All
+        <Link className="dashboardWidgetAction primaryCta" to="/customer/history?tab=bookings">
+          View All History
         </Link>
       </div>
     </section>

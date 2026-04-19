@@ -26,14 +26,11 @@ export default function AccountSidebar() {
     <aside className="dashboardSidebar">
       <div className="memberProfileCard">
         <div className="memberProfileHeader">
-          <span className="memberIcon">MEMBER</span>
+          <span className="memberIcon">{currentCustomer.fullName?.toUpperCase() || currentCustomer.email?.toUpperCase()}</span>
         </div>
         <div className="memberProfileBody">
           <p className="memberSince">Member since {new Date().getFullYear()}</p>
-          <p className="memberId">1000{currentCustomer.id || '1234'}</p>
-        </div>
-        <div className="memberProfileFooter">
-          {currentCustomer.fullName?.toUpperCase() || currentCustomer.email?.toUpperCase()}
+          <p className="memberId">{currentCustomer.id || '1234'}</p>
         </div>
       </div>
 
