@@ -22,7 +22,6 @@ export default function CustomerBookingsList({ bookings }) {
 
   return (
     <div className="bookingsList">
-      <h2 className="bookingsHeading">My Bookings</h2>
       <div className="bookingsContainer">
         {bookings.map((booking) => {
           const createdDate = booking.createdAt ? new Date(booking.createdAt).toLocaleDateString() : 'N/A'
@@ -47,30 +46,30 @@ export default function CustomerBookingsList({ bookings }) {
 
               <div className="bookingCardDetails">
                 <div className="bookingDetailRow">
-                  <span className="bookingLabel">Check-in:</span>
+                  <span className="bookingLabel">Check-in</span>
                   <span className="bookingValue">{checkInDate}</span>
                 </div>
                 {booking.checkOutDate && (
                   <div className="bookingDetailRow">
-                    <span className="bookingLabel">Check-out:</span>
+                    <span className="bookingLabel">Check-out</span>
                     <span className="bookingValue">{booking.checkOutDate}</span>
                   </div>
                 )}
                 <div className="bookingDetailRow">
-                  <span className="bookingLabel">Guests:</span>
+                  <span className="bookingLabel">Guests</span>
                   <span className="bookingValue">{booking.guests || 'N/A'}</span>
                 </div>
                 <div className="bookingDetailRow">
-                  <span className="bookingLabel">Guest Name:</span>
+                  <span className="bookingLabel">Guest Name</span>
                   <span className="bookingValue">{booking.fullName || 'N/A'}</span>
                 </div>
                 <div className="bookingDetailRow">
-                  <span className="bookingLabel">Booked:</span>
+                  <span className="bookingLabel">Booked on</span>
                   <span className="bookingValue">{createdDate}</span>
                 </div>
                 {daysUntilCheckIn !== null && (
                   <div className={`bookingDetailRow ${daysUntilCheckIn <= 7 ? 'isWarning' : ''}`}>
-                    <span className="bookingLabel">Days Until Check-in:</span>
+                    <span className="bookingLabel">Days Until Check-in</span>
                     <span className="bookingValue">{Math.max(daysUntilCheckIn, 0)} days</span>
                   </div>
                 )}
@@ -78,14 +77,14 @@ export default function CustomerBookingsList({ bookings }) {
 
               {!canEdit && (
                 <p className="bookingEditMessage">
-                  Edits are only allowed more than 7 days before check-in.
+                  Booking is locked. Edits are only allowed more than 7 days before check-in.
                 </p>
               )}
 
               <div className="bookingCardActions">
                 <Link
                   to={`/customer/bookings/${encodeURIComponent(booking.bookingReference)}`}
-                  className="bookingsEmptyLink"
+                  className="bookingViewBtn"
                 >
                   View Details
                 </Link>
@@ -94,7 +93,7 @@ export default function CustomerBookingsList({ bookings }) {
                   disabled={!canEdit}
                   className={`bookingEditBtn ${canEdit ? 'isEnabled' : 'isDisabled'}`}
                 >
-                  {canEdit ? 'Edit Booking' : 'Cannot Edit'}
+                  {canEdit ? 'Edit Booking' : 'Locked'}
                 </button>
               </div>
             </div>

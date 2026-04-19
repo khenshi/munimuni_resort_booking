@@ -1,15 +1,15 @@
 export const CUSTOMER_ACCOUNTS_STORAGE_KEY = 'munimuni-customer-accounts'
 export const CURRENT_CUSTOMER_STORAGE_KEY = 'munimuni-current-customer'
 export const AUTH_CHANGED_EVENT = 'munimuni-auth-changed'
-export const CUSTOMER_BALANCES_STORAGE_KEY = 'munimuni-customer-balances'
-export const BALANCE_CHANGED_EVENT = 'munimuni-balance-changed'
+export const CUSTOMER_OUTSTANDING_BALANCES_STORAGE_KEY = 'munimuni-customer-outstanding-balances'
+export const OUTSTANDING_BALANCE_CHANGED_EVENT = 'munimuni-outstanding-balance-changed'
 
 function normalizeEmail(emailValue) {
   return String(emailValue ?? '').trim().toLowerCase()
 }
 
-function dispatchBalanceChanged() {
-  window.dispatchEvent(new Event(BALANCE_CHANGED_EVENT))
+function dispatchOutstandingBalanceChanged() {
+  window.dispatchEvent(new Event(OUTSTANDING_BALANCE_CHANGED_EVENT))
 }
 
 export function readCustomerAccounts() {
@@ -140,26 +140,26 @@ export function updateCustomerPassword(customerId, currentPassword, nextPassword
   return { ok: true }
 }
 
-export function readCustomerBalances() {
+export function readCustomerOutstandingBalances() {
   try {
-    const parsed = JSON.parse(window.localStorage.getItem(CUSTOMER_BALANCES_STORAGE_KEY) ?? '{}')
+    const parsed = JSON.parse(window.localStorage.getItem(CUSTOMER_OUTSTANDING_BALANCES_STORAGE_KEY) ?? '{}')
     return parsed && typeof parsed === 'object' ? parsed : {}
   } catch {
     return {}
   }
 }
 
-export function writeCustomerBalances(balancesMap) {
-  window.localStorage.setItem(CUSTOMER_BALANCES_STORAGE_KEY, JSON.stringify(balancesMap))
-  dispatchBalanceChanged()
+export function writeCustomerOutstandingBalances(balancesMap) {
+  window.localStorage.setItem(CUSTOMER_OUTSTANDING_BALANCES_STORAGE_KEY, JSON.stringify(balancesMap))
+  dispatchOutstandingBalanceChanged()
 }
 
-export function getCustomerBalance(customerId) {
+export function getCustomerOutstandingBalance(customerId) {
   if (!customerId) {
     return 0
   }
 
-  const balancesMap = readCustomerBalances()
+  const balancesMap = readCustomerOutstandingBalances()
   const parsedValue = Number(balancesMap[customerId] ?? 0)
   if (!Number.isFinite(parsedValue)) {
     return 0
@@ -168,28 +168,28 @@ export function getCustomerBalance(customerId) {
   return Math.max(0, parsedValue)
 }
 
-export function setCustomerBalance(customerId, nextBalance) {
+export function setCustomerOutstandingBalance(customerId, nextBalance) {
   if (!customerId) {
     return 0
   }
 
   const parsedValue = Number(nextBalance)
   const safeBalance = Number.isFinite(parsedValue) ? Math.max(0, parsedValue) : 0
-  const balancesMap = readCustomerBalances()
+  const balancesMap = readCustomerOutstandingBalances()
   balancesMap[customerId] = safeBalance
-  writeCustomerBalances(balancesMap)
+  writeCustomerOutstandingBalances(balancesMap)
 
   return safeBalance
 }
 
-export function adjustCustomerBalance(customerId, deltaAmount) {
+export function adjustCustomerOutstandingBalance(customerId, deltaAmount) {
   if (!customerId) {
     return 0
   }
 
-  const currentBalance = getCustomerBalance(customerId)
+  const currentBalance = getCustomerOutstandingBalance(customerId)
   const parsedDelta = Number(deltaAmount)
   const safeDelta = Number.isFinite(parsedDelta) ? parsedDelta : 0
   const nextBalance = Math.max(0, currentBalance + safeDelta)
-  return setCustomerBalance(customerId, nextBalance)
+  return setCustomerOutstandingBalance(customerId, nextBalance)
 }

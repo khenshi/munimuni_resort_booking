@@ -1,13 +1,10 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Navigate } from 'react-router-dom'
 import LoginPageHeader from '../components/login/layout/LoginPageHeader'
 import {
   AUTH_CHANGED_EVENT,
-  BALANCE_CHANGED_EVENT,
-  getCustomerBalance,
   readCurrentCustomer,
   readCustomerAccounts,
-  setCustomerBalance,
   updateCustomerContactDetails,
   updateCustomerPassword,
 } from '../components/login/auth-storage'
@@ -24,6 +21,8 @@ function readEditableProfile(customerId, fallbackCustomer) {
   }
 }
 
+import AccountLayout from '../components/dashboard/layout/AccountLayout'
+
 export default function CustomerEditProfilePage() {
   const [currentCustomer, setCurrentCustomer] = useState(() => readCurrentCustomer())
   const [contactForm, setContactForm] = useState(() => {
@@ -39,15 +38,6 @@ export default function CustomerEditProfilePage() {
   const [confirmNewPassword, setConfirmNewPassword] = useState('')
   const [contactNotice, setContactNotice] = useState('')
   const [passwordNotice, setPasswordNotice] = useState('')
-  const [balanceNotice, setBalanceNotice] = useState('')
-
-  const [balanceInput, setBalanceInput] = useState(() => {
-    const initialCustomer = readCurrentCustomer()
-    if (!initialCustomer?.id) {
-      return '0'
-    }
-    return String(getCustomerBalance(initialCustomer.id))
-  })
 
   useEffect(() => {
     const syncCustomer = () => {
@@ -56,34 +46,17 @@ export default function CustomerEditProfilePage() {
 
       if (nextCustomer?.id) {
         setContactForm(readEditableProfile(nextCustomer.id, nextCustomer))
-        setBalanceInput(String(getCustomerBalance(nextCustomer.id)))
       }
-    }
-
-    const syncBalance = () => {
-      if (!currentCustomer?.id) {
-        return
-      }
-      setBalanceInput(String(getCustomerBalance(currentCustomer.id)))
     }
 
     window.addEventListener('storage', syncCustomer)
     window.addEventListener(AUTH_CHANGED_EVENT, syncCustomer)
-    window.addEventListener(BALANCE_CHANGED_EVENT, syncBalance)
 
     return () => {
       window.removeEventListener('storage', syncCustomer)
       window.removeEventListener(AUTH_CHANGED_EVENT, syncCustomer)
-      window.removeEventListener(BALANCE_CHANGED_EVENT, syncBalance)
     }
   }, [currentCustomer?.id])
-
-  const activeBalance = useMemo(() => {
-    if (!currentCustomer?.id) {
-      return 0
-    }
-    return getCustomerBalance(currentCustomer.id)
-  }, [currentCustomer?.id, balanceInput])
 
   if (!currentCustomer) {
     return <Navigate to="/customer/login" replace />
@@ -122,140 +95,101 @@ export default function CustomerEditProfilePage() {
     setConfirmNewPassword('')
   }
 
-  const handleBalanceSubmit = (event) => {
-    event.preventDefault()
-    const nextBalance = Number(balanceInput)
-
-    if (!Number.isFinite(nextBalance) || nextBalance < 0) {
-      setBalanceNotice('Balance must be a valid non-negative number.')
-      return
-    }
-
-    const savedBalance = setCustomerBalance(currentCustomer.id, nextBalance)
-    setBalanceInput(String(savedBalance))
-    setBalanceNotice('Balance saved in local storage for this account.')
-  }
-
   return (
-    <div className="customerProfilePage">
-      <LoginPageHeader />
-      <main className="customerProfileMain">
-        <section className="customerProfileShell" aria-labelledby="customer-profile-title">
-          <header className="customerProfileHero">
-            <p className="customerProfileKicker">My Account</p>
-            <h1 id="customer-profile-title">Edit profile and account security</h1>
-            <p>
-              Changes are saved locally and scoped to your account id to keep user data isolated.
-            </p>
-          </header>
+    <AccountLayout>
+      <section className="customerProfileShell" aria-labelledby="customer-profile-title">
+        <header className="customerProfileHero">
+          <p className="customerProfileKicker">My Account</p>
+          <h1 id="customer-profile-title">Edit profile and account security</h1>
+          <p>
+            Changes are saved locally and scoped to your account id to keep user data isolated.
+          </p>
+        </header>
 
-          <div className="customerProfileGrid">
-            <article className="customerProfileCard">
-              <h2>Contact details</h2>
-              <form onSubmit={handleContactSubmit} className="customerProfileForm">
-                <label htmlFor="profile-full-name">Full name</label>
-                <input
-                  id="profile-full-name"
-                  type="text"
-                  value={contactForm.fullName}
-                  onChange={(event) => setContactForm((prev) => ({ ...prev, fullName: event.target.value }))}
-                  placeholder="Your full name"
-                />
+        <div className="customerProfileGrid">
+          <article className="customerProfileCard">
+            <h2>Contact details</h2>
+            <form onSubmit={handleContactSubmit} className="customerProfileForm">
+              <label htmlFor="profile-full-name">Full name</label>
+              <input
+                id="profile-full-name"
+                type="text"
+                value={contactForm.fullName}
+                onChange={(event) => setContactForm((prev) => ({ ...prev, fullName: event.target.value }))}
+                placeholder="Your full name"
+              />
 
-                <label htmlFor="profile-email">Email</label>
-                <input
-                  id="profile-email"
-                  type="email"
-                  value={contactForm.email}
-                  onChange={(event) => setContactForm((prev) => ({ ...prev, email: event.target.value }))}
-                  placeholder="you@example.com"
-                  required
-                />
+              <label htmlFor="profile-email">Email</label>
+              <input
+                id="profile-email"
+                type="email"
+                value={contactForm.email}
+                onChange={(event) => setContactForm((prev) => ({ ...prev, email: event.target.value }))}
+                placeholder="you@example.com"
+                required
+              />
 
-                <label htmlFor="profile-phone">Phone</label>
-                <input
-                  id="profile-phone"
-                  type="text"
-                  value={contactForm.phone}
-                  onChange={(event) => setContactForm((prev) => ({ ...prev, phone: event.target.value }))}
-                  placeholder="09xx xxx xxxx"
-                />
+              <label htmlFor="profile-phone">Phone</label>
+              <input
+                id="profile-phone"
+                type="text"
+                value={contactForm.phone}
+                onChange={(event) => setContactForm((prev) => ({ ...prev, phone: event.target.value }))}
+                placeholder="09xx xxx xxxx"
+              />
 
-                <label htmlFor="profile-address">Address</label>
-                <textarea
-                  id="profile-address"
-                  rows={3}
-                  value={contactForm.address}
-                  onChange={(event) => setContactForm((prev) => ({ ...prev, address: event.target.value }))}
-                  placeholder="Street, city, province"
-                />
+              <label htmlFor="profile-address">Address</label>
+              <textarea
+                id="profile-address"
+                rows={3}
+                value={contactForm.address}
+                onChange={(event) => setContactForm((prev) => ({ ...prev, address: event.target.value }))}
+                placeholder="Street, city, province"
+              />
 
-                <button type="submit">Save contact details</button>
-                {contactNotice ? <p className="customerProfileNotice">{contactNotice}</p> : null}
-              </form>
-            </article>
+              <button type="submit">Save contact details</button>
+              {contactNotice ? <p className="customerProfileNotice">{contactNotice}</p> : null}
+            </form>
+          </article>
 
-            <article className="customerProfileCard">
-              <h2>Update password</h2>
-              <form onSubmit={handlePasswordSubmit} className="customerProfileForm">
-                <label htmlFor="profile-current-password">Current password</label>
-                <input
-                  id="profile-current-password"
-                  type="password"
-                  value={currentPassword}
-                  onChange={(event) => setCurrentPassword(event.target.value)}
-                  required
-                />
+          <article className="customerProfileCard">
+            <h2>Update password</h2>
+            <form onSubmit={handlePasswordSubmit} className="customerProfileForm">
+              <label htmlFor="profile-current-password">Current password</label>
+              <input
+                id="profile-current-password"
+                type="password"
+                value={currentPassword}
+                onChange={(event) => setCurrentPassword(event.target.value)}
+                required
+              />
 
-                <label htmlFor="profile-new-password">New password</label>
-                <input
-                  id="profile-new-password"
-                  type="password"
-                  value={newPassword}
-                  onChange={(event) => setNewPassword(event.target.value)}
-                  minLength={6}
-                  required
-                />
+              <label htmlFor="profile-new-password">New password</label>
+              <input
+                id="profile-new-password"
+                type="password"
+                value={newPassword}
+                onChange={(event) => setNewPassword(event.target.value)}
+                minLength={6}
+                required
+              />
 
-                <label htmlFor="profile-confirm-password">Confirm new password</label>
-                <input
-                  id="profile-confirm-password"
-                  type="password"
-                  value={confirmNewPassword}
-                  onChange={(event) => setConfirmNewPassword(event.target.value)}
-                  minLength={6}
-                  required
-                />
+              <label htmlFor="profile-confirm-password">Confirm new password</label>
+              <input
+                id="profile-confirm-password"
+                type="password"
+                value={confirmNewPassword}
+                onChange={(event) => setConfirmNewPassword(event.target.value)}
+                minLength={6}
+                required
+              />
 
-                <button type="submit">Save new password</button>
-                {passwordNotice ? <p className="customerProfileNotice">{passwordNotice}</p> : null}
-              </form>
-            </article>
-
-            <article className="customerProfileCard">
-              <h2>Wallet balance</h2>
-              <form onSubmit={handleBalanceSubmit} className="customerProfileForm">
-                <p className="customerProfileHint">
-                  Current balance: <strong>PHP {activeBalance.toLocaleString()}</strong>
-                </p>
-
-                <label htmlFor="profile-wallet-balance">Set account balance</label>
-                <input
-                  id="profile-wallet-balance"
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  value={balanceInput}
-                  onChange={(event) => setBalanceInput(event.target.value)}
-                />
-
-                <button type="submit">Save balance</button>
-                {balanceNotice ? <p className="customerProfileNotice">{balanceNotice}</p> : null}
-              </form>
-            </article>
-          </div>
-        </section>
-      </main>
-    </div>
+              <button type="submit">Save new password</button>
+              {passwordNotice ? <p className="customerProfileNotice">{passwordNotice}</p> : null}
+            </form>
+          </article>
+        </div>
+      </section>
+    </AccountLayout>
   )
 }
