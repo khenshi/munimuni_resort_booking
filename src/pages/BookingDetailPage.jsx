@@ -1,7 +1,9 @@
+import { useState } from 'react'
 import { Navigate, Link, useParams } from 'react-router-dom'
 import LoginPageHeader from '../components/login/layout/LoginPageHeader'
 import { readCurrentCustomer } from '../components/login/auth-storage'
 import { getCustomerBookingList } from '../components/login/bookings-storage'
+import useBookingStateSync from '../components/booking/state/useBookingStateSync'
 import { previousBookings } from '../data/previous-bookings'
 import '../styles/pages/customer-detail-pages.css'
 
@@ -28,14 +30,17 @@ function calculateNights(checkInDate, checkOutDate) {
 export default function BookingDetailPage() {
   const { bookingId } = useParams()
   const currentCustomer = readCurrentCustomer()
+  const [customerBookings, setCustomerBookings] = useState(() =>
+    currentCustomer ? getCustomerBookingList(currentCustomer.id) : [],
+  )
+
+  useBookingStateSync(currentCustomer?.id, setCustomerBookings)
 
   if (!currentCustomer) {
     return <Navigate to="/customer/login" replace />
   }
 
   const decodedBookingId = decodeURIComponent(bookingId || '')
-  const customerBookings = getCustomerBookingList(currentCustomer.id)
-
   const liveBooking = customerBookings.find(
     (booking) => booking.bookingReference === decodedBookingId,
   )

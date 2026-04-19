@@ -6,7 +6,8 @@ import { AUTH_CHANGED_EVENT, readCurrentCustomer } from '../components/login/aut
 import PreviousBookingsWidget from '../components/dashboard/PreviousBookingsWidget'
 import DigitalConciergeSection from '../components/dashboard/DigitalConciergeSection'
 import CustomerBookingsList from '../components/login/CustomerBookingsList'
-import { getCustomerBookingList, BOOKINGS_CHANGED_EVENT } from '../components/login/bookings-storage'
+import { getCustomerBookingList } from '../components/login/bookings-storage'
+import useBookingStateSync from '../components/booking/state/useBookingStateSync'
 import '../styles/pages/customer-dashboard-page.css'
 import LandingFooter from '../components/landing/layout/LandingFooter'
 
@@ -31,23 +32,16 @@ export default function CustomerDashboardPage() {
       }
     }
 
-    const refreshBookings = () => {
-      if (currentCustomer?.id) {
-        const bookings = getCustomerBookingList(currentCustomer.id)
-        setCustomerBookings(bookings)
-      }
-    }
-
     window.addEventListener('storage', syncCurrentCustomer)
     window.addEventListener(AUTH_CHANGED_EVENT, syncCurrentCustomer)
-    window.addEventListener(BOOKINGS_CHANGED_EVENT, refreshBookings)
 
     return () => {
       window.removeEventListener('storage', syncCurrentCustomer)
       window.removeEventListener(AUTH_CHANGED_EVENT, syncCurrentCustomer)
-      window.removeEventListener(BOOKINGS_CHANGED_EVENT, refreshBookings)
     }
-  }, [navigate, currentCustomer?.id])
+  }, [navigate])
+
+  useBookingStateSync(currentCustomer?.id, setCustomerBookings)
 
   if (!currentCustomer) {
     return <Navigate to="/customer/login" replace />
