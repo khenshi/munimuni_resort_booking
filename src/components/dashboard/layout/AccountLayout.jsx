@@ -1,5 +1,4 @@
 import { Navigate } from 'react-router-dom'
-import LoginPageHeader from '../../login/layout/LoginPageHeader'
 import LandingFooter from '../../landing/layout/LandingFooter'
 import AccountSidebar from './AccountSidebar'
 import { readCurrentCustomer } from '../../login/auth-storage'
@@ -14,8 +13,6 @@ export default function AccountLayout({ children }) {
 
   return (
     <div className="customerDashboard">
-      <LoginPageHeader />
-      
       <main className="dashboardMain">
         <div className="dashboardLayoutArea">
           <AccountSidebar />

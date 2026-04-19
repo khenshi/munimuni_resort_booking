@@ -1,5 +1,4 @@
 import { Link, Navigate, useParams } from 'react-router-dom'
-import LoginPageHeader from '../components/login/layout/LoginPageHeader'
 import { readCurrentCustomer } from '../components/login/auth-storage'
 import {
   findReceiptById,
@@ -33,7 +32,6 @@ export default function ReceiptDetailPage() {
   if (!receipt) {
     return (
       <div className="customerDetailPage">
-        <LoginPageHeader />
         <main className="customerDetailMain">
           <section className="customerDetailCard">
             <p className="customerDetailKicker">Receipt Detail</p>
@@ -59,7 +57,6 @@ export default function ReceiptDetailPage() {
 
   return (
     <div className="customerDetailPage">
-      <LoginPageHeader />
       <main className="customerDetailMain">
         <section className="customerDetailCard">
           <p className="customerDetailKicker">Receipt Detail</p>

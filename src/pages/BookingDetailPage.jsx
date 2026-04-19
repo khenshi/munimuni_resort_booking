@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { Navigate, Link, useParams } from 'react-router-dom'
-import LoginPageHeader from '../components/login/layout/LoginPageHeader'
 import { readCurrentCustomer } from '../components/login/auth-storage'
 import { getCustomerBookingList } from '../components/login/bookings-storage'
 import useBookingStateSync from '../components/booking/state/useBookingStateSync'
@@ -54,7 +53,6 @@ export default function BookingDetailPage() {
   if (!booking) {
     return (
       <div className="customerDetailPage">
-        <LoginPageHeader />
         <main className="customerDetailMain">
           <section className="customerDetailCard">
             <p className="customerDetailKicker">Booking Detail</p>
@@ -82,7 +80,6 @@ export default function BookingDetailPage() {
 
   return (
     <div className="customerDetailPage">
-      <LoginPageHeader />
       <main className="customerDetailMain">
         <section className="customerDetailCard">
           <p className="customerDetailKicker">Booking Detail</p>

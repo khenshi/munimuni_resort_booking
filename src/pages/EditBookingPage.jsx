@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
-import LoginPageHeader from '../components/login/layout/LoginPageHeader'
 import { readCurrentCustomer } from '../components/login/auth-storage'
 import EditBookingForm from '../components/booking/forms/EditBookingForm'
 import useEditBookingLogic from '../components/booking/state/useEditBookingLogic'
@@ -59,7 +58,6 @@ export default function EditBookingPage() {
   if (!existingBooking) {
     return (
       <div className="customerDetailPage">
-        <LoginPageHeader />
         <main className="customerDetailMain">
           <section className="customerDetailCard">
             <p className="customerDetailKicker">Edit Booking</p>
@@ -81,7 +79,6 @@ export default function EditBookingPage() {
 
   return (
     <div className="customerDetailPage">
-      <LoginPageHeader />
       <main className="customerDetailMain">
         <EditBookingForm
           pageHeading={`Edit booking for ${selectedOffer?.title ?? 'your stay'}`}

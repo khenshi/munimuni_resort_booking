@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
-import LoginPageHeader from '../components/login/layout/LoginPageHeader'
 import CustomerLoginFormCard from '../components/login/sections/CustomerLoginFormCard'
 import {
   readCurrentCustomer,
@@ -105,7 +104,6 @@ export default function CustomerLoginPage() {
 
   return (
     <div className="customerLoginPage">
-      <LoginPageHeader />
       <main className="customerLoginMain">
         <div className="customerLoginShell">
           <CustomerLoginFormCard

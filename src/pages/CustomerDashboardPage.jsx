@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
-import LoginPageHeader from '../components/login/layout/LoginPageHeader'
 import FinancialWalletSection from '../components/dashboard/sections/FinancialWalletSection'
 import { BOOKINGS_CHANGED_EVENT } from '../components/login/bookings-storage'
 import {
@@ -17,7 +16,6 @@ import { getCustomerBookingList } from '../components/login/bookings-storage'
 import useBookingStateSync from '../components/booking/state/useBookingStateSync'
 import '../styles/pages/customer-dashboard-page.css'
 import '../styles/components/dashboard/digital-concierge-panel.css'
-import LandingFooter from '../components/landing/layout/LandingFooter'
 
 import AccountLayout from '../components/dashboard/layout/AccountLayout'
 

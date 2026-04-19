@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { Navigate } from 'react-router-dom'
-import LoginPageHeader from '../components/login/layout/LoginPageHeader'
 import {
   AUTH_CHANGED_EVENT,
   readCurrentCustomer,

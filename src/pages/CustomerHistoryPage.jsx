@@ -1,6 +1,5 @@
 import { useMemo, useState, useEffect } from 'react'
 import { Navigate, useNavigate, useLocation } from 'react-router-dom'
-import LoginPageHeader from '../components/login/layout/LoginPageHeader'
 import { readCurrentCustomer } from '../components/login/auth-storage'
 import { previousBookings } from '../data/previous-bookings'
 import { resortReceipts } from '../data/receipts'
