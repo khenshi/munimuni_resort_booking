@@ -5,9 +5,11 @@ import FinancialWalletSection from '../components/dashboard/sections/FinancialWa
 import { AUTH_CHANGED_EVENT, readCurrentCustomer } from '../components/login/auth-storage'
 import PreviousBookingsWidget from '../components/dashboard/PreviousBookingsWidget'
 import DigitalConciergeSection from '../components/dashboard/DigitalConciergeSection'
+import DigitalConciergePanel from '../components/dashboard/DigitalConciergePanel'
 import CustomerBookingsList from '../components/login/CustomerBookingsList'
 import { getCustomerBookingList, BOOKINGS_CHANGED_EVENT } from '../components/login/bookings-storage'
 import '../styles/pages/customer-dashboard-page.css'
+import '../styles/components/dashboard/digital-concierge-panel.css'
 import LandingFooter from '../components/landing/layout/LandingFooter'
 
 export default function CustomerDashboardPage() {
@@ -162,6 +164,7 @@ export default function CustomerDashboardPage() {
           <div className="dashboardWidgetsRow">
             <PreviousBookingsWidget />
             <DigitalConciergeSection />
+            <DigitalConciergePanel />
           </div>       
           
         </div>
