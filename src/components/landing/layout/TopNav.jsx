@@ -7,16 +7,18 @@ import {
   readCurrentCustomer,
 } from '../../login/auth-storage'
 
-export default function TopNav({ navItems, menuOpen, onMenuToggle }) {
+export default function TopNav({ navItems }) {
   const [profileMenuOpen, setProfileMenuOpen] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
   const [currentCustomer, setCurrentCustomer] = useState(() => readCurrentCustomer())
   const profileMenuRef = useRef(null)
+  const menuButtonRef = useRef(null)
 
   const customerInitials = useMemo(() => {
     const name = currentCustomer?.fullName?.trim() ?? ''
     if (!name) return 'P'
 
-    const segments = name.split(/\s+/).filter(Boolean)
+    const segments = name.split(/\s+/).filter(Boolean) //regex to split by whitespace and filter out empty segments (in case of multiple spaces)
     if (segments.length === 1) return segments[0].slice(0, 1).toUpperCase()
     return `${segments[0].slice(0, 1)}${segments[1].slice(0, 1)}`.toUpperCase()
   }, [currentCustomer])
@@ -29,7 +31,10 @@ export default function TopNav({ navItems, menuOpen, onMenuToggle }) {
       }
     }
     const onKeyDown = (event) => {
-      if (event.key === 'Escape') setProfileMenuOpen(false)
+      if (event.key === 'Escape') {
+        setProfileMenuOpen(false)
+        setMenuOpen(false)
+      }
     }
 
     window.addEventListener('storage', syncCurrentCustomer)
@@ -55,11 +60,11 @@ export default function TopNav({ navItems, menuOpen, onMenuToggle }) {
       window.scrollTo({ top, behavior: 'smooth' })
     }
 
-    onMenuToggle?.()
+    setMenuOpen(false)
   }
 
   const onMobileBookNowClick = () => {
-    onMenuToggle?.()
+    setMenuOpen(false)
   }
 
   const handleSignOut = () => {
@@ -109,7 +114,10 @@ export default function TopNav({ navItems, menuOpen, onMenuToggle }) {
               aria-label="Open profile menu"
               aria-haspopup="menu"
               aria-expanded={profileMenuOpen}
-              onClick={() => setProfileMenuOpen((prev) => !prev)}
+              onClick={() => {
+                setProfileMenuOpen((prev) => !prev)
+                setMenuOpen(false)
+              }}
             >
               {customerInitials}
             </button>
@@ -163,9 +171,13 @@ export default function TopNav({ navItems, menuOpen, onMenuToggle }) {
           <button
             type="button"
             className="menuButton"
+            ref={menuButtonRef}
             aria-label="Open menu"
             aria-expanded={menuOpen}
-            onClick={onMenuToggle}
+            onClick={() => {
+              setMenuOpen((prev) => !prev)
+              setProfileMenuOpen(false)
+            }}
           >
             <span className="menuIcon" aria-hidden="true">
               <span />
@@ -194,7 +206,7 @@ export default function TopNav({ navItems, menuOpen, onMenuToggle }) {
               className="mobileBookNow"
               onClick={onMobileBookNowClick}
             >
-              Book Now
+              Book Here
             </RouterLink>
           </div>
         </div>

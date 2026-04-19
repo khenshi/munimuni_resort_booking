@@ -41,8 +41,15 @@ export default function useBookingPageLogic() {
   const prefilledGuests = navigationState.prefillGuestCount ?? query.get('guests') ?? ''
 
   const selectedOffer = useMemo(() => {
-    if (selectedOfferFromState?.title) return selectedOfferFromState
-    return resolveSelectedOffer(offerType, offerId)
+    const resolvedOffer = resolveSelectedOffer(offerType, offerId)
+    if (!selectedOfferFromState?.title) return resolvedOffer
+
+    return {
+      ...resolvedOffer,
+      ...Object.fromEntries(
+        Object.entries(selectedOfferFromState).filter(([, value]) => value !== undefined),
+      ),
+    }
   }, [selectedOfferFromState, offerId, offerType])
 
   const detailsTo = useMemo(() => {
