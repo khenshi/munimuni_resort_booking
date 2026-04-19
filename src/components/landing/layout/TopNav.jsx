@@ -120,20 +120,12 @@ export default function TopNav({ navItems, menuOpen, onMenuToggle }) {
                   <>
                     <p className="profileDropdownTitle">{currentCustomer.fullName || currentCustomer.email}</p>
                     <RouterLink
-                      to="/customer/history"
-                      className="profileDropdownLink"
-                      role="menuitem"
-                      onClick={() => setProfileMenuOpen(false)}
-                    >
-                      History & Receipts
-                    </RouterLink>
-                    <RouterLink
                       to="/customer/dashboard"
                       className="profileDropdownLink"
                       role="menuitem"
                       onClick={() => setProfileMenuOpen(false)}
                     >
-                      Dashboard
+                      My Dashboard
                     </RouterLink>
                     <button type="button" className="profileDropdownButton" role="menuitem" onClick={handleSignOut}>
                       Sign Out

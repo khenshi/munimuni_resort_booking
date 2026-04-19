@@ -1,6 +1,4 @@
-import BookingPageFlow from '../components/booking/BookingPageFlow'
-import BookingPageHeader from '../components/booking/BookingPageHeader'
-import useBookingPageLogic from '../components/booking/useBookingPageLogic'
+import { BookingPageFlow, BookingPageHeader, useBookingPageLogic } from '../components/booking'
 import '../styles/pages/booking-page.css'
 
 export default function BookingPage() {

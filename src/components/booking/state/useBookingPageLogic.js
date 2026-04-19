@@ -1,11 +1,11 @@
 import { useMemo, useState } from 'react'
 import { useLocation } from 'react-router-dom'
-import { resolveAutoCheckOutDate, resolveSelectedOffer } from './booking-utils'
-import { addDaysToISODate, getTodayISODate } from '../packages/utils/availability-utils'
-import { isItemAvailableForDate } from '../packages'
-import { readCurrentCustomer } from '../login/auth-storage'
-import { addCustomerBooking } from '../login/bookings-storage'
-import { addOns, cottages, dayTourOffers, overnightOffers } from '../../data/packages'
+import { resolveAutoCheckOutDate, resolveSelectedOffer } from '../utils/booking-utils'
+import { addDaysToISODate, getTodayISODate } from '../../packages/utils/availability-utils'
+import { isItemAvailableForDate } from '../../packages'
+import { readCurrentCustomer } from '../../login/auth-storage'
+import { addCustomerBooking } from '../../login/bookings-storage'
+import { addOns, cottages, dayTourOffers, overnightOffers } from '../../../data/packages'
 import {
   buildFullName,
   createInitialBookingFormData,
@@ -15,7 +15,7 @@ import {
   getSelectedAddOnLabels,
   sanitizeGuestCountInput,
   sanitizePhoneInput,
-} from './booking-form-utils'
+} from '../utils/booking-form-utils'
 
 function generateBookingReference(selectedOffer) {
   const offerTypePrefix = (selectedOffer?.offerType ?? 'gen').slice(0, 3).toUpperCase()
@@ -29,8 +29,10 @@ export default function useBookingPageLogic() {
   const location = useLocation()
   const query = new URLSearchParams(location.search)
   const navigationState = location.state ?? {}
+  const currentPath = `${location.pathname}${location.search}`
   const prefillStayDates = navigationState.prefillStayDates ?? {}
   const selectedOfferFromState = navigationState.selectedOffer
+  const currentCustomer = readCurrentCustomer()
 
   const offerType = query.get('offerType') ?? ''
   const offerId = query.get('offerId') ?? ''
@@ -170,6 +172,7 @@ export default function useBookingPageLogic() {
   )
 
   const pageHeading = 'Book Your Stay'
+  const isAuthenticated = Boolean(currentCustomer?.id)
 
   const selectedAddOnLabels = useMemo(
     () => getSelectedAddOnLabels(formData.selectedAddOns, addOns),
@@ -269,5 +272,10 @@ export default function useBookingPageLogic() {
     maxAllowedGuests,
     selectedAddOnLabels,
     activeDateUnavailable,
+    isAuthenticated,
+    loginActionState: {
+      returnTo: currentPath,
+      authMode: 'signin',
+    },
   }
 }

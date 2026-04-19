@@ -102,6 +102,14 @@ export default function LoginPageHeader() {
                     >
                       Dashboard
                     </Link>
+                    <Link
+                      to="/customer/profile"
+                      className="loginProfileDropdownLink"
+                      role="menuitem"
+                      onClick={() => setProfileMenuOpen(false)}
+                    >
+                      Edit Profile
+                    </Link>
                     <button
                       type="button"
                       className="loginProfileDropdownButton"

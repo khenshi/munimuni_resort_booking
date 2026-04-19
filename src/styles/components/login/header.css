@@ -2,7 +2,7 @@
   --brand-cyan-rgb: var(--color-cyan-rgb);
   --brand-cyan: rgb(var(--brand-cyan-rgb));
 
-  position: fixed;
+  position: sticky;
   top: 0;
   left: 0;
   right: 0;

@@ -1,7 +1,7 @@
 export default function BookingStepAddOns({ formData, addOns, toggleAddOn }) {
   return (
     <div className="bookingAddOnsList">
-      {addOns.slice(0, 3).map((item) => {
+      {addOns.map((item) => {
         const checked = formData.selectedAddOns.includes(item.id)
         return (
           <label key={item.id} className={`bookingAddOn ${checked ? 'isChecked' : ''}`}>

@@ -1,0 +1,60 @@
+.digitalConciergePanel {
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 8px 24px rgba(16,38,74,0.08);
+  padding: 24px;
+  margin-top: 18px;
+}
+.conciergeMapSection {
+  margin-bottom: 18px;
+}
+.conciergeDirectionsBtn {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 8px 16px;
+  background: #1a73e8;
+  color: #fff;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background 0.2s;
+}
+.conciergeDirectionsBtn:hover {
+  background: #155ab6;
+}
+.conciergeContactInfo {
+  margin-top: 18px;
+}
+.conciergeContactInfo ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 8px 0;
+}
+.conciergeContactInfo li {
+  margin-bottom: 6px;
+  font-size: 15px;
+}
+.conciergeSocialLinks h5 {
+  margin: 10px 0 4px 0;
+  font-size: 15px;
+}
+.conciergeSocialLinks ul {
+  display: flex;
+  gap: 12px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.conciergeSocialLinks a {
+  color: #1a73e8;
+  text-decoration: none;
+  font-weight: 500;
+}
+.conciergeSocialLinks a:hover {
+  text-decoration: underline;
+}
+
+.conciergeCardWrapper {
+  display: flex;
+  flex-direction: column;
+}

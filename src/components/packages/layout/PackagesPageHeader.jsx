@@ -117,6 +117,14 @@ export default function PackagesPageHeader({ activeTab, onTabChange }) {
                     >
                       Dashboard
                     </Link>
+                    <Link
+                      to="/customer/profile"
+                      className="packagesProfileDropdownLink"
+                      role="menuitem"
+                      onClick={() => setProfileMenuOpen(false)}
+                    >
+                      Edit Profile
+                    </Link>
                     <button
                       type="button"
                       className="packagesProfileDropdownButton"

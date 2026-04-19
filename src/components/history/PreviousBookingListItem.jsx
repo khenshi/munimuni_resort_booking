@@ -16,7 +16,7 @@ export default function PreviousBookingListItem({ booking, onViewDetails }) {
   const statusClassName = statusVariant ? `historyStatusPill ${statusVariant.replace(/\s+/g, '-')}` : ''
 
   return (
-    <article className="historyBookingRow" aria-label={`Booking ${booking.id}`}>
+    <div className="historyBookingRow" aria-label={`Booking ${booking.id}`}>
       <div className="historyRowMain">
         <div className="historyRowTitleGroup">
           <p className="historyRowTitle">{booking.title}</p>
@@ -44,7 +44,7 @@ export default function PreviousBookingListItem({ booking, onViewDetails }) {
           </button>
         </div>
       </div>
-    </article>
+    </div>
   )
 }
 

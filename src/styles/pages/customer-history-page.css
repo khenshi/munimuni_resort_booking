@@ -1,6 +1,5 @@
 .customerHistoryPage {
   min-height: 100vh;
-  background: #f8fafc;
 }
 
 .customerHistoryMain {
@@ -33,10 +32,11 @@
 
 .customerHistoryLabel {
   margin: 0 0 0.75rem;
-  color: #374151;
   font-size: 0.85rem;
-  letter-spacing: 0.12em;
+  font-weight: 700;
   text-transform: uppercase;
+  color: var(--color-cyan, #00d2d3);
+  letter-spacing: 0.12em;
 }
 
 .customerHistoryTitle {

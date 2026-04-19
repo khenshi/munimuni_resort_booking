@@ -6,7 +6,9 @@ import PackageOfferDetailsPage from './pages/PackageOfferDetailsPage'
 import CustomerLoginPage from './pages/CustomerLoginPage'
 import CustomerDashboardPage from './pages/CustomerDashboardPage'
 import CustomerHistoryPage from './pages/CustomerHistoryPage'
+import CustomerEditProfilePage from './pages/CustomerEditProfilePage'
 import BookingDetailPage from './pages/BookingDetailPage'
+import EditBookingPage from './pages/EditBookingPage'
 import ReceiptDetailPage from './pages/ReceiptDetailPage'
 
 export default function App() {
@@ -16,8 +18,10 @@ export default function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/customer/login" element={<CustomerLoginPage />} />
         <Route path="/customer/dashboard" element={<CustomerDashboardPage />} />
+        <Route path="/customer/profile" element={<CustomerEditProfilePage />} />
         <Route path="/customer/history" element={<CustomerHistoryPage />} />
         <Route path="/customer/bookings/:bookingId" element={<BookingDetailPage />} />
+        <Route path="/customer/bookings/:bookingReference/edit" element={<EditBookingPage />} />
         <Route path="/customer/receipts/:receiptId" element={<ReceiptDetailPage />} />
         <Route path="/booking" element={<BookingPage />} />
         <Route path="/packages">
