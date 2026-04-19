@@ -1,0 +1,185 @@
+.contentPage {
+  min-height: 100vh;
+  background: #f8fafc;
+}
+
+.contentPageMain {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 3rem;
+}
+
+.contentPageShell {
+  display: grid;
+  gap: 1.25rem;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 24px;
+  box-shadow: 0 24px 64px rgba(15, 23, 42, 0.08);
+  overflow: hidden;
+}
+
+.contentPageHero {
+  display: grid;
+  gap: 1rem;
+  padding: 2rem;
+  border-bottom: 1px solid #e5e7eb;
+  background:
+    radial-gradient(circle at top right, rgba(14, 165, 233, 0.08), transparent 36%),
+    #f8fafc;
+}
+
+.contentPageKicker {
+  margin: 0;
+  color: #334155;
+  font-size: 0.82rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.contentPageTitle {
+  margin: 0;
+  color: #0f172a;
+  font-size: clamp(2rem, 3vw, 2.8rem);
+  line-height: 1.08;
+}
+
+.contentPageDescription {
+  margin: 0;
+  max-width: 760px;
+  color: #475569;
+  line-height: 1.75;
+}
+
+.contentPageBadgeRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+
+.contentPageBadge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.45rem 0.8rem;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #0f172a;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.contentPageBody {
+  display: grid;
+  gap: 1rem;
+  padding: 0 2rem 2rem;
+}
+
+.contentPanelCopy {
+  margin: 0.45rem 0 0;
+  color: #475569;
+  line-height: 1.6;
+}
+
+.contentSectionGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.contentInfoCard {
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  background: #ffffff;
+  padding: 1.1rem 1.15rem;
+}
+
+.contentInfoCard h3 {
+  margin: 0 0 0.65rem;
+  color: #0f172a;
+  font-size: 1.05rem;
+}
+
+.contentInfoCard ul {
+  margin: 0;
+  padding-left: 1.1rem;
+  color: #475569;
+  line-height: 1.7;
+}
+
+.contentInfoCard li + li {
+  margin-top: 0.45rem;
+}
+
+.accordionList {
+  display: grid;
+}
+
+.accordionItem + .accordionItem {
+  border-top: 1px solid #e2e8f0;
+}
+
+.accordionButton {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.15rem;
+  border: 0;
+  background: #ffffff;
+  color: #0f172a;
+  text-align: left;
+  cursor: pointer;
+}
+
+.accordionButton:hover {
+  background: #f8fafc;
+}
+
+.accordionButtonTitle {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.45;
+}
+
+.accordionIcon {
+  flex-shrink: 0;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  background: #e2e8f0;
+  color: #0f172a;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.accordionItem.isOpen .accordionIcon {
+  background: #0f172a;
+  color: #ffffff;
+}
+
+.accordionPanel {
+  padding: 0 1.15rem 1rem;
+  background: #ffffff;
+  color: #475569;
+  line-height: 1.7;
+}
+
+@media (max-width: 760px) {
+  .contentPageBody {
+    padding: 0 1rem 1rem;
+  }
+
+  .contentPageHero {
+    padding: 1.35rem;
+  }
+
+  .contentSectionGrid {
+    grid-template-columns: 1fr;
+  }
+}

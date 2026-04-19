@@ -129,7 +129,6 @@
   font-weight: 600;
   letter-spacing: 0.2px;
   cursor: pointer;
-  box-shadow: 0 14px 38px rgba(var(--color-cyan-rgb), 0.2);
 }
 
 .customerLoginSubmitBtn:hover {
