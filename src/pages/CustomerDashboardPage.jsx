@@ -1,8 +1,13 @@
 import { useEffect, useState } from 'react'
-import { Navigate, useNavigate } from 'react-router-dom'
+import { Link, Navigate, useNavigate } from 'react-router-dom'
 import LoginPageHeader from '../components/login/layout/LoginPageHeader'
 import FinancialWalletSection from '../components/dashboard/sections/FinancialWalletSection'
-import { AUTH_CHANGED_EVENT, readCurrentCustomer } from '../components/login/auth-storage'
+import {
+  AUTH_CHANGED_EVENT,
+  BALANCE_CHANGED_EVENT,
+  getCustomerBalance,
+  readCurrentCustomer,
+} from '../components/login/auth-storage'
 import PreviousBookingsWidget from '../components/dashboard/PreviousBookingsWidget'
 import DigitalConciergeSection from '../components/dashboard/DigitalConciergeSection'
 import CustomerBookingsList from '../components/login/CustomerBookingsList'
@@ -17,6 +22,10 @@ export default function CustomerDashboardPage() {
     const initialCustomer = readCurrentCustomer()
     return initialCustomer?.id ? getCustomerBookingList(initialCustomer.id) : []
   })
+  const [customerBalance, setCustomerBalance] = useState(() => {
+    const initialCustomer = readCurrentCustomer()
+    return initialCustomer?.id ? getCustomerBalance(initialCustomer.id) : 0
+  })
 
   useEffect(() => {
     const syncCurrentCustomer = () => {
@@ -28,6 +37,7 @@ export default function CustomerDashboardPage() {
       } else {
         const bookings = getCustomerBookingList(nextCustomer.id)
         setCustomerBookings(bookings)
+        setCustomerBalance(getCustomerBalance(nextCustomer.id))
       }
     }
 
@@ -38,14 +48,22 @@ export default function CustomerDashboardPage() {
       }
     }
 
+    const refreshBalance = () => {
+      if (currentCustomer?.id) {
+        setCustomerBalance(getCustomerBalance(currentCustomer.id))
+      }
+    }
+
     window.addEventListener('storage', syncCurrentCustomer)
     window.addEventListener(AUTH_CHANGED_EVENT, syncCurrentCustomer)
     window.addEventListener(BOOKINGS_CHANGED_EVENT, refreshBookings)
+    window.addEventListener(BALANCE_CHANGED_EVENT, refreshBalance)
 
     return () => {
       window.removeEventListener('storage', syncCurrentCustomer)
       window.removeEventListener(AUTH_CHANGED_EVENT, syncCurrentCustomer)
       window.removeEventListener(BOOKINGS_CHANGED_EVENT, refreshBookings)
+      window.removeEventListener(BALANCE_CHANGED_EVENT, refreshBalance)
     }
   }, [navigate, currentCustomer?.id])
 
@@ -92,7 +110,9 @@ export default function CustomerDashboardPage() {
               <div className="navSection">
                 <p className="navSectionTitle">MY PROFILE</p>
                 <ul className="navList">
-                  <li className="navItem">Personal Information</li>
+                  <li className="navItem">
+                    <Link to="/customer/profile">Personal Information</Link>
+                  </li>
                 </ul>
               </div>
             </nav>
@@ -114,7 +134,10 @@ export default function CustomerDashboardPage() {
 
         <div className="dashboardContentStack">
           
-          <FinancialWalletSection customerName={currentCustomer.fullName || currentCustomer.email} />
+          <FinancialWalletSection
+            customerName={currentCustomer.fullName || currentCustomer.email}
+            accountBalance={customerBalance}
+          />
           
           <section className="nextStaySection">
             <h2 className="sectionTitle">Current & Upcoming Bookings</h2>

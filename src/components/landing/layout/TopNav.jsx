@@ -135,6 +135,14 @@ export default function TopNav({ navItems, menuOpen, onMenuToggle }) {
                     >
                       Dashboard
                     </RouterLink>
+                    <RouterLink
+                      to="/customer/profile"
+                      className="profileDropdownLink"
+                      role="menuitem"
+                      onClick={() => setProfileMenuOpen(false)}
+                    >
+                      Edit Profile
+                    </RouterLink>
                     <button type="button" className="profileDropdownButton" role="menuitem" onClick={handleSignOut}>
                       Sign Out
                     </button>

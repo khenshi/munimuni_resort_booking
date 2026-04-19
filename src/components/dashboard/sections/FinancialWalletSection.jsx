@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { defaultWalletData } from '../../../data/receipts'
 import './FinancialWalletSection.css'
 
-export default function FinancialWalletSection({ customerName, walletData = defaultWalletData }) {
+export default function FinancialWalletSection({ customerName, walletData = defaultWalletData, accountBalance = 0 }) {
   const hasOutstandingBalance = Number(walletData.outstandingBalance) > 0
 
   return (
@@ -25,6 +25,9 @@ export default function FinancialWalletSection({ customerName, walletData = defa
             <div>
               <p className="dashboardPanelLabel">Outstanding Balances</p>
               <h3 className="dashboardPanelTitle">Open charges</h3>
+              <p className="dashboardBalanceNote">
+                Wallet balance: PHP {Number(accountBalance).toLocaleString()}
+              </p>
             </div>
             <span className={`dashboardBalancePill ${hasOutstandingBalance ? 'isDue' : 'isClear'}`}>
               {hasOutstandingBalance ? 'Payment due' : 'Settled'}

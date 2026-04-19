@@ -1,0 +1,124 @@
+.customerProfilePage {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #f7f7f2 0%, #f1f5ef 52%, #edf3ef 100%);
+}
+
+.customerProfileMain {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 4rem;
+}
+
+.customerProfileShell {
+  background: rgba(255, 255, 255, 0.88);
+  border: 1px solid rgba(24, 55, 38, 0.15);
+  border-radius: 1.5rem;
+  box-shadow: 0 24px 64px rgba(24, 55, 38, 0.1);
+  padding: 2rem;
+}
+
+.customerProfileHero {
+  margin-bottom: 1.5rem;
+}
+
+.customerProfileKicker {
+  margin: 0;
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #2f6a46;
+  font-weight: 700;
+}
+
+.customerProfileHero h1 {
+  margin: 0.45rem 0;
+  font-size: clamp(1.45rem, 1.7vw + 1rem, 2.2rem);
+  color: #173924;
+}
+
+.customerProfileHero p {
+  margin: 0;
+  color: #2e4a38;
+}
+
+.customerProfileGrid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.customerProfileCard {
+  border: 1px solid rgba(23, 57, 36, 0.12);
+  border-radius: 1rem;
+  padding: 1rem;
+  background: #fff;
+}
+
+.customerProfileCard h2 {
+  margin: 0 0 0.85rem;
+  color: #173924;
+  font-size: 1.05rem;
+}
+
+.customerProfileForm {
+  display: grid;
+  gap: 0.62rem;
+}
+
+.customerProfileForm label {
+  font-size: 0.85rem;
+  color: #304b3a;
+  font-weight: 600;
+}
+
+.customerProfileForm input,
+.customerProfileForm textarea {
+  border: 1px solid rgba(30, 66, 44, 0.25);
+  border-radius: 0.68rem;
+  padding: 0.62rem 0.7rem;
+  font-size: 0.92rem;
+  color: #1b3024;
+  background: #fbfefa;
+}
+
+.customerProfileForm input:focus,
+.customerProfileForm textarea:focus {
+  outline: 2px solid rgba(67, 128, 84, 0.35);
+  outline-offset: 1px;
+}
+
+.customerProfileForm button {
+  border: 0;
+  border-radius: 0.72rem;
+  background: linear-gradient(135deg, #24603f, #2d7a50);
+  color: #fff;
+  font-weight: 700;
+  padding: 0.7rem 0.95rem;
+  cursor: pointer;
+}
+
+.customerProfileHint {
+  margin: 0;
+  color: #234431;
+}
+
+.customerProfileNotice {
+  margin: 0.2rem 0 0;
+  font-size: 0.85rem;
+  color: #24503b;
+  background: rgba(158, 221, 178, 0.28);
+  border: 1px solid rgba(57, 130, 81, 0.25);
+  border-radius: 0.6rem;
+  padding: 0.48rem 0.6rem;
+}
+
+@media (max-width: 768px) {
+  .customerProfileMain {
+    padding: 1.2rem 0.8rem 2.6rem;
+  }
+
+  .customerProfileShell {
+    padding: 1rem;
+    border-radius: 1rem;
+  }
+}

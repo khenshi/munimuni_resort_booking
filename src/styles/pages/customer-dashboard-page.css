@@ -138,6 +138,11 @@
   transition: all 0.2s;
 }
 
+.navItem a {
+  color: inherit;
+  text-decoration: none;
+}
+
 .navItem:hover {
   background: #fdfdfd;
   color: #000;

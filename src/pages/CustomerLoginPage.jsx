@@ -61,6 +61,8 @@ export default function CustomerLoginPage() {
         id: nextRecord.id,
         fullName: nextRecord.fullName,
         email: nextRecord.email,
+        phone: nextRecord.phone || '',
+        address: nextRecord.address || '',
         signedInAt: new Date().toISOString(),
       })
       setSubmitNotice(`Account created for ${normalizedEmail}. You are now signed in.`)
@@ -93,6 +95,8 @@ export default function CustomerLoginPage() {
       id: accountId,
       fullName: matchedAccount.fullName,
       email: matchedAccount.email,
+      phone: matchedAccount.phone || '',
+      address: matchedAccount.address || '',
       signedInAt: new Date().toISOString(),
     })
 
