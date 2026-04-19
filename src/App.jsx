@@ -8,6 +8,8 @@ import CustomerDashboardPage from './pages/CustomerDashboardPage'
 import CustomerHistoryPage from './pages/CustomerHistoryPage'
 import BookingDetailPage from './pages/BookingDetailPage'
 import ReceiptDetailPage from './pages/ReceiptDetailPage'
+import PaymentPage from './pages/PaymentPage'
+import ReceiptHistory from './pages/ReceiptHistory'
 
 export default function App() {
   return (
@@ -19,6 +21,8 @@ export default function App() {
         <Route path="/customer/history" element={<CustomerHistoryPage />} />
         <Route path="/customer/bookings/:bookingId" element={<BookingDetailPage />} />
         <Route path="/customer/receipts/:receiptId" element={<ReceiptDetailPage />} />
+        <Route path="/customer/payment" element={<PaymentPage />} />
+        <Route path="/customer/receipt-history" element={<ReceiptHistory />} />
         <Route path="/booking" element={<BookingPage />} />
         <Route path="/packages">
           <Route index element={<PackagesPage />} />
