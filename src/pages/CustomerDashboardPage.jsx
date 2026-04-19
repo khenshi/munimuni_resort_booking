@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 import LoginPageHeader from '../components/login/layout/LoginPageHeader'
 import FinancialWalletSection from '../components/dashboard/sections/FinancialWalletSection'
+import { BOOKINGS_CHANGED_EVENT } from '../components/login/bookings-storage'
 import {
   AUTH_CHANGED_EVENT,
   BALANCE_CHANGED_EVENT,
@@ -11,7 +12,8 @@ import {
 import PreviousBookingsWidget from '../components/dashboard/PreviousBookingsWidget'
 import DigitalConciergeSection from '../components/dashboard/DigitalConciergeSection'
 import CustomerBookingsList from '../components/login/CustomerBookingsList'
-import { getCustomerBookingList, BOOKINGS_CHANGED_EVENT } from '../components/login/bookings-storage'
+import { getCustomerBookingList } from '../components/login/bookings-storage'
+import useBookingStateSync from '../components/booking/state/useBookingStateSync'
 import '../styles/pages/customer-dashboard-page.css'
 import LandingFooter from '../components/landing/layout/LandingFooter'
 
@@ -58,6 +60,8 @@ export default function CustomerDashboardPage() {
     window.addEventListener(AUTH_CHANGED_EVENT, syncCurrentCustomer)
     window.addEventListener(BOOKINGS_CHANGED_EVENT, refreshBookings)
     window.addEventListener(BALANCE_CHANGED_EVENT, refreshBalance)
+    window.addEventListener('storage', syncCurrentCustomer)
+    window.addEventListener(AUTH_CHANGED_EVENT, syncCurrentCustomer)
 
     return () => {
       window.removeEventListener('storage', syncCurrentCustomer)
@@ -65,7 +69,9 @@ export default function CustomerDashboardPage() {
       window.removeEventListener(BOOKINGS_CHANGED_EVENT, refreshBookings)
       window.removeEventListener(BALANCE_CHANGED_EVENT, refreshBalance)
     }
-  }, [navigate, currentCustomer?.id])
+  }, [navigate])
+
+  useBookingStateSync(currentCustomer?.id, setCustomerBookings)
 
   if (!currentCustomer) {
     return <Navigate to="/customer/login" replace />

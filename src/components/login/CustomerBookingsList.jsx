@@ -15,13 +15,9 @@ export default function CustomerBookingsList({ bookings }) {
   }
 
   const handleEdit = (booking) => {
-    navigate('/booking', {
-      state: {
-        mode: 'edit',
-        booking,
-        selectedOffer: booking.selectedOffer,
-      },
-    })
+    navigate(
+      `/customer/bookings/${encodeURIComponent(booking.bookingReference)}/edit`,
+    )
   }
 
   return (
