@@ -1,4 +1,5 @@
-import { useEffect } from 'react'
+import { useEffect, useState, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { readCurrentCustomer, writeCurrentCustomer, dispatchAuthChanged, addCustomerReceipt } from '../../login/auth-storage'
 
 export default function PaymentSuccessState({
@@ -9,8 +10,19 @@ export default function PaymentSuccessState({
   onReturnToDashboard,
   onViewHistory,
 }) {
+  const [createdReceipt, setCreatedReceipt] = useState(null)
+  const navigate = useNavigate()
+  const receiptProcessedRef = useRef(false)
+
+  // Reset processing flag when transaction changes
   useEffect(() => {
-    if (transactionSummary && bookingData) {
+    receiptProcessedRef.current = false
+    setCreatedReceipt(null)
+  }, [transactionSummary?.bookingReference])
+  useEffect(() => {
+    if (transactionSummary && bookingData && !receiptProcessedRef.current) {
+      receiptProcessedRef.current = true
+      
       const currentCustomer = readCurrentCustomer()
       if (currentCustomer) {
         const receipt = {
@@ -55,6 +67,7 @@ export default function PaymentSuccessState({
         }
 
         addCustomerReceipt(currentCustomer.id, receipt)
+        setCreatedReceipt(receipt)
 
         // Update current user context with recent payment details
         const updatedCustomer = {
@@ -65,7 +78,7 @@ export default function PaymentSuccessState({
         dispatchAuthChanged()
       }
     }
-  }, [transactionSummary, bookingData, paymentMethod])
+  }, [transactionSummary?.bookingReference]) // Only depend on bookingReference to allow new transactions
 
   return (
     <>
@@ -89,7 +102,12 @@ export default function PaymentSuccessState({
         <button type="button" onClick={onReturnToDashboard} className="primary-btn">
           Go to Dashboard
         </button>
-        <button type="button" className="secondary-btn">
+        <button 
+          type="button" 
+          className="secondary-btn"
+          onClick={() => createdReceipt && navigate('/customer/receipts/detail', { state: { receiptData: createdReceipt } })}
+          disabled={!createdReceipt}
+        >
           View Invoice
         </button>
       </div>
