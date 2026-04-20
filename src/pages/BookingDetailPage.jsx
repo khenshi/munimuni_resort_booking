@@ -3,7 +3,6 @@ import { Navigate, Link, useParams } from 'react-router-dom'
 import { readCurrentCustomer } from '../components/login/auth-storage'
 import { getCustomerBookingList } from '../components/login/bookings-storage'
 import useBookingStateSync from '../components/booking/state/useBookingStateSync'
-import { previousBookings } from '../data/previous-bookings'
 import '../styles/pages/customer-detail-pages.css'
 
 function formatDate(dateText) {
@@ -26,6 +25,26 @@ function calculateNights(checkInDate, checkOutDate) {
   return nights > 0 ? nights : null
 }
 
+function parseDateAtStartOfDay(dateText) {
+  if (!dateText) return null
+  const parsedDate = new Date(dateText)
+  if (Number.isNaN(parsedDate.getTime())) return null
+  parsedDate.setHours(0, 0, 0, 0)
+  return parsedDate
+}
+
+function resolveBookingTimelineStatus(booking) {
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+
+  const checkOutDate = parseDateAtStartOfDay(booking.checkOutDate || booking.checkInDate)
+  if (!checkOutDate) {
+    return 'upcoming'
+  }
+
+  return checkOutDate < today ? 'completed' : 'upcoming'
+}
+
 export default function BookingDetailPage() {
   const { bookingId } = useParams()
   const currentCustomer = readCurrentCustomer()
@@ -40,15 +59,9 @@ export default function BookingDetailPage() {
   }
 
   const decodedBookingId = decodeURIComponent(bookingId || '')
-  const liveBooking = customerBookings.find(
-    (booking) => booking.bookingReference === decodedBookingId,
+  const booking = customerBookings.find(
+    (record) => record.bookingReference === decodedBookingId || record.id === decodedBookingId,
   )
-
-  const archivedBooking = previousBookings.find(
-    (booking) => booking.id === decodedBookingId || booking.bookingReference === decodedBookingId,
-  )
-
-  const booking = liveBooking || archivedBooking
 
   if (!booking) {
     return (
@@ -77,6 +90,7 @@ export default function BookingDetailPage() {
   const nights = booking.nights || calculateNights(booking.checkInDate, booking.checkOutDate)
   const guestCount = booking.guests || booking.guestCount || 'N/A'
   const bookingLabel = booking.selectedOffer?.title || booking.propertyName || 'Resort Booking'
+  const timelineStatus = resolveBookingTimelineStatus(booking)
 
   return (
     <div className="customerDetailPage">
@@ -113,7 +127,7 @@ export default function BookingDetailPage() {
               </div>
               <div className="customerDetailRow">
                 <span>Status</span>
-                <strong className="customerDetailBadge">{booking.status || 'Pending'}</strong>
+                <strong className="customerDetailBadge">{timelineStatus}</strong>
               </div>
             </article>
 

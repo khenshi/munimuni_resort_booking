@@ -313,6 +313,12 @@
   color: #166534;
 }
 
+.historyStatusPill.upcoming {
+  border-color: #93c5fd;
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
 .historyStatusPill.cancelled {
   border-color: #fecaca;
   background: #fef2f2;

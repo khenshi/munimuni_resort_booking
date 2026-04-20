@@ -14,7 +14,7 @@ import PreviousBookingListItem from './PreviousBookingListItem'
 export default function PreviousBookingsList({ records, onViewDetails, isLoading = false }) {
   if (isLoading) {
     return (
-      <section className="historyList" aria-label="Previous stays list">
+      <section className="historyList" aria-label="Bookings and stays list">
         <div className="historyListSkeleton" aria-hidden="true">
           <div className="historySkeletonRow" />
           <div className="historySkeletonRow" />
@@ -26,9 +26,9 @@ export default function PreviousBookingsList({ records, onViewDetails, isLoading
 
   if (!records?.length) {
     return (
-      <section className="historyList" aria-label="Previous stays list">
+      <section className="historyList" aria-label="Bookings and stays list">
         <div className="historyEmptyState" role="status">
-          <p className="historyEmptyTitle">No previous stays found</p>
+          <p className="historyEmptyTitle">No bookings found</p>
           <p className="historyEmptyText">Try adjusting your search, year, or category filters.</p>
         </div>
       </section>
@@ -36,7 +36,7 @@ export default function PreviousBookingsList({ records, onViewDetails, isLoading
   }
 
   return (
-    <section className="historyList" aria-label="Previous stays list">
+    <section className="historyList" aria-label="Bookings and stays list">
       <div className="historyListStack">
         {records.map((booking) => (
           <PreviousBookingListItem key={booking.id} booking={booking} onViewDetails={onViewDetails} />

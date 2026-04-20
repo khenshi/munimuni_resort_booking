@@ -1,14 +1,15 @@
-import { useMemo, useState, useEffect } from 'react'
+import { useMemo, useState } from 'react'
 import { Navigate, useNavigate, useLocation } from 'react-router-dom'
 import { readCurrentCustomer } from '../components/login/auth-storage'
-import { previousBookings } from '../data/previous-bookings'
+import { getCustomerBookingList } from '../components/login/bookings-storage'
+import useBookingStateSync from '../components/booking/state/useBookingStateSync'
 import { resortReceipts } from '../data/receipts'
 import BillingReceiptsList from '../components/history/BillingReceiptsList'
 import PreviousBookingsList from '../components/history/PreviousBookingsList'
 import '../styles/pages/customer-history-page.css'
 
 const HISTORY_TABS = [
-  { id: 'bookings', label: 'Previous Stays' },
+  { id: 'bookings', label: 'Bookings & Stays' },
   { id: 'billing', label: 'Billing & Receipts' },
 ]
 
@@ -25,6 +26,26 @@ const SORT_OPTIONS = [
   { id: 'oldest', label: 'Oldest first' },
 ]
 
+function parseDateAtStartOfDay(dateText) {
+  if (!dateText) return null
+  const parsedDate = new Date(dateText)
+  if (Number.isNaN(parsedDate.getTime())) return null
+  parsedDate.setHours(0, 0, 0, 0)
+  return parsedDate
+}
+
+function resolveBookingTimelineStatus(booking) {
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+
+  const checkOutDate = parseDateAtStartOfDay(booking.checkOutDate || booking.checkInDate)
+  if (!checkOutDate) {
+    return 'upcoming'
+  }
+
+  return checkOutDate < today ? 'completed' : 'upcoming'
+}
+
 
 
 import AccountLayout from '../components/dashboard/layout/AccountLayout'
@@ -32,15 +53,15 @@ import AccountLayout from '../components/dashboard/layout/AccountLayout'
 export default function CustomerHistoryPage() {
   const currentCustomer = readCurrentCustomer()
   const location = useLocation()
-  const [activeTab, setActiveTab] = useState('bookings')
+  const [activeTab, setActiveTab] = useState(() => {
+    const tab = new URLSearchParams(location.search).get('tab')
+    return tab === 'billing' ? 'billing' : 'bookings'
+  })
+  const [customerBookings, setCustomerBookings] = useState(() => (
+    currentCustomer ? getCustomerBookingList(currentCustomer.id) : []
+  ))
 
-  useEffect(() => {
-    const params = new URLSearchParams(location.search)
-    const tab = params.get('tab')
-    if (tab && (tab === 'bookings' || tab === 'billing')) {
-      setActiveTab(tab)
-    }
-  }, [location.search])
+  useBookingStateSync(currentCustomer?.id, setCustomerBookings)
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedYear, setSelectedYear] = useState('All')
   const [selectedCategory, setSelectedCategory] = useState('all')
@@ -49,31 +70,38 @@ export default function CustomerHistoryPage() {
   const navigate = useNavigate()
 
   const visibleBookings = useMemo(() => {
-    return previousBookings
+    return customerBookings
       .filter((booking) => {
         const normalizedQuery = searchQuery.trim().toLowerCase()
-        const matchesQuery = !normalizedQuery
-          || booking.propertyName.toLowerCase().includes(normalizedQuery)
-          || booking.bookingReference.toLowerCase().includes(normalizedQuery)
+        const bookingTitle = (booking.selectedOffer?.title || booking.propertyName || '').toLowerCase()
+        const bookingReference = (booking.bookingReference || booking.id || '').toLowerCase()
 
-        const bookingYear = booking.checkInDate.slice(0, 4)
+        const matchesQuery = !normalizedQuery
+          || bookingTitle.includes(normalizedQuery)
+          || bookingReference.includes(normalizedQuery)
+
+        const bookingYear = (booking.checkInDate || booking.checkOutDate || booking.createdAt || '').slice(0, 4)
         const matchesYear = selectedYear === 'All' || bookingYear === selectedYear
 
         return matchesQuery && matchesYear
       })
       .map((booking) => ({
         ...booking,
-        title: booking.propertyName,
-        dateRange: `${booking.checkInDate} to ${booking.checkOutDate}`,
-        guests: booking.guestCount ? `${booking.guestCount} guests` : '',
-        total: `PHP ${booking.totalPaid}`,
+        id: booking.bookingReference || booking.id,
+        title: booking.selectedOffer?.title || booking.propertyName || 'Resort Booking',
+        dateRange: `${booking.checkInDate || 'TBD'} to ${booking.checkOutDate || 'TBD'}`,
+        guests: booking.guests || booking.guestCount ? `${booking.guests || booking.guestCount} guests` : '',
+        total: typeof (booking.totalAmount ?? booking.totalPaid) === 'number'
+          ? `PHP ${(booking.totalAmount ?? booking.totalPaid).toLocaleString('en-PH')}`
+          : undefined,
+        status: resolveBookingTimelineStatus(booking),
       }))
       .sort((left, right) => {
-        const leftDate = new Date(left.checkInDate)
-        const rightDate = new Date(right.checkInDate)
+        const leftDate = parseDateAtStartOfDay(left.checkInDate) || new Date(0)
+        const rightDate = parseDateAtStartOfDay(right.checkInDate) || new Date(0)
         return sortOrder === 'newest' ? rightDate - leftDate : leftDate - rightDate
       })
-  }, [searchQuery, selectedYear, sortOrder])
+  }, [customerBookings, searchQuery, selectedYear, sortOrder])
 
   const visibleReceipts = useMemo(() => {
     return resortReceipts
@@ -106,6 +134,10 @@ export default function CustomerHistoryPage() {
 
   const handleViewDetails = (record) => {
     const recordId = record.originalId || record.id || ''
+    if (!recordId) {
+      return
+    }
+
     if (activeTab === 'bookings') {
       navigate(`/customer/bookings/${encodeURIComponent(recordId)}`)
     } else {
@@ -123,9 +155,9 @@ export default function CustomerHistoryPage() {
         <div className="customerHistoryHero">
           <div className="customerHistoryTitleGroup">
             <p className="customerHistoryLabel">My Resort History</p>
-            <h1 className="customerHistoryTitle">Review past stays and resort charges</h1>
+            <h1 className="customerHistoryTitle">Review all bookings, stays, and resort charges</h1>
             <p className="customerHistoryDescription">
-              Use the tabs, search bar, and filters below to find prior reservations or billing documents.
+              Use the tabs, search bar, and filters below to find booking schedules and billing documents.
             </p>
           </div>
         </div>
@@ -210,7 +242,7 @@ export default function CustomerHistoryPage() {
             <p>
               Showing{' '}
               <strong>
-                {activeTab === 'bookings' ? 'previous stays' : 'billing & receipts'}
+                {activeTab === 'bookings' ? 'bookings & stays' : 'billing & receipts'}
               </strong>{' '}
               sorted by {sortOrder === 'newest' ? 'newest' : 'oldest'}.
             </p>
@@ -218,7 +250,7 @@ export default function CustomerHistoryPage() {
 
           <div className="customerHistoryPlaceholder">
             <p className="customerHistoryPlaceholderTitle">
-              {activeTab === 'bookings' ? 'Previous stay records' : 'Billing & receipt records'}
+              {activeTab === 'bookings' ? 'Booking and stay records' : 'Billing & receipt records'}
             </p>
             <p className="customerHistoryPlaceholderText">
               Showing {activeTab === 'bookings' ? visibleBookings.length : visibleReceipts.length} matching record(s).
