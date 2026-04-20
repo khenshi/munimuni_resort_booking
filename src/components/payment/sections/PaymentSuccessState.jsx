@@ -1,9 +1,72 @@
+import { useEffect } from 'react'
+import { readCurrentCustomer, writeCurrentCustomer, dispatchAuthChanged, addCustomerReceipt } from '../../login/auth-storage'
+
 export default function PaymentSuccessState({
   transactionSummary,
+  bookingData,
+  paymentMethod,
   formatCurrency,
   onReturnToDashboard,
   onViewHistory,
 }) {
+  useEffect(() => {
+    if (transactionSummary && bookingData) {
+      const currentCustomer = readCurrentCustomer()
+      if (currentCustomer) {
+        const receipt = {
+          id: `receipt-${Date.now()}`,
+          invoiceNumber: `INV-${Date.now()}`,
+          stayLabel: bookingData.propertyName || 'Resort Stay',
+          issuedDate: new Date().toISOString().slice(0, 10),
+          amountPaid: transactionSummary.amountPaid,
+          paymentMethod: paymentMethod || 'Cash',
+          paymentStatus: 'paid',
+          guestName: currentCustomer.fullName,
+          billingAddress: 'MuniMuni Resort Front Desk Billing',
+          lineItems: [],
+          serviceFee: 0,
+          discount: 0,
+        }
+
+        const itemizedCosts = bookingData.itemizedCosts || {}
+        if (itemizedCosts.room) {
+          receipt.lineItems.push({
+            id: 'room',
+            label: `${bookingData.propertyName || 'Room'} package`,
+            quantity: 1,
+            unitPrice: itemizedCosts.room,
+          })
+        }
+        if (itemizedCosts.addOns) {
+          receipt.lineItems.push({
+            id: 'add-ons',
+            label: 'Add-ons',
+            quantity: 1,
+            unitPrice: itemizedCosts.addOns,
+          })
+        }
+        if (itemizedCosts.rentals) {
+          receipt.lineItems.push({
+            id: 'rentals',
+            label: 'Rentals',
+            quantity: 1,
+            unitPrice: itemizedCosts.rentals,
+          })
+        }
+
+        addCustomerReceipt(currentCustomer.id, receipt)
+
+        // Update current user context with recent payment details
+        const updatedCustomer = {
+          ...currentCustomer,
+          recentPayment: transactionSummary,
+        }
+        writeCurrentCustomer(updatedCustomer)
+        dispatchAuthChanged()
+      }
+    }
+  }, [transactionSummary, bookingData, paymentMethod])
+
   return (
     <>
       <div className="success-banner">
@@ -24,10 +87,10 @@ export default function PaymentSuccessState({
 
       <div className="payment-actions">
         <button type="button" onClick={onReturnToDashboard} className="primary-btn">
-          Return to Dashboard
+          Go to Dashboard
         </button>
-        <button type="button" onClick={onViewHistory} className="secondary-btn">
-          View Booking History
+        <button type="button" className="secondary-btn">
+          View Invoice
         </button>
       </div>
     </>
