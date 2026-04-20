@@ -10,21 +10,18 @@ import CustomerEditProfilePage from './pages/CustomerEditProfilePage'
 import BookingDetailPage from './pages/BookingDetailPage'
 import EditBookingPage from './pages/EditBookingPage'
 import ReceiptDetailPage from './pages/ReceiptDetailPage'
-<<<<<<< HEAD
 import PoliciesAgreementsPage from './pages/PoliciesAgreementsPage'
 import FAQPage from './pages/FAQPage'
 import CustomerLayout from './components/login/layout/CustomerLayout'
-=======
+
+//jb
 import PaymentPage from './pages/PaymentPage'
-import ReceiptHistory from './pages/ReceiptHistory'
->>>>>>> origin/jb-wasted-effort
 
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LandingPage />} />
-<<<<<<< HEAD
         <Route path="/customer" element={<CustomerLayout />}>
           <Route path="login" element={<CustomerLoginPage />} />
           <Route path="dashboard" element={<CustomerDashboardPage />} />
@@ -34,15 +31,6 @@ export default function App() {
           <Route path="bookings/:bookingReference/edit" element={<EditBookingPage />} />
           <Route path="receipts/:receiptId" element={<ReceiptDetailPage />} />
         </Route>
-=======
-        <Route path="/customer/login" element={<CustomerLoginPage />} />
-        <Route path="/customer/dashboard" element={<CustomerDashboardPage />} />
-        <Route path="/customer/history" element={<CustomerHistoryPage />} />
-        <Route path="/customer/bookings/:bookingId" element={<BookingDetailPage />} />
-        <Route path="/customer/receipts/:receiptId" element={<ReceiptDetailPage />} />
-        <Route path="/customer/payment" element={<PaymentPage />} />
-        <Route path="/customer/receipt-history" element={<ReceiptHistory />} />
->>>>>>> origin/jb-wasted-effort
         <Route path="/booking" element={<BookingPage />} />
         <Route path="/packages">
           <Route index element={<PackagesPage />} />

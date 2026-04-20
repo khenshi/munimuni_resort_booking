@@ -3,8 +3,6 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { createTransaction, saveTransaction, generateTransactionId, ensureBookingCosts, calculateBookingCosts } from '../utils/transactionSchema'
 import { CURRENT_CUSTOMER_STORAGE_KEY } from '../components/login/auth-storage'
 import { CUSTOMER_BOOKINGS_STORAGE_KEY } from '../components/login/bookings-storage'
-import ReceiptView from '../components/common/ReceiptView'
-import '../styles/pages/payment-history.css'
 
 export default function PaymentPage() {
   const location = useLocation()
