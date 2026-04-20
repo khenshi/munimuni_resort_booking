@@ -1,10 +1,9 @@
 import { useMemo, useState } from 'react'
-import { useLocation } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { resolveAutoCheckOutDate, resolveSelectedOffer } from '../utils/booking-utils'
 import { addDaysToISODate, getTodayISODate } from '../../packages/utils/availability-utils'
 import { isItemAvailableForDate } from '../../packages'
 import { readCurrentCustomer } from '../../login/auth-storage'
-import { addCustomerBooking } from '../../login/bookings-storage'
 import { addOns, cottages, dayTourOffers, overnightOffers } from '../../../data/packages'
 import {
   buildFullName,
@@ -17,16 +16,32 @@ import {
   sanitizePhoneInput,
 } from '../utils/booking-form-utils'
 
-function generateBookingReference(selectedOffer) {
-  const offerTypePrefix = (selectedOffer?.offerType ?? 'gen').slice(0, 3).toUpperCase()
-  const randomCode = Math.floor(1000 + Math.random() * 9000)
-  const dateCode = new Date().toISOString().slice(2, 10).replace(/-/g, '')
+const PAYMENT_DRAFT_STORAGE_KEY = 'munimuni-payment-draft'
 
-  return `MMR-${offerTypePrefix}-${dateCode}-${randomCode}`
+function calculateCostBreakdown(selectedOffer, formData) {
+  const guestCount = Math.max(1, Number.parseInt(formData.guests, 10) || 1)
+  let offerCost = Number(selectedOffer?.price) || 0
+
+  if (selectedOffer?.offerType === 'daytour' && selectedOffer?.offerId === 'basic') {
+    offerCost = (Number(selectedOffer?.price) || 0) * guestCount
+  }
+
+  const addOnsCost = formData.selectedAddOns.reduce((total, addOnId) => {
+    const addOn = addOns.find((item) => item.id === addOnId)
+    return total + (Number(addOn?.price) || 0)
+  }, 0)
+
+  return {
+    room: offerCost,
+    addOns: addOnsCost,
+    rentals: 0,
+    totalAmount: offerCost + addOnsCost,
+  }
 }
 
 export default function useBookingPageLogic() {
   const location = useLocation()
+  const navigate = useNavigate()
   const query = new URLSearchParams(location.search)
   const navigationState = location.state ?? {}
   const currentPath = `${location.pathname}${location.search}`
@@ -88,8 +103,6 @@ export default function useBookingPageLogic() {
     prefilledGuests,
     stayTab,
   }))
-  const [isSubmitted, setIsSubmitted] = useState(false)
-  const [bookingReference, setBookingReference] = useState('')
   const todayISODate = getTodayISODate()
   const minCheckInDate = addDaysToISODate(todayISODate, 1)
 
@@ -221,38 +234,42 @@ export default function useBookingPageLogic() {
     e.preventDefault()
     if (!canProceed) return
 
-    const reference = generateBookingReference(selectedOffer)
-    setBookingReference(reference)
     const fullName = buildFullName(formData.firstName, formData.lastName)
-
-    const currentCustomer = readCurrentCustomer()
-
-    if (currentCustomer?.id) {
-      const bookingPayload = {
-        bookingReference: reference,
-        selectedOffer: {
-          title: selectedOffer?.title,
-          price: selectedOffer?.price,
-          offerType: selectedOffer?.offerType,
-          offerId: selectedOffer?.offerId,
-          priceInfo: selectedOffer?.priceInfo,
-        },
-        checkInDate: formData.checkInDate,
-        checkOutDate: formData.checkOutDate,
-        guests: formData.guests,
-        specialRequest: formData.specialRequest,
-        fullName,
-        phone: formData.phone,
-        email: formData.email,
-        address: formData.address,
-        selectedAddOns: formData.selectedAddOns,
-        termsAccepted: formData.termsAccepted,
-      }
-
-      addCustomerBooking(currentCustomer.id, bookingPayload)
+    const costBreakdown = calculateCostBreakdown(selectedOffer, formData)
+    const bookingDraft = {
+      bookingReference: null,
+      selectedOffer: {
+        title: selectedOffer?.title,
+        price: selectedOffer?.price,
+        offerType: selectedOffer?.offerType,
+        offerId: selectedOffer?.offerId,
+        priceInfo: selectedOffer?.priceInfo,
+      },
+      checkInDate: formData.checkInDate,
+      checkOutDate: formData.checkOutDate,
+      guests: formData.guests,
+      specialRequest: formData.specialRequest,
+      fullName,
+      phone: formData.phone,
+      email: formData.email,
+      address: formData.address,
+      selectedAddOns: formData.selectedAddOns,
+      termsAccepted: formData.termsAccepted,
+      itemizedCosts: {
+        room: costBreakdown.room,
+        addOns: costBreakdown.addOns,
+        rentals: costBreakdown.rentals,
+      },
+      totalAmount: costBreakdown.totalAmount,
     }
 
-    setIsSubmitted(true)
+    window.sessionStorage.setItem(PAYMENT_DRAFT_STORAGE_KEY, JSON.stringify(bookingDraft))
+    navigate('/customer/payment', {
+      state: {
+        source: 'booking-checkout',
+        bookingDraft,
+      },
+    })
   }
 
   return {
@@ -262,9 +279,7 @@ export default function useBookingPageLogic() {
     prefilledCheckInDate,
     isMissingPrefilledDate,
     prefilledDateUnavailable,
-    isSubmitted,
     formData,
-    bookingReference,
     step,
     setStep,
     submitBooking,

@@ -2,7 +2,6 @@ import BookingStateNotice from './BookingStateNotice'
 import BookingStepContent from './BookingStepContent'
 import BookingStepsIndicator from '../layout/BookingStepsIndicator'
 import { addOns } from '../../../data/packages'
-import { buildFullName } from '../utils/booking-form-utils'
 
 export default function BookingPageFlow({
   pageHeading,
@@ -10,9 +9,7 @@ export default function BookingPageFlow({
   prefilledCheckInDate,
   isMissingPrefilledDate,
   prefilledDateUnavailable,
-  isSubmitted,
   formData,
-  bookingReference,
   step,
   setStep,
   submitBooking,
@@ -30,8 +27,6 @@ export default function BookingPageFlow({
   isAuthenticated,
   loginActionState,
 }) {
-  const submittedGuestName = buildFullName(formData.firstName, formData.lastName) || 'guest'
-
   return (
     <main className="bookingMain">
       <section className="bookingShell" aria-labelledby="booking-heading">
@@ -66,16 +61,6 @@ export default function BookingPageFlow({
             message={`The selected offer is not available on ${prefilledCheckInDate}. Please choose another date before booking.`}
             actionTo="/packages"
             actionLabel="Choose Another Date"
-          />
-        ) : isSubmitted ? (
-          <BookingStateNotice
-            title="Booking request submitted"
-            message={`Thank you, ${submittedGuestName}. Your request for ${selectedOffer.title} is in our queue.
-
-Reference: ${bookingReference}
-Our reservations team will contact you within 24 hours via ${formData.email || 'your contact details'} to confirm availability and final payment details.`}
-            actionTo="/packages"
-            actionLabel="Back to Offers"
           />
         ) : (
           <form className="bookingForm" onSubmit={submitBooking}>
@@ -123,7 +108,7 @@ Our reservations team will contact you within 24 hours via ${formData.email || '
                 </button>
               ) : (
                 <button type="submit" className="bookingActionBtn isPrimary" disabled={!canProceed}>
-                  Confirm Booking
+                  Proceed to Payment
                 </button>
               )}
             </div>

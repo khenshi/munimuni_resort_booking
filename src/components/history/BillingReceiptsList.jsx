@@ -8,7 +8,7 @@ import BillingReceiptLedgerItem from './BillingReceiptLedgerItem'
 
 /**
  * Render the billing & receipts list.
- * @param {{ records: import('../../pages/historyDisplayModels').ReceiptLedgerItemModel[], onViewDetails?: (receipt: any) => void, isLoading?: boolean }} props
+ * @param {{ records: import('./historyDisplayModels').ReceiptLedgerItemModel[], onViewDetails?: (receipt: any) => void, isLoading?: boolean }} props
  * @returns {import('react').JSX.Element}
  */
 export default function BillingReceiptsList({ records, onViewDetails, isLoading = false }) {

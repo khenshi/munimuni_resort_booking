@@ -6,7 +6,7 @@
 
 /**
  * Render one billing/receipt ledger row for the History page.
- * @param {{ receipt: import('../../pages/historyDisplayModels').ReceiptLedgerItemModel, onViewDetails?: (receipt: any) => void }} props
+ * @param {{ receipt: import('./historyDisplayModels').ReceiptLedgerItemModel, onViewDetails?: (receipt: any) => void }} props
  * @returns {import('react').JSX.Element}
  */
 export default function BillingReceiptLedgerItem({ receipt, onViewDetails }) {

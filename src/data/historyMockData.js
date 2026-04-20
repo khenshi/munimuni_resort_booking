@@ -1,10 +1,10 @@
 /**
  * Mock data for the Customer History page.
- * Enables Member 5 list rendering before real data wiring.
+ * Enables list rendering before real data wiring.
  * Replace with real sources when available.
  */
 
-import { createBookingListItemModel, createReceiptLedgerItemModel } from './historyDisplayModels'
+import { createBookingListItemModel, createReceiptLedgerItemModel } from '../components/history/historyDisplayModels'
 
 /**
  * Mock "Previous Stays" records for mapping + filtering.
@@ -107,4 +107,3 @@ export const MOCK_RECEIPTS = [
     year: '2023',
   }),
 ]
-

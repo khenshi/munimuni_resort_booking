@@ -3,7 +3,7 @@
  * Defines the standardized Transaction Object and provides localStorage utilities
  */
 
-import { cottages, overnightOffers, dayTourOffers, addOns } from '../data/packages'
+import { cottages, overnightOffers, dayTourOffers, addOns } from '../../../data/packages'
 
 // Transaction Object Structure
 export const createTransaction = ({
@@ -14,6 +14,9 @@ export const createTransaction = ({
   itemizedCosts,
   paymentMethod,
   totalAmount,
+  amountPaid = totalAmount,
+  amountDue = 0,
+  paymentType = 'full',
   status = 'completed'
 }) => ({
   transactionId,
@@ -23,6 +26,9 @@ export const createTransaction = ({
   itemizedCosts, // { room: number, addOns: number, rentals: number }
   paymentMethod,
   totalAmount,
+  amountPaid,
+  amountDue,
+  paymentType,
   status
 })
 
@@ -85,27 +91,54 @@ export const ensureBookingCosts = (booking) => {
 
 // Helper function to calculate booking costs from official package data
 export const calculateBookingCosts = (booking) => {
+  if (Number.isFinite(Number(booking?.totalAmount)) && booking?.itemizedCosts) {
+    return {
+      itemizedCosts: {
+        room: Number(booking.itemizedCosts.room) || 0,
+        addOns: Number(booking.itemizedCosts.addOns) || 0,
+        rentals: Number(booking.itemizedCosts.rentals) || 0,
+      },
+      totalAmount: Number(booking.totalAmount) || 0,
+    }
+  }
+
   let roomCost = 0
   let addOnsCost = 0
   let rentalsCost = 0
+  const guestCount = Math.max(1, Number.parseInt(booking?.guests, 10) || Number.parseInt(booking?.guestCount, 10) || 1)
+
+  const selectedOffer = booking?.selectedOffer
+  if (selectedOffer?.price) {
+    roomCost = Number(selectedOffer.price) || 0
+    if (selectedOffer.offerType === 'daytour' && selectedOffer.offerId === 'basic') {
+      roomCost = roomCost * guestCount
+    }
+  }
 
   // Find room/cottage price
-  const allPackages = [...cottages, ...overnightOffers, ...dayTourOffers]
-  const matchedPackage = allPackages.find(pkg => 
-    pkg.name === booking.propertyName || 
-    pkg.title === booking.propertyName ||
-    pkg.name === booking.title || 
-    pkg.title === booking.title
-  )
-  if (matchedPackage) {
-    roomCost = matchedPackage.price
-  } else {
-    // Fallback to existing or default
-    roomCost = booking.itemizedCosts?.room || 0
+  if (!roomCost) {
+    const allPackages = [...cottages, ...overnightOffers, ...dayTourOffers]
+    const matchedPackage = allPackages.find(pkg => 
+      pkg.name === booking.propertyName || 
+      pkg.title === booking.propertyName ||
+      pkg.name === booking.title || 
+      pkg.title === booking.title
+    )
+    if (matchedPackage) {
+      roomCost = matchedPackage.price
+    } else {
+      // Fallback to existing or default
+      roomCost = booking.itemizedCosts?.room || 0
+    }
   }
 
   // Calculate add-ons cost
-  if (booking.addOns && Array.isArray(booking.addOns)) {
+  if (booking.selectedAddOns && Array.isArray(booking.selectedAddOns)) {
+    addOnsCost = booking.selectedAddOns.reduce((total, addOnId) => {
+      const matchedAddOn = addOns.find(addon => addon.id === addOnId || addon.title === addOnId)
+      return total + (matchedAddOn ? matchedAddOn.price : 0)
+    }, 0)
+  } else if (booking.addOns && Array.isArray(booking.addOns)) {
     addOnsCost = booking.addOns.reduce((total, addOnId) => {
       const matchedAddOn = addOns.find(addon => addon.id === addOnId || addon.title === addOnId)
       return total + (matchedAddOn ? matchedAddOn.price : 0)

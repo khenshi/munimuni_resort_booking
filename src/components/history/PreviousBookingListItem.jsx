@@ -6,7 +6,7 @@
 
 /**
  * Render one booking row for the History page.
- * @param {{ booking: import('../../pages/historyDisplayModels').BookingListItemModel, onViewDetails?: (booking: any) => void }} props
+ * @param {{ booking: import('./historyDisplayModels').BookingListItemModel, onViewDetails?: (booking: any) => void }} props
  * @returns {import('react').JSX.Element}
  */
 export default function PreviousBookingListItem({ booking, onViewDetails }) {

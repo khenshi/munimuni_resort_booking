@@ -1,7 +1,7 @@
 /**
  * History page display models for list rendering.
  * Keeps UI mapping stable while data sources evolve.
- * Used by Member 5 list item components and mappers.
+ * Used by history list item components and mappers.
  */
 
 /**
@@ -45,4 +45,3 @@ export function createBookingListItemModel(model) {
 export function createReceiptLedgerItemModel(model) {
   return model
 }
-
