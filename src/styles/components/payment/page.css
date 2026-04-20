@@ -249,6 +249,7 @@
 }
 
 .secondary-btn {
+  margin-top: 1rem;
   background: rgba(255, 255, 255, 0.95);
   border-color: rgba(22, 32, 51, 0.28);
   color: #13263e;

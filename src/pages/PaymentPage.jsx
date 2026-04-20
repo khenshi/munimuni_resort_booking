@@ -35,9 +35,11 @@ export default function PaymentPage() {
 
   if (transactionSummary) {
     return (
-      <PaymentPageShell title="Payment Successful" onBack={goToDashboard}>
+      <PaymentPageShell title="Payment Successful">
         <PaymentSuccessState
           transactionSummary={transactionSummary}
+          bookingData={bookingData}
+          paymentMethod={paymentMethod}
           formatCurrency={formatCurrency}
           onReturnToDashboard={goToDashboard}
           onViewHistory={goToHistory}
