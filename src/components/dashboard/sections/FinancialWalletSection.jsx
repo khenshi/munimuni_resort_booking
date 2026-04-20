@@ -1,4 +1,4 @@
-import './FinancialWalletSection.css'
+import '../../../styles/components/dashboard/FinancialWalletSection.css'
 
 export function formatCurrency(amount) {
   return `PHP ${Number(amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}`

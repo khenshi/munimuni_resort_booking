@@ -95,11 +95,20 @@ export default function EditBookingForm({
             <div className="bookingActions">
               <button
                 type="button"
-                className="bookingActionBtn"
+                className="bookingActionBtn isDanger"
                 onClick={onCancel}
                 disabled={isSubmitting}
               >
                 Cancel
+              </button>
+
+              <button
+                type="button"
+                className="bookingActionBtn"
+                disabled={step === 1 || isSubmitting}
+                onClick={() => setStep((current) => Math.max(1, current - 1))}
+              >
+                Previous
               </button>
 
               {step < 4 ? (

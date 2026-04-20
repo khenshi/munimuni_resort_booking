@@ -188,8 +188,13 @@
 .bookingActions {
   margin-top: 14px;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 10px;
+  align-items: center;
+}
+
+.bookingActionBtn:nth-child(2) {
+  margin-left: auto;
 }
 
 .bookingActionBtn {
@@ -211,6 +216,16 @@
   border-color: transparent;
   background: var(--color-cyan);
   color: #ffffff;
+}
+
+.bookingActionBtn.isDanger {
+  border-color: transparent;
+  background: #dc2626;
+  color: #ffffff;
+}
+
+.bookingActionBtn.isDanger:hover:not(:disabled) {
+  background: #b91c1c;
 }
 
 .bookingActionBtn:disabled {

@@ -26,9 +26,9 @@ export default function App() {
           <Route path="profile" element={<CustomerEditProfilePage />} />
           <Route path="history" element={<CustomerHistoryPage />} />
           <Route path="bookings/:bookingId" element={<BookingDetailPage />} />
-          <Route path="bookings/:bookingReference/edit" element={<EditBookingPage />} />
           <Route path="receipts/:receiptId" element={<ReceiptDetailPage />} />
         </Route>
+        <Route path="/customer/bookings/:bookingReference/edit" element={<EditBookingPage />} />
         <Route path="/booking" element={<BookingPage />} />
         <Route path="/packages">
           <Route index element={<PackagesPage />} />

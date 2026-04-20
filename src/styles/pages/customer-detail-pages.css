@@ -1,6 +1,6 @@
 .customerDetailPage {
   min-height: 100vh;
-  background: #f8fafc;
+  background: var(--color-sand-soft, #f8f6ed);
 }
 
 .customerDetailMain {

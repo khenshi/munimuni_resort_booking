@@ -48,11 +48,7 @@ export default function EditBookingPage() {
   const [step, setStep] = useState(1)
 
   const handleCancel = () => {
-    if (existingBooking) {
-      navigate(`/customer/bookings/${encodeURIComponent(decodedReference)}`)
-    } else {
-      navigate('/customer/dashboard')
-    }
+    navigate(-1)
   }
 
   if (!existingBooking) {
