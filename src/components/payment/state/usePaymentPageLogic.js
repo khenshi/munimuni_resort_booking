@@ -16,8 +16,6 @@ import {
   saveTransaction,
 } from '../utils/transactionSchema'
 
-const PAYMENT_DRAFT_STORAGE_KEY = 'munimuni-payment-draft'
-
 function roundCurrency(value) {
   return Math.round((Number(value) || 0) * 100) / 100
 }
@@ -36,15 +34,6 @@ function generateBookingReference(selectedOffer) {
   const dateCode = new Date().toISOString().slice(2, 10).replace(/-/g, '')
 
   return `MMR-${offerTypePrefix}-${dateCode}-${randomCode}`
-}
-
-function getStoredDraft() {
-  try {
-    const parsed = JSON.parse(window.sessionStorage.getItem(PAYMENT_DRAFT_STORAGE_KEY) ?? 'null')
-    return parsed && typeof parsed === 'object' ? parsed : null
-  } catch {
-    return null
-  }
 }
 
 function calculateBookingFinancials(booking) {
@@ -95,15 +84,9 @@ export default function usePaymentPageLogic() {
     setCurrentCustomer(customer)
 
     const routeState = location.state ?? {}
-    const routeDraft = routeState.bookingDraft && typeof routeState.bookingDraft === 'object'
+    const draft = routeState.bookingDraft && typeof routeState.bookingDraft === 'object'
       ? routeState.bookingDraft
       : null
-
-    if (routeDraft) {
-      window.sessionStorage.setItem(PAYMENT_DRAFT_STORAGE_KEY, JSON.stringify(routeDraft))
-    }
-
-    const draft = routeDraft ?? getStoredDraft()
 
     const isNewBookingDraft = Boolean(draft && draft.bookingReference == null)
 
@@ -231,7 +214,7 @@ export default function usePaymentPageLogic() {
         }))
 
         syncOutstandingBalance(currentCustomer.id)
-        window.sessionStorage.removeItem(PAYMENT_DRAFT_STORAGE_KEY)
+
 
         setTransactionSummary({
           bookingReference: reference,

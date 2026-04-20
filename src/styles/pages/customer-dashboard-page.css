@@ -298,6 +298,12 @@
   grid-template-columns: 1fr;
   gap: 1.5rem;
   align-items: start;
+  overflow: hidden;
+}
+
+.nextStayMain {
+  width: 100%;
+  overflow: hidden;
 }
 
 .nextStaySidebar {
@@ -363,6 +369,13 @@
 
 .bookingsList {
   width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0 0 12px 0;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  scrollbar-width: auto;
+  scrollbar-color: #64748b #e2e8f0;
 }
 
 .bookingsEmpty {
@@ -395,10 +408,34 @@
   box-shadow: 0 5px 15px rgba(0, 210, 211, 0.3);
 }
 
+
 .bookingsContainer {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
   gap: 1.5rem;
+  width: max-content;
+  min-width: 100%;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+.bookingsList::-webkit-scrollbar {
+  height: 10px;
+}
+
+.bookingsList::-webkit-scrollbar-track {
+  background: #e2e8f0;
+  border-radius: 6px;
+}
+
+.bookingsList::-webkit-scrollbar-thumb {
+  background: #64748b;
+  border-radius: 6px;
+}
+
+.bookingsList::-webkit-scrollbar-thumb:hover {
+  background: #475569;
 }
 
 .bookingCard {
@@ -410,6 +447,8 @@
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
+  flex: 0 0 320px;
+  min-width: 320px;
 }
 
 .bookingCardHeader {
@@ -584,7 +623,13 @@
   }
 
   .bookingsContainer {
-    grid-template-columns: 1fr;
+    flex: 0 0 auto;
+    gap: 1.25rem;
+  }
+
+  .bookingCard {
+    flex: 0 0 280px;
+    min-width: 280px;
   }
 
   .bookingCardHeader {

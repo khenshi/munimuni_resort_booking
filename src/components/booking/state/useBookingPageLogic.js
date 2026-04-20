@@ -16,7 +16,6 @@ import {
   sanitizePhoneInput,
 } from '../utils/booking-form-utils'
 
-const PAYMENT_DRAFT_STORAGE_KEY = 'munimuni-payment-draft'
 
 function calculateCostBreakdown(selectedOffer, formData) {
   const guestCount = Math.max(1, Number.parseInt(formData.guests, 10) || 1)
@@ -263,7 +262,6 @@ export default function useBookingPageLogic() {
       totalAmount: costBreakdown.totalAmount,
     }
 
-    window.sessionStorage.setItem(PAYMENT_DRAFT_STORAGE_KEY, JSON.stringify(bookingDraft))
     navigate('/customer/payment', {
       state: {
         source: 'booking-checkout',

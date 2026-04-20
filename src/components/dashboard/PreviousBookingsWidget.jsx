@@ -7,11 +7,22 @@ export default function PreviousBookingsWidget() {
   const currentCustomer = readCurrentCustomer()
   const allBookings = currentCustomer?.id ? getCustomerBookingList(currentCustomer.id) : []
 
+  // Get today's date in ISO format (YYYY-MM-DD) to avoid timezone issues
+  const getTodayISODate = () => {
+    const now = new Date()
+    const year = now.getFullYear()
+    const month = String(now.getMonth() + 1).padStart(2, '0')
+    const day = String(now.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
+  }
+
+  const todayISO = getTodayISODate()
+
   // Filter for completed/past bookings (check-out date is in the past)
   const completedBookings = allBookings.filter((booking) => {
     if (!booking.checkOutDate) return false
-    return new Date(booking.checkOutDate) < new Date()
-  }).sort((a, b) => new Date(b.checkOutDate) - new Date(a.checkOutDate))
+    return booking.checkOutDate < todayISO
+  }).sort((a, b) => b.checkOutDate.localeCompare(a.checkOutDate))
 
   const recentBookings = completedBookings.slice(0, 3)
 

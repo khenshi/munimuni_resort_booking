@@ -4,7 +4,7 @@ export function formatCurrency(amount) {
   return `PHP ${Number(amount).toLocaleString(undefined, { minimumFractionDigits: 2 })}`
 }
 
-export default function FinancialWalletSection({ outstandingBalance = 0 }) {
+export default function FinancialWalletSection({ outstandingBalance = 0, onPayNow }) {
   const hasBalance = outstandingBalance > 0;
 
   return (
@@ -28,7 +28,7 @@ export default function FinancialWalletSection({ outstandingBalance = 0 }) {
             <span className="balanceValue">{formatCurrency(outstandingBalance)}</span>
           </div>
           {hasBalance && (
-            <button type="button" className="payNowBtn">
+            <button type="button" className="payNowBtn" onClick={onPayNow}>
               Pay Now
             </button>
           )}
