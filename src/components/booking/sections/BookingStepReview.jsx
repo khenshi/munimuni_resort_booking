@@ -102,7 +102,12 @@ export default function BookingStepReview({ formData, selectedOffer, addOns, sel
           checked={formData.termsAccepted}
           onChange={(e) => onChange('termsAccepted', e.target.checked)}
         />
-        <span>I agree to the booking and cancellation policy.</span>
+        <span>
+          I agree to the{' '}
+          <a href="/policies" target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'underline', color: '#007bff' }}>
+            booking and cancellation policy
+          </a>.
+        </span>
       </label>
     </div>
   )
