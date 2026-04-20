@@ -13,8 +13,6 @@ import ReceiptDetailPage from './pages/ReceiptDetailPage'
 import PoliciesAgreementsPage from './pages/PoliciesAgreementsPage'
 import FAQPage from './pages/FAQPage'
 import CustomerLayout from './components/login/layout/CustomerLayout'
-
-//jb
 import PaymentPage from './pages/PaymentPage'
 
 export default function App() {
@@ -38,6 +36,7 @@ export default function App() {
         </Route>
         <Route path="/policies" element={<PoliciesAgreementsPage />} />  
         <Route path="/faq" element={<FAQPage />} />
+        <Route path="/customer/payment" element={<PaymentPage />} />
       </Routes>
     </BrowserRouter>
   )
