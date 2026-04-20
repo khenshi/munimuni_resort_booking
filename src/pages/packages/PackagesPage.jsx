@@ -5,8 +5,8 @@ import {
   PackagesPageHeader,
   readPackagesViewState,
   writePackagesViewState,
-} from '../components/packages'
-import '../styles/pages/packages-page.css'
+} from '../../components/packages'
+import '../../styles/pages/packages-page.css'
 
 export default function PackagesPage() {
   const [activeTab, setActiveTab] = useState(() => readPackagesViewState().activeTab)

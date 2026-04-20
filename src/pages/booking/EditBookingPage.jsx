@@ -1,10 +1,10 @@
 import { useMemo, useState } from 'react'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
-import { readCurrentCustomer } from '../components/login/auth-storage'
-import EditBookingForm from '../components/booking/forms/EditBookingForm'
-import useEditBookingLogic from '../components/booking/state/useEditBookingLogic'
-import { addOns } from '../data/packages'
-import '../styles/pages/customer-detail-pages.css'
+import { readCurrentCustomer } from '../../components/login/auth-storage'
+import EditBookingForm from '../../components/booking/forms/EditBookingForm'
+import useEditBookingLogic from '../../components/booking/state/useEditBookingLogic'
+import { addOns } from '../../data/packages'
+import '../../styles/pages/customer-detail-pages.css'
 
 /**
  * EditBookingPage

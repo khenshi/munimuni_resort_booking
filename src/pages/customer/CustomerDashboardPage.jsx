@@ -1,23 +1,23 @@
 import { useEffect, useState } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
-import FinancialWalletSection from '../components/dashboard/sections/FinancialWalletSection'
-import { BOOKINGS_CHANGED_EVENT } from '../components/login/bookings-storage'
+import FinancialWalletSection from '../../components/dashboard/sections/FinancialWalletSection'
+import { BOOKINGS_CHANGED_EVENT } from '../../components/login/bookings-storage'
 import {
   AUTH_CHANGED_EVENT,
   OUTSTANDING_BALANCE_CHANGED_EVENT,
   getCustomerOutstandingBalance,
   readCurrentCustomer,
-} from '../components/login/auth-storage'
-import PreviousBookingsWidget from '../components/dashboard/PreviousBookingsWidget'
-import DigitalConciergeSection from '../components/dashboard/DigitalConciergeSection'
-import DigitalConciergePanel from '../components/dashboard/DigitalConciergePanel'
-import CustomerBookingsList from '../components/login/CustomerBookingsList'
-import { getCustomerBookingList } from '../components/login/bookings-storage'
-import useBookingStateSync from '../components/booking/state/useBookingStateSync'
-import '../styles/pages/customer-dashboard-page.css'
-import '../styles/components/dashboard/digital-concierge-panel.css'
+} from '../../components/login/auth-storage'
+import PreviousBookingsWidget from '../../components/dashboard/PreviousBookingsWidget'
+import DigitalConciergeSection from '../../components/dashboard/DigitalConciergeSection'
+import DigitalConciergePanel from '../../components/dashboard/DigitalConciergePanel'
+import CustomerBookingsList from '../../components/dashboard/sections/CustomerBookingsList'
+import { getCustomerBookingList } from '../../components/login/bookings-storage'
+import useBookingStateSync from '../../components/booking/state/useBookingStateSync'
+import '../../styles/pages/customer-dashboard-page.css'
+import '../../styles/components/dashboard/digital-concierge-panel.css'
 
-import AccountLayout from '../components/dashboard/layout/AccountLayout'
+import AccountLayout from '../../components/dashboard/layout/AccountLayout'
 
 export default function CustomerDashboardPage() {
   const navigate = useNavigate()
@@ -75,16 +75,25 @@ export default function CustomerDashboardPage() {
     return <Navigate to="/customer/login" replace />
   }
 
+  // Get today's date in ISO format (YYYY-MM-DD) to avoid timezone issues
+  const getTodayISODate = () => {
+    const now = new Date()
+    const year = now.getFullYear()
+    const month = String(now.getMonth() + 1).padStart(2, '0')
+    const day = String(now.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
+  }
+
+  const todayISO = getTodayISODate()
   const upcomingBookings = customerBookings
-    .filter((b) => b.checkInDate && new Date(b.checkInDate) > new Date())
-    .sort((a, b) => new Date(a.checkInDate) - new Date(b.checkInDate))
-    .slice(0, 2);
+    .filter((b) => b.checkInDate && b.checkInDate > todayISO)
+    .sort((a, b) => a.checkInDate.localeCompare(b.checkInDate));
 
   return (
     <AccountLayout>
       <header className="dashboardIntro">
         <div className="dashboardIntroText">
-          {/* <p className="dashboardKicker">Customer Dashboard</p> */}
+          <p className="dashboardKicker">Customer Dashboard</p>
           <h1 className="dashboardTitle">
             Welcome back, {currentCustomer.fullName || currentCustomer.email}.
           </h1>

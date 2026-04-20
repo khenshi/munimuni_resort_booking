@@ -1,4 +1,4 @@
-import '../styles/pages/content-pages.css'
+import '../../styles/pages/content-pages.css'
 
 const POLICY_GROUPS = [
   {

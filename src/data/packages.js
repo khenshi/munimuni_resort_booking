@@ -19,6 +19,7 @@ export const cottages = [
     paxLabel: '10-15 pax',
     description: 'Recommended for small group day tours and intimate gatherings.',
     imageUrl: galleryImage3,
+    alt: 'Cove cottage with ocean-facing lounge area',
     availability: {
       unavailableCheckInDates: ['2026-04-06', '2026-04-12', '2026-04-20'],
     },
@@ -43,6 +44,7 @@ export const cottages = [
     paxLabel: '10-15 pax',
     description: 'Value-friendly option excellent for group outings and budget-conscious travelers.',
     imageUrl: galleryImage5,
+    alt: 'Jungle cottage with natural surroundings',
     availability: {
       unavailableCheckInDates: ['2026-04-08', '2026-04-15', '2026-04-21'],
     },
@@ -67,6 +69,7 @@ export const cottages = [
     paxLabel: '20-30 pax',
     description: 'Best for larger gatherings, celebrations, and special events.',
     imageUrl: galleryImage7,
+    alt: 'Cliffside cottage with panoramic sea view',
     availability: {
       unavailableCheckInDates: ['2026-04-10', '2026-04-18', '2026-04-27'],
     },
@@ -144,6 +147,7 @@ export const overnightOffers = [
     paxLabel: '10-30 pax',
     description: 'Ideal for guests who want a private stay space with overnight access.',
     imageUrl: galleryImage6,
+    alt: 'Cliffside cottage with panoramic sea view',
     availability: {
       unavailableCheckInDates: ['2026-04-05', '2026-04-11', '2026-04-19'],
     },
@@ -170,6 +174,7 @@ export const overnightOffers = [
     paxLabel: '10-20 pax',
     description: 'Designed for family groups with bundled overnight inclusions.',
     imageUrl: galleryImage2,
+    alt: 'Family enjoying a meal together at the resort',
     availability: {
       unavailableCheckInDates: ['2026-04-07', '2026-04-13', '2026-04-22'],
     },
@@ -196,6 +201,7 @@ export const overnightOffers = [
     paxLabel: '15-30 pax',
     description: 'Best for friends looking for an extended resort stay.',
     imageUrl: galleryImage8,
+    alt: 'Group of friends enjoying a beachside gathering',
     availability: {
       unavailableCheckInDates: ['2026-04-09', '2026-04-17', '2026-04-25'],
     },

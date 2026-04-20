@@ -69,9 +69,3 @@ export const resortImages = [
     alt: 'Coastal view with clear water and palm trees',
   },
 ]
-
-export const cottageImageById = {
-  cove: { src: galleryImage3, alt: 'Cove cottage with ocean-facing lounge area' },
-  jungle: { src: galleryImage5, alt: 'Jungle cottage surrounded by tropical greenery' },
-  cliffside: { src: galleryImage7, alt: 'Cliffside cottage with panoramic sea view' },
-}

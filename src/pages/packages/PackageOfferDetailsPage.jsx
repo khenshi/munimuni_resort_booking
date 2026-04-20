@@ -1,6 +1,6 @@
 import { useEffect, useMemo } from 'react'
 import { Link, useLocation, useParams } from 'react-router-dom'
-import { PackagesPageHeader } from '../components/packages'
+import { PackagesPageHeader } from '../../components/packages'
 import {
   PackageOfferDateEditor,
   PackageOfferDetailsCard,
@@ -9,8 +9,8 @@ import {
   resolveOfferDetail,
   resolveSelectedAvailabilityItem,
   tabByType,
-} from '../components/packages/details'
-import '../styles/pages/packages-page.css'
+} from '../../components/packages/details'
+import '../../styles/pages/packages-page.css'
 
 export default function PackageOfferDetailsPage() {
   const { offerType, offerId } = useParams()

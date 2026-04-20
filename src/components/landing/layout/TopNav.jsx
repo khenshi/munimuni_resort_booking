@@ -13,6 +13,7 @@ export default function TopNav({ navItems }) {
   const [currentCustomer, setCurrentCustomer] = useState(() => readCurrentCustomer())
   const profileMenuRef = useRef(null)
   const menuButtonRef = useRef(null)
+  const mobileMenuRef = useRef(null)
 
   const customerInitials = useMemo(() => {
     const name = currentCustomer?.fullName?.trim() ?? ''
@@ -29,6 +30,11 @@ export default function TopNav({ navItems }) {
       if (!profileMenuRef.current?.contains(event.target)) {
         setProfileMenuOpen(false)
       }
+
+      if (!menuButtonRef.current?.contains(event.target) && !mobileMenuRef.current?.contains(event.target)) {
+        setMenuOpen(false)
+      }
+
     }
     const onKeyDown = (event) => {
       if (event.key === 'Escape') {
@@ -104,6 +110,9 @@ export default function TopNav({ navItems }) {
               {item.label}
             </ScrollLink>
           ))}
+          <a href="/faq" className="navLink" target="_blank" >
+            FAQ
+          </a>
         </nav>
 
         <div className="navActions">
@@ -128,12 +137,20 @@ export default function TopNav({ navItems }) {
                   <>
                     <p className="profileDropdownTitle">{currentCustomer.fullName || currentCustomer.email}</p>
                     <RouterLink
+                      to="/customer/history"
+                      className="profileDropdownLink"
+                      role="menuitem"
+                      onClick={() => setProfileMenuOpen(false)}
+                    >
+                      History & Receipts
+                    </RouterLink>
+                    <RouterLink
                       to="/customer/dashboard"
                       className="profileDropdownLink"
                       role="menuitem"
                       onClick={() => setProfileMenuOpen(false)}
                     >
-                      My Dashboard
+                      Dashboard
                     </RouterLink>
                     <button type="button" className="profileDropdownButton" role="menuitem" onClick={handleSignOut}>
                       Sign Out
@@ -181,7 +198,7 @@ export default function TopNav({ navItems }) {
       </div>
 
       {menuOpen && (
-        <div className="mobileMenu" role="dialog" aria-label="Mobile menu">
+        <div className="mobileMenu" ref={mobileMenuRef} role="dialog" aria-label="Mobile menu">
           <div className="mobileMenuInner">
             {navItems.map((item) => (
               <button

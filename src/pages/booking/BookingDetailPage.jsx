@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { Navigate, Link, useParams } from 'react-router-dom'
-import { readCurrentCustomer } from '../components/login/auth-storage'
-import { getCustomerBookingList } from '../components/login/bookings-storage'
-import useBookingStateSync from '../components/booking/state/useBookingStateSync'
-import '../styles/pages/customer-detail-pages.css'
+import { readCurrentCustomer } from '../../components/login/auth-storage'
+import { getCustomerBookingList } from '../../components/login/bookings-storage'
+import useBookingStateSync from '../../components/booking/state/useBookingStateSync'
+import '../../styles/pages/customer-detail-pages.css'
 
 function formatDate(dateText) {
   if (!dateText) return 'TBD'

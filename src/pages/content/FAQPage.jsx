@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import '../styles/pages/content-pages.css'
+import '../../styles/pages/content-pages.css'
 
 const FAQ_GROUPS = [
   {

@@ -6,9 +6,9 @@ import {
   PaymentPaymentForm,
   PaymentSuccessState,
   usePaymentPageLogic,
-} from '../components/payment'
-import '../styles/components/payment/page.css'
-import '../styles/pages/payment-page.css'
+} from '../../components/payment'
+import '../../styles/components/payment/page.css'
+import '../../styles/pages/payment-page.css'
 
 export default function PaymentPage() {
   const {

@@ -29,7 +29,7 @@ export default function AccountSidebar() {
         </div>
         <div className="memberProfileBody">
           <p className="memberSince">Member since {new Date().getFullYear()}</p>
-          <p className="memberId">{currentCustomer.id || '1234'}</p>
+          <p className="memberSince">{currentCustomer.email}</p>
         </div>
       </div>
 

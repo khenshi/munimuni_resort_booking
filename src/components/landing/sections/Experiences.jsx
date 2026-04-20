@@ -1,13 +1,9 @@
 
 import { Link } from 'react-router-dom'
-import cottageOne from '../../../assets/3.png'
-import { cottageImageById } from '../../../data/landing'
 import { cottages } from '../../../data/packages'
 
 const featuredOffers = cottages.slice(0, 3).map((cottage) => ({
   ...cottage,
-  image: cottageImageById[cottage.id]?.src ?? cottageOne,
-  alt: cottageImageById[cottage.id]?.alt ?? `${cottage.name} cottage`,
   to: `/packages/offers/daytour/cottage-${cottage.id}`,
 }))
 
@@ -26,7 +22,7 @@ export default function Experiences() {
         <div className="featuredOffersGrid">
           {featuredOffers.map((offer) => (
             <article className="featuredOfferCard" key={offer.title}>
-              <img src={offer.image} alt={offer.alt} className="featuredOfferImage" />
+              <img src={offer.imageUrl} alt={offer.alt} className="featuredOfferImage" />
 
               <div className="featuredOfferBody">
                 <h3>{offer.name}</h3>
