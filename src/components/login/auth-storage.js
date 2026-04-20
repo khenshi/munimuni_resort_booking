@@ -261,13 +261,48 @@ export function getCustomerReceipts(customerId) {
 }
 
 export function addCustomerReceipt(customerId, receipt) {
-  if (!customerId) {
+  if (!customerId || !receipt) {
     return;
   }
   const receiptsMap = readCustomerReceipts();
   if (!receiptsMap[customerId]) {
     receiptsMap[customerId] = [];
   }
-  receiptsMap[customerId].push(receipt);
+  
+  // Check if receipt with same invoiceNumber already exists
+  const existingReceipt = receiptsMap[customerId].find(
+    (existing) => existing.invoiceNumber === receipt.invoiceNumber
+  );
+  
+  if (existingReceipt) {
+    // Update existing receipt instead of adding duplicate
+    const index = receiptsMap[customerId].indexOf(existingReceipt);
+    receiptsMap[customerId][index] = receipt;
+  } else {
+    receiptsMap[customerId].push(receipt);
+  }
+  
+  writeCustomerReceipts(receiptsMap);
+}
+
+export function cleanupDuplicateReceipts(customerId) {
+  if (!customerId) {
+    return;
+  }
+  const receiptsMap = readCustomerReceipts();
+  if (!receiptsMap[customerId]) {
+    return;
+  }
+  
+  // Remove duplicates based on invoiceNumber, keeping the first occurrence
+  const seen = new Set();
+  receiptsMap[customerId] = receiptsMap[customerId].filter(receipt => {
+    if (seen.has(receipt.invoiceNumber)) {
+      return false;
+    }
+    seen.add(receipt.invoiceNumber);
+    return true;
+  });
+  
   writeCustomerReceipts(receiptsMap);
 }

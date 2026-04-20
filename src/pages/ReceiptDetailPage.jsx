@@ -1,7 +1,6 @@
-import { Link, Navigate, useParams } from 'react-router-dom'
+import { Link, Navigate, useLocation } from 'react-router-dom'
 import { readCurrentCustomer } from '../components/login/auth-storage'
 import {
-  findReceiptById,
   formatReceiptCurrency,
   getReceiptTotals,
 } from '../data/receipts'
@@ -19,15 +18,14 @@ function formatDate(dateText) {
 }
 
 export default function ReceiptDetailPage() {
-  const { receiptId } = useParams()
+  const location = useLocation()
   const currentCustomer = readCurrentCustomer()
 
   if (!currentCustomer) {
     return <Navigate to="/customer/login" replace />
   }
 
-  const decodedReceiptId = decodeURIComponent(receiptId || '')
-  const receipt = findReceiptById(decodedReceiptId)
+  const receipt = location.state?.receiptData
 
   if (!receipt) {
     return (
@@ -37,7 +35,7 @@ export default function ReceiptDetailPage() {
             <p className="customerDetailKicker">Receipt Detail</p>
             <h1 className="customerDetailTitle">Receipt not found</h1>
             <p className="customerDetailDescription">
-              We could not find a receipt record for ID <strong>{decodedReceiptId}</strong>.
+              We could not find the receipt data.
             </p>
             <div className="customerDetailActions">
               <Link className="customerDetailBtn isPrimary" to="/customer/dashboard">

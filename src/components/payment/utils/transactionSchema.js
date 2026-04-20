@@ -38,7 +38,18 @@ const STORAGE_KEY = 'munimuni-transactions'
 export const saveTransaction = (transaction) => {
   try {
     const existingTransactions = getAllTransactions()
-    existingTransactions.push(transaction)
+    // Check if transaction with same transactionId already exists
+    const existingIndex = existingTransactions.findIndex(
+      (existing) => existing.transactionId === transaction.transactionId
+    )
+    
+    if (existingIndex >= 0) {
+      // Update existing transaction instead of adding duplicate
+      existingTransactions[existingIndex] = transaction
+    } else {
+      existingTransactions.push(transaction)
+    }
+    
     localStorage.setItem(STORAGE_KEY, JSON.stringify(existingTransactions))
     return true
   } catch (error) {
