@@ -95,14 +95,6 @@ export default function LoginPageHeader() {
                       History and Receipts
                     </Link>
                     <Link
-                      to="/customer/payment"
-                      className="packagesProfileDropdownLink"
-                      role="menuitem"
-                      onClick={() => setProfileMenuOpen(false)}
-                    >
-                      Payment
-                    </Link>
-                    <Link
                       to="/customer/dashboard"
                       className="loginProfileDropdownLink"
                       role="menuitem"

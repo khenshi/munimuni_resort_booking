@@ -7,8 +7,7 @@ export default function AccountSidebar() {
 
   const navItems = [
     { label: 'Account Overview', path: '/customer/dashboard' },
-    { label: 'Stay History', path: '/customer/history', search: '?tab=bookings' },
-    { label: 'Billing & Receipts', path: '/customer/history', search: '?tab=billing' },
+    { label: 'History', path: '/customer/history'},
   ]
 
   const profileItems = [
@@ -39,12 +38,14 @@ export default function AccountSidebar() {
           <p className="navSectionTitle">MY ACCOUNT</p>
           <ul className="navList">
             {navItems.map((item) => (
-              <li 
-                key={item.label} 
-                className={`navItem ${isActive(item.path, item.search) ? 'isActive' : ''}`}
-              >
-                <Link to={item.path + (item.search || '')}>{item.label}</Link>
-              </li>
+              <Link to={item.path + (item.search || '')}>
+                <li 
+                  key={item.label} 
+                  className={`navItem ${isActive(item.path, item.search) ? 'isActive' : ''}`}
+                >
+                  {item.label}
+                </li>
+              </Link>
             ))}
           </ul>
         </div>
@@ -52,12 +53,14 @@ export default function AccountSidebar() {
           <p className="navSectionTitle">MY PROFILE</p>
           <ul className="navList">
             {profileItems.map((item) => (
+              <Link to={item.path}>
               <li 
                 key={item.label} 
                 className={`navItem ${isActive(item.path) ? 'isActive' : ''}`}
               >
-                <Link to={item.path}>{item.label}</Link>
+                {item.label}
               </li>
+              </Link>
             ))}
           </ul>
         </div>
