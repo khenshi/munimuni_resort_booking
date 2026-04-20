@@ -110,6 +110,14 @@ export default function PackagesPageHeader({ activeTab, onTabChange }) {
                       History and Receipts
                     </Link>
                     <Link
+                      to="/customer/payment"
+                      className="packagesProfileDropdownLink"
+                      role="menuitem"
+                      onClick={() => setProfileMenuOpen(false)}
+                    >
+                      Payment
+                    </Link>
+                    <Link
                       to="/customer/dashboard"
                       className="packagesProfileDropdownLink"
                       role="menuitem"
