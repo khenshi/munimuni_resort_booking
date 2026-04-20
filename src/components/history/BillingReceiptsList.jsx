@@ -28,7 +28,7 @@ export default function BillingReceiptsList({ records, onViewDetails, isLoading 
     return (
       <section className="historyList" aria-label="Billing and receipts list">
         <div className="historyEmptyState" role="status">
-          <p className="historyEmptyTitle">No billing records found</p>
+          <p className="historyEmptyTitle">No invoices found</p>
           <p className="historyEmptyText">Try adjusting your search, year, or sort settings.</p>
         </div>
       </section>

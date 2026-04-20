@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react'
 import { Navigate, useNavigate, useLocation } from 'react-router-dom'
 import { readCurrentCustomer } from '../components/login/auth-storage'
+import { getCustomerReceipts } from '../components/login/auth-storage'
 import { getCustomerBookingList } from '../components/login/bookings-storage'
 import useBookingStateSync from '../components/booking/state/useBookingStateSync'
-import { resortReceipts } from '../data/receipts'
 import BillingReceiptsList from '../components/history/BillingReceiptsList'
 import PreviousBookingsList from '../components/history/PreviousBookingsList'
 import '../styles/pages/customer-history-page.css'
@@ -104,7 +104,8 @@ export default function CustomerHistoryPage() {
   }, [customerBookings, searchQuery, selectedYear, sortOrder])
 
   const visibleReceipts = useMemo(() => {
-    return resortReceipts
+    const customerReceipts = currentCustomer ? getCustomerReceipts(currentCustomer.id) : []
+    return customerReceipts
       .filter((receipt) => {
         const normalizedQuery = searchQuery.trim().toLowerCase()
         const matchesQuery = !normalizedQuery
@@ -121,7 +122,7 @@ export default function CustomerHistoryPage() {
         label: receipt.stayLabel,
         date: receipt.issuedDate,
         status: receipt.paymentStatus,
-        amount: `PHP ${receipt.amountPaid}`,
+        amount: `PHP ${receipt.amountPaid.toLocaleString('en-PH')}`,
         id: receipt.invoiceNumber,
         originalId: receipt.id,
       }))
@@ -130,18 +131,13 @@ export default function CustomerHistoryPage() {
         const rightDate = new Date(right.issuedDate)
         return sortOrder === 'newest' ? rightDate - leftDate : leftDate - rightDate
       })
-  }, [searchQuery, selectedYear, sortOrder])
+  }, [currentCustomer, searchQuery, selectedYear, sortOrder])
 
   const handleViewDetails = (record) => {
-    const recordId = record.originalId || record.id || ''
-    if (!recordId) {
-      return
-    }
-
     if (activeTab === 'bookings') {
-      navigate(`/customer/bookings/${encodeURIComponent(recordId)}`)
+      navigate(`/customer/bookings/${encodeURIComponent(record.id)}`)
     } else {
-      navigate(`/customer/receipts/${encodeURIComponent(recordId)}`)
+      navigate('/customer/receipts/detail', { state: { receiptData: record } })
     }
   }
 
