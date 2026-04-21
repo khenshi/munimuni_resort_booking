@@ -41,7 +41,7 @@ export function filterByPax(items, paxValue, getPax) {
 
   return items.filter((item) => {
     const itemPax = getPax(item)
-    return paxNeeded === null || (Number.isFinite(itemPax) && itemPax >= paxNeeded)
+    return paxNeeded === null || itemPax >= paxNeeded
   })
 }
 

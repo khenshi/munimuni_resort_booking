@@ -1,8 +1,3 @@
-/**
- * History list section for the "Previous Stays" tab.
- * Renders booking rows, plus empty/loading states.
- * Delegates navigation via the onViewDetails callback.
- */
 
 import PreviousBookingListItem from './PreviousBookingListItem'
 

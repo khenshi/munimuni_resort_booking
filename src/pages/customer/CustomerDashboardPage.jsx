@@ -96,7 +96,7 @@ export default function CustomerDashboardPage() {
         <div className="dashboardIntroText">
           <p className="dashboardKicker">Customer Dashboard</p>
           <h1 className="dashboardTitle">
-            Welcome back, {currentCustomer.fullName || currentCustomer.email}.
+            Welcome back, {currentCustomer.fullName.slice(0, 1).toUpperCase() + currentCustomer.fullName.slice(1) || currentCustomer.email}.
           </h1>
           <p className="dashboardCopy">
             Manage your resort experience, track stays, and handle billing from your personal hub.

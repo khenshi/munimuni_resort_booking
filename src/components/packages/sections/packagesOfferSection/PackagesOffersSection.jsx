@@ -55,7 +55,7 @@ export default function PackagesOffersSection({ activeTab }) {
     filterByPax(addOns, paxValue, () => Number.POSITIVE_INFINITY),
     sortBy,
     (item) => item.title,
-    () => Number.POSITIVE_INFINITY,
+    (item) => item.price,
   )
 
   const sortedDayTourOffers = markAndOrderByAvailability(

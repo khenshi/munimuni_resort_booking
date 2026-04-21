@@ -1,14 +1,3 @@
-/**
- * History "Billing & Receipts" ledger row component.
- * Renders a normalized receipt display model for Member 5 mapping.
- * Delegates navigation via the onViewDetails callback.
- */
-
-/**
- * Render one billing/receipt ledger row for the History page.
- * @param {{ receipt: import('./historyDisplayModels').ReceiptLedgerItemModel, onViewDetails?: (receipt: any) => void }} props
- * @returns {import('react').JSX.Element}
- */
 export default function BillingReceiptLedgerItem({ receipt, onViewDetails }) {
   return (
     <article className="historyReceiptRow" aria-label={`Receipt ${receipt.id}`}>
@@ -17,8 +6,8 @@ export default function BillingReceiptLedgerItem({ receipt, onViewDetails }) {
           <p className="historyRowTitle">{receipt.label}</p>
           <p className="historyRowSubtle">
             <span className="historyRowMeta">{receipt.date}</span>
-            <span className="historyRowMeta"> • {receipt.id}</span>
           </p>
+          <p className="historyRowSubtle">{receipt.id}</p>
         </div>
 
         <div className="historyRowAside">

@@ -24,19 +24,23 @@ export default function OffersFiltersBar({
         </select>
       </div>
 
-      <div className="offersFilterBlock">
-        <span className="offersSortLabel">Pax Needed</span>
-        <div className="rangeInputs">
-          <input
-            type="number"
-            min="0"
-            className="offersRangeInput"
-            placeholder="e.g. 12"
-            value={paxValue}
-            onChange={(event) => onPaxValueChange(event.target.value)}
-          />
+      {requiresStayDates ? (
+       <>
+        <div className="offersFilterBlock">
+          <span className="offersSortLabel">Pax Needed</span>
+          <div className="rangeInputs">
+            <input
+              type="number"
+              min="0"
+              className="offersRangeInput"
+              placeholder="e.g. 12"
+              value={paxValue}
+              onChange={(event) => onPaxValueChange(event.target.value)}
+            />
+          </div>
         </div>
-      </div>
+      </>
+      ) : null}
 
       {requiresStayDates ? (
         <>

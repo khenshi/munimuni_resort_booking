@@ -1,15 +1,5 @@
-/**
- * History "Previous Stays" list row component.
- * Renders a normalized booking display model for Member 5 mapping.
- * Delegates navigation via the onViewDetails callback.
- */
-
-/**
- * Render one booking row for the History page.
- * @param {{ booking: import('./historyDisplayModels').BookingListItemModel, onViewDetails?: (booking: any) => void }} props
- * @returns {import('react').JSX.Element}
- */
 export default function PreviousBookingListItem({ booking, onViewDetails }) {
+  const bookingReference = booking.bookingReference || booking.reference || booking.id
   const statusVariant = String(booking.status ?? '')
     .trim()
     .toLowerCase()
@@ -30,10 +20,10 @@ export default function PreviousBookingListItem({ booking, onViewDetails }) {
               </>
             ) : null}
           </p>
+          <p className="historyRowSubtle">{bookingReference}</p>
         </div>
 
         <div className="historyRowAside">
-          {booking.total ? <p className="historyRowAmount">{booking.total}</p> : null}
           <button
             type="button"
             className="historyRowAction"

@@ -1,16 +1,5 @@
-/**
- * History list section for the "Billing & Receipts" tab.
- * Renders receipt ledger rows, plus empty/loading states.
- * Delegates navigation via the onViewDetails callback.
- */
-
 import BillingReceiptLedgerItem from './BillingReceiptLedgerItem'
 
-/**
- * Render the billing & receipts list.
- * @param {{ records: import('./historyDisplayModels').ReceiptLedgerItemModel[], onViewDetails?: (receipt: any) => void, isLoading?: boolean }} props
- * @returns {import('react').JSX.Element}
- */
 export default function BillingReceiptsList({ records, onViewDetails, isLoading = false }) {
   if (isLoading) {
     return (

@@ -145,7 +145,7 @@ export default function CustomerHistoryPage() {
               onChange={(event) => setSearchQuery(event.target.value)}
               placeholder={activeTab === 'bookings' 
                 ? 'Search by accommodation name'
-                : 'Search by customer name or invoice number'
+                : 'Search by accommodation name or invoice number'
               }
             />
           </label>
