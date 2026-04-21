@@ -49,6 +49,8 @@ export default function PaymentPaymentForm({
     // basic format checks
     if (!cardDetails.name.trim()) errors.name = 'Required'
     if (cardDetails.number.replace(/\s/g, '').length < 13) errors.number = 'Invalid Card'
+
+    // simple expiry/invalid date check
     if (!/^\d{2}\/\d{2}$/.test(cardDetails.expiry)) {
       errors.expiry = 'Invalid (MM/YY)'
     } else {
@@ -65,6 +67,8 @@ export default function PaymentPaymentForm({
         }
       }
     }
+
+    // cvv length check
     if (cardDetails.cvv.length < 3) errors.cvv = 'Invalid CVV'
 
     if (Object.keys(errors).length > 0) {
