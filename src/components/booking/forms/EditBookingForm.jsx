@@ -29,6 +29,7 @@ import BookingStepContent from '../sections/BookingStepContent'
  * @param {string} props.submitError
  * @param {boolean} props.submitSuccess
  * @param {function} [props.onCancel]
+ * @param {function} [props.onBackToDashboard]
  */
 export default function EditBookingForm({
   pageHeading,
@@ -53,6 +54,7 @@ export default function EditBookingForm({
   submitError,
   submitSuccess,
   onCancel,
+  onBackToDashboard,
 }) {
   return (
     <main className="bookingMain">
@@ -61,10 +63,29 @@ export default function EditBookingForm({
         <h1 id="edit-booking-heading">{pageHeading}</h1>
 
         {submitSuccess ? (
-          <div className="bookingStateNotice bookingStateNoticeSuccess">
-            <h2>Booking Updated</h2>
-            <p>Your booking changes have been saved successfully.</p>
-          </div>
+          <section className="bookingForm editBookingSuccessShell" aria-live="polite">
+            <header className="editBookingSuccessHeader">
+              <p className="editBookingSuccessKicker">Confirmation</p>
+              <h2>Booking Updated Successfully</h2>
+            </header>
+
+            <div className="bookingPanel editBookingSuccessPanel">
+              <p className="editBookingSuccessMessage">
+                Your edits for <strong>{selectedOffer?.title ?? 'this booking'}</strong> were saved.
+                You can review your latest booking details anytime in your dashboard.
+              </p>
+
+              <div className="bookingActions editBookingSuccessActions">
+                <button
+                  type="button"
+                  className="bookingActionBtn isPrimary"
+                  onClick={onBackToDashboard}
+                >
+                  Back to Dashboard
+                </button>
+              </div>
+            </div>
+          </section>
         ) : (
           <form className="bookingForm" onSubmit={submitBooking}>
             <BookingStepsIndicator step={step} />

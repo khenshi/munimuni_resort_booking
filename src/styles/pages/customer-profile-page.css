@@ -93,7 +93,7 @@
   letter-spacing: 0.05em;
 }
 
-.customerProfileForm input,
+.customerProfileForm input:not([type='checkbox']),
 .customerProfileForm textarea {
   border: 1px solid #e2e8f0;
   border-radius: 10px;
@@ -112,6 +112,22 @@
   border-color: var(--color-cyan, #00d2d3);
   background: white;
   box-shadow: 0 0 0 4px rgba(0, 210, 211, 0.1);
+}
+
+.customerProfileForm input[type='checkbox'] {
+  width: auto;
+  margin: 0;
+}
+
+.profileCheckboxLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0;
+  color: #334155;
 }
 
 .formActions {

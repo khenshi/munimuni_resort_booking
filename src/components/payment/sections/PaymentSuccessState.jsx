@@ -14,6 +14,8 @@ export default function PaymentSuccessState({
   const navigate = useNavigate()
   const receiptProcessedRef = useRef(false)
 
+  const packageTitle = bookingData?.selectedOffer?.title || bookingData?.title || bookingData?.propertyName || 'Resort Stay'
+
   // Reset processing flag when transaction changes
   useEffect(() => {
     receiptProcessedRef.current = false
@@ -28,7 +30,8 @@ export default function PaymentSuccessState({
         const receipt = {
           id: `receipt-${Date.now()}`,
           invoiceNumber: `INV-${Date.now()}`,
-          stayLabel: bookingData.propertyName || 'Resort Stay',
+          stayLabel: packageTitle,
+          packageName: packageTitle,
           issuedDate: new Date().toISOString().slice(0, 10),
           amountPaid: transactionSummary.amountPaid,
           paymentMethod: paymentMethod || 'Cash',
@@ -44,7 +47,7 @@ export default function PaymentSuccessState({
         if (itemizedCosts.room) {
           receipt.lineItems.push({
             id: 'room',
-            label: `${bookingData.propertyName || 'Room'} package`,
+            label: `${packageTitle} package`,
             quantity: 1,
             unitPrice: itemizedCosts.room,
           })

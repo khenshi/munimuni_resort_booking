@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { getCustomerBooking, updateCustomerBooking } from '../../login/bookings-storage'
-import { resolveAutoCheckOutDate } from '../utils/booking-utils'
+import { resolveAutoCheckOutDate, resolveSelectedOffer } from '../utils/booking-utils'
 import { getTodayISODate, addDaysToISODate } from '../../packages/utils/availability-utils'
 import { isItemAvailableForDate } from '../../packages'
 import { addOns } from '../../../data/packages'
@@ -49,14 +49,15 @@ export default function useEditBookingLogic(bookingReference, customerId) {
 
   const selectedOffer = useMemo(() => {
     if (!existingBooking?.selectedOffer) return null
+
+    const resolvedOffer = resolveSelectedOffer(
+      existingBooking.selectedOffer.offerType,
+      existingBooking.selectedOffer.offerId,
+    )
+
     return {
-      title: existingBooking.selectedOffer.title,
-      price: existingBooking.selectedOffer.price,
-      offerType: existingBooking.selectedOffer.offerType,
-      offerId: existingBooking.selectedOffer.offerId,
-      priceInfo: existingBooking.selectedOffer.priceInfo,
-      paxMax: existingBooking.selectedOffer.paxMax,
-      imageUrl: existingBooking.selectedOffer.imageUrl,
+      ...resolvedOffer,
+      ...existingBooking.selectedOffer,
     }
   }, [existingBooking])
 

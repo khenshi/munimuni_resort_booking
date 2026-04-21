@@ -98,6 +98,7 @@ export default function EditBookingPage() {
           submitError={submitError}
           submitSuccess={submitSuccess}
           onCancel={handleCancel}
+          onBackToDashboard={() => navigate('/customer/dashboard')}
         />
       </main>
     </div>

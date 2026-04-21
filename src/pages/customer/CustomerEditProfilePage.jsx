@@ -20,6 +20,36 @@ function readEditableProfile(customerId, fallbackCustomer) {
     address: String(matchedAccount?.address ?? fallbackCustomer?.address ?? '').trim(),
   }
 }
+
+function isValidPhoneNumber(phoneValue) {
+  return /^(09\d{9}|\+639\d{9})$/.test(phoneValue)
+}
+
+function sanitizePhoneInput(rawValue) {
+  const normalizedValue = String(rawValue ?? '')
+  if (normalizedValue.startsWith('+')) {
+    const digitsAfterPlus = normalizedValue.slice(1).replace(/\D/g, '').slice(0, 12)
+    return `+${digitsAfterPlus}`
+  }
+
+  return normalizedValue.replace(/\D/g, '').slice(0, 11)
+}
+
+function getPhoneValidationMessage(phoneValue) {
+  if (!phoneValue) return ''
+  if (isValidPhoneNumber(phoneValue)) return ''
+
+  if (phoneValue.startsWith('+') && !phoneValue.startsWith('+63')) {
+    return 'Phone number must start with +63.'
+  }
+
+  if (!phoneValue.startsWith('+') && !phoneValue.startsWith('09')) {
+    return 'Phone number must start with 09 or +63.'
+  }
+
+  return 'Use 09XXXXXXXXX or +639XXXXXXXXX format.'
+}
+
 export default function CustomerEditProfilePage() {
   const [currentCustomer, setCurrentCustomer] = useState(() => readCurrentCustomer())
   const [contactForm, setContactForm] = useState(() => {
@@ -33,8 +63,12 @@ export default function CustomerEditProfilePage() {
   const [currentPassword, setCurrentPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [confirmNewPassword, setConfirmNewPassword] = useState('')
+  const [showPasswords, setShowPasswords] = useState(false)
   const [contactNotice, setContactNotice] = useState('')
+  const [contactNoticeType, setContactNoticeType] = useState('success')
   const [passwordNotice, setPasswordNotice] = useState('')
+  const [passwordNoticeType, setPasswordNoticeType] = useState('error')
+  const phoneValidationMessage = getPhoneValidationMessage(contactForm.phone)
 
   useEffect(() => {
     const syncCustomer = () => {
@@ -61,20 +95,37 @@ export default function CustomerEditProfilePage() {
 
   const handleContactSubmit = (event) => {
     event.preventDefault()
+
+    const normalizedPhone = String(contactForm.phone ?? '').trim()
+    if (normalizedPhone && !isValidPhoneNumber(normalizedPhone)) {
+      setContactNoticeType('error')
+      setContactNotice('Phone number must be in 09XXXXXXXXX or +639XXXXXXXXX format.')
+      return
+    }
+
     const result = updateCustomerContactDetails(currentCustomer.id, contactForm)
 
     if (!result.ok) {
+      setContactNoticeType('error')
       setContactNotice(result.error || 'Unable to update contact details.')
       return
     }
 
+    setContactNoticeType('success')
     setContactNotice('Contact details updated successfully.')
   }
 
   const handlePasswordSubmit = (event) => {
     event.preventDefault()
 
+    if (currentPassword === newPassword) {
+      setPasswordNoticeType('error')
+      setPasswordNotice('New password must be different from your current password.')
+      return
+    }
+
     if (newPassword !== confirmNewPassword) {
+      setPasswordNoticeType('error')
       setPasswordNotice('New password and confirmation do not match.')
       return
     }
@@ -82,10 +133,12 @@ export default function CustomerEditProfilePage() {
     const result = updateCustomerPassword(currentCustomer.id, currentPassword, newPassword)
 
     if (!result.ok) {
+      setPasswordNoticeType('error')
       setPasswordNotice(result.error || 'Unable to update password.')
       return
     }
 
+    setPasswordNoticeType('success')
     setPasswordNotice('Password updated successfully.')
     setCurrentPassword('')
     setNewPassword('')
@@ -141,9 +194,15 @@ export default function CustomerEditProfilePage() {
                   id="profile-phone"
                   type="text"
                   value={contactForm.phone}
-                  onChange={(event) => setContactForm((prev) => ({ ...prev, phone: event.target.value }))}
+                  onChange={(event) => {
+                    const sanitizedPhone = sanitizePhoneInput(event.target.value)
+                    setContactForm((prev) => ({ ...prev, phone: sanitizedPhone }))
+                  }}
                   placeholder="09xx xxx xxxx"
+                  inputMode="numeric"
+                  maxLength={contactForm.phone.startsWith('+') ? 13 : 11}
                 />
+                {phoneValidationMessage ? <p className="customerProfileNotice error">{phoneValidationMessage}</p> : null}
               </div>
 
               <div className="formField">
@@ -159,7 +218,7 @@ export default function CustomerEditProfilePage() {
 
               <div className="formActions">
                 <button type="submit" className="saveProfileBtn">Save Changes</button>
-                {contactNotice && <p className="customerProfileNotice success">{contactNotice}</p>}
+                {contactNotice && <p className={`customerProfileNotice ${contactNoticeType}`}>{contactNotice}</p>}
               </div>
             </form>
           </article>
@@ -174,7 +233,7 @@ export default function CustomerEditProfilePage() {
                 <label htmlFor="profile-current-password">Current Password</label>
                 <input
                   id="profile-current-password"
-                  type="password"
+                  type={showPasswords ? 'text' : 'password'}
                   value={currentPassword}
                   onChange={(event) => setCurrentPassword(event.target.value)}
                   required
@@ -185,7 +244,7 @@ export default function CustomerEditProfilePage() {
                 <label htmlFor="profile-new-password">New Password</label>
                 <input
                   id="profile-new-password"
-                  type="password"
+                  type={showPasswords ? 'text' : 'password'}
                   value={newPassword}
                   onChange={(event) => setNewPassword(event.target.value)}
                   minLength={6}
@@ -197,7 +256,7 @@ export default function CustomerEditProfilePage() {
                 <label htmlFor="profile-confirm-password">Confirm New Password</label>
                 <input
                   id="profile-confirm-password"
-                  type="password"
+                  type={showPasswords ? 'text' : 'password'}
                   value={confirmNewPassword}
                   onChange={(event) => setConfirmNewPassword(event.target.value)}
                   minLength={6}
@@ -205,9 +264,21 @@ export default function CustomerEditProfilePage() {
                 />
               </div>
 
+              <div className="formField">
+                <label htmlFor="profile-show-password" className="profileCheckboxLabel">
+                  <input
+                    id="profile-show-password"
+                    type="checkbox"
+                    checked={showPasswords}
+                    onChange={(event) => setShowPasswords(event.target.checked)}
+                  />{' '}
+                  Show passwords
+                </label>
+              </div>
+
               <div className="formActions">
                 <button type="submit" className="saveProfileBtn secondary">Update Password</button>
-                {passwordNotice && <p className="customerProfileNotice error">{passwordNotice}</p>}
+                {passwordNotice && <p className={`customerProfileNotice ${passwordNoticeType}`}>{passwordNotice}</p>}
               </div>
             </form>
           </article>

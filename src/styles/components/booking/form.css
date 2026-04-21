@@ -232,3 +232,46 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+.editBookingSuccessShell {
+  margin-top: 4px;
+}
+
+.editBookingSuccessHeader {
+  margin-bottom: 12px;
+  display: grid;
+  gap: 6px;
+}
+
+.editBookingSuccessHeader h2 {
+  margin: 0;
+  color: #162033;
+  font-size: clamp(22px, 2.3vw, 30px);
+}
+
+.editBookingSuccessKicker {
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(22, 101, 52, 0.82);
+  font-weight: 700;
+}
+
+.editBookingSuccessPanel {
+  background: #ffffff;
+}
+
+.editBookingSuccessMessage {
+  margin: 0;
+  color: rgba(22, 32, 51, 0.82);
+  line-height: 1.6;
+}
+
+.editBookingSuccessActions {
+  margin-top: 14px;
+}
+
+.editBookingSuccessActions .bookingActionBtn:nth-child(1) {
+  margin-left: 0;
+}
