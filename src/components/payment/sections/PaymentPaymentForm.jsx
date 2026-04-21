@@ -31,10 +31,12 @@ export default function PaymentPaymentForm({
       value = value.replace(/\D/g, '').replace(/(\d{2})(\d{0,2})/, '$1/$2').substring(0, 5)
     } else if (name === 'cvv') {
       value = value.replace(/\D/g, '').substring(0, 3)
+    } else if (name === 'name') {
+      value = value.replace(/[^a-zA-Z ]/g, '')
     }
 
     setCardDetails(prev => ({ ...prev, [name]: value }))
-    // clear erros when user types
+    // clear errors when user types
     if (localErrors[name]) {
       setLocalErrors(prev => ({ ...prev, [name]: null }))
     }
@@ -44,10 +46,25 @@ export default function PaymentPaymentForm({
     if (paymentMethod === 'QR Ph') return onSubmit()
 
     const errors = {}
-    // basic forma checks
+    // basic format checks
     if (!cardDetails.name.trim()) errors.name = 'Required'
     if (cardDetails.number.replace(/\s/g, '').length < 13) errors.number = 'Invalid Card'
-    if (!/^\d{2}\/\d{2}$/.test(cardDetails.expiry)) errors.expiry = 'Invalid (MM/YY)'
+    if (!/^\d{2}\/\d{2}$/.test(cardDetails.expiry)) {
+      errors.expiry = 'Invalid (MM/YY)'
+    } else {
+      const [m, y] = cardDetails.expiry.split('/').map(Number)
+      if (m < 1 || m > 12) {
+        errors.expiry = 'Invalid Month'
+      } else {
+        const now = new Date()
+        const currentMonth = now.getMonth() + 1
+        const currentYear = Number(now.getFullYear().toString().slice(-2))
+        
+        if (y < currentYear || (y === currentYear && m < currentMonth)) {
+          errors.expiry = 'Expired Card'
+        }
+      }
+    }
     if (cardDetails.cvv.length < 3) errors.cvv = 'Invalid CVV'
 
     if (Object.keys(errors).length > 0) {
