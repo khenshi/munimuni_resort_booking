@@ -10,10 +10,13 @@ export default function LandingFooter() {
         </div>
 
         <nav className="landingFooterNav" aria-label="Footer navigation">
-          <a href="#resort-highlights">Highlights</a>
-          <a href="#resort-gallery">Gallery</a>
-          <a href="#featured-offers">Offers</a>
-          <a href="#resort-contact">Contact</a>
+          <a href="/#resort-highlights">Highlights</a>
+          <a href="/#resort-gallery">Gallery</a>
+          <a href="/#featured-offers">Offers</a>
+          <a href="/#resort-contact">Contact</a>
+          <a href="/faq" target="_blank" rel="noreferrer">
+            FAQ
+          </a>
         </nav>
 
         <div className="landingFooterContact">

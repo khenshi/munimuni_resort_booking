@@ -3,6 +3,14 @@ import { Navigate, useNavigate, useLocation } from 'react-router-dom'
 import { getCustomerBookingList, getCustomerReceipts, readCurrentCustomer } from '../../components/login'
 import { useBookingStateSync } from '../../components/booking'
 import { BillingReceiptsList, PreviousBookingsList } from '../../components/history'
+import {
+  filterBookings,
+  sortBookings,
+  filterReceipts,
+  sortReceipts,
+  normalizeBookingForDisplay,
+  normalizeReceiptForDisplay,
+} from '../../components/history/utils/filteringSortingUtils'
 import { AccountLayout } from '../../components/dashboard'
 import '../../styles/pages/customer-history-page.css'
 
@@ -13,36 +21,34 @@ const HISTORY_TABS = [
 
 const YEAR_OPTIONS = ['All', '2025', '2024', '2023', '2022', '2021']
 
-const CATEGORY_OPTIONS = [
-  { id: 'all', label: 'All Reservations' },
-  { id: 'rooms', label: 'Day Tour' },
-  { id: 'rooms', label: 'Overnight' },
+// Bookings tab options
+const BOOKINGS_FILTER_OPTIONS = [
+  { id: 'all', label: 'All' },
+  { id: 'day-tour', label: 'Day Tour' },
+  { id: 'overnight', label: 'Overnight' },
+  { id: 'upcoming', label: 'Upcoming' },
+  { id: 'completed', label: 'Completed' },
 ]
 
-const SORT_OPTIONS = [
-  { id: 'newest', label: 'Newest first' },
-  { id: 'oldest', label: 'Oldest first' },
+const BOOKINGS_SORT_OPTIONS = [
+  { id: 'newest-booked', label: 'Newest first (by booked date)' },
+  { id: 'oldest-booked', label: 'Oldest first (by booked date)' },
+  { id: 'newest-checkin', label: 'Newest first (by check-in date)' },
+  { id: 'oldest-checkin', label: 'Oldest first (by check-in date)' },
 ]
 
-function parseDateAtStartOfDay(dateText) {
-  if (!dateText) return null
-  const parsedDate = new Date(dateText)
-  if (Number.isNaN(parsedDate.getTime())) return null
-  parsedDate.setHours(0, 0, 0, 0)
-  return parsedDate
-}
+// Receipts tab options
+const RECEIPTS_FILTER_OPTIONS = [
+  { id: 'all', label: 'All' },
+  { id: 'qr', label: 'QR' },
+  { id: 'debit', label: 'Debit' },
+  { id: 'credit', label: 'Credit' },
+]
 
-function resolveBookingTimelineStatus(booking) {
-  const today = new Date()
-  today.setHours(0, 0, 0, 0)
-
-  const checkOutDate = parseDateAtStartOfDay(booking.checkOutDate || booking.checkInDate)
-  if (!checkOutDate) {
-    return 'upcoming'
-  }
-
-  return checkOutDate < today ? 'completed' : 'upcoming'
-}
+const RECEIPTS_SORT_OPTIONS = [
+  { id: 'newest-issued', label: 'Newest first (by issued date)' },
+  { id: 'oldest-issued', label: 'Oldest first (by issued date)' },
+]
 export default function CustomerHistoryPage() {
   const currentCustomer = readCurrentCustomer()
   const location = useLocation()
@@ -57,74 +63,37 @@ export default function CustomerHistoryPage() {
   useBookingStateSync(currentCustomer?.id, setCustomerBookings)
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedYear, setSelectedYear] = useState('All')
-  const [selectedCategory, setSelectedCategory] = useState('all')
-  const [sortOrder, setSortOrder] = useState('newest')
+  
+  // Separate filters for each tab
+  const [selectedBookingType, setSelectedBookingType] = useState('all')
+  const [selectedPaymentType, setSelectedPaymentType] = useState('all')
+  
+  // Separate sort options for each tab
+  const [bookingsSortOrder, setBookingsSortOrder] = useState('newest-checkin')
+  const [receiptsSortOrder, setReceiptsSortOrder] = useState('newest-issued')
 
   const navigate = useNavigate()
 
   const visibleBookings = useMemo(() => {
-    return customerBookings
-      .filter((booking) => {
-        const normalizedQuery = searchQuery.trim().toLowerCase()
-        const bookingTitle = (booking.selectedOffer?.title || booking.propertyName || '').toLowerCase()
-        const bookingReference = (booking.bookingReference || booking.id || '').toLowerCase()
-
-        const matchesQuery = !normalizedQuery
-          || bookingTitle.includes(normalizedQuery)
-          || bookingReference.includes(normalizedQuery)
-
-        const bookingYear = (booking.checkInDate || booking.checkOutDate || booking.createdAt || '').slice(0, 4)
-        const matchesYear = selectedYear === 'All' || bookingYear === selectedYear
-
-        return matchesQuery && matchesYear
-      })
-      .map((booking) => ({
-        ...booking,
-        id: booking.bookingReference || booking.id,
-        title: booking.selectedOffer?.title || booking.propertyName || 'Resort Booking',
-        dateRange: `${booking.checkInDate || 'TBD'} to ${booking.checkOutDate || 'TBD'}`,
-        guests: booking.guests || booking.guestCount ? `${booking.guests || booking.guestCount} guests` : '',
-        total: typeof (booking.totalAmount ?? booking.totalPaid) === 'number'
-          ? `PHP ${(booking.totalAmount ?? booking.totalPaid).toLocaleString('en-PH')}`
-          : undefined,
-        status: resolveBookingTimelineStatus(booking),
-      }))
-      .sort((left, right) => {
-        const leftDate = parseDateAtStartOfDay(left.checkInDate) || new Date(0)
-        const rightDate = parseDateAtStartOfDay(right.checkInDate) || new Date(0)
-        return sortOrder === 'newest' ? rightDate - leftDate : leftDate - rightDate
-      })
-  }, [customerBookings, searchQuery, selectedYear, sortOrder])
+    const filtered = filterBookings(customerBookings, {
+      searchQuery,
+      selectedYear,
+      selectedType: selectedBookingType,
+    })
+    const sorted = sortBookings(filtered, bookingsSortOrder)
+    return sorted.map(normalizeBookingForDisplay)
+  }, [customerBookings, searchQuery, selectedYear, selectedBookingType, bookingsSortOrder])
 
   const visibleReceipts = useMemo(() => {
     const customerReceipts = currentCustomer ? getCustomerReceipts(currentCustomer.id) : []
-    return customerReceipts
-      .filter((receipt) => {
-        const normalizedQuery = searchQuery.trim().toLowerCase()
-        const matchesQuery = !normalizedQuery
-          || receipt.stayLabel.toLowerCase().includes(normalizedQuery)
-          || receipt.invoiceNumber.toLowerCase().includes(normalizedQuery)
-
-        const receiptYear = receipt.issuedDate.slice(0, 4)
-        const matchesYear = selectedYear === 'All' || receiptYear === selectedYear
-
-        return matchesQuery && matchesYear
-      })
-      .map((receipt) => ({
-        ...receipt,
-        label: receipt.stayLabel,
-        date: receipt.issuedDate,
-        status: receipt.paymentStatus,
-        amount: `PHP ${receipt.amountPaid.toLocaleString('en-PH')}`,
-        id: receipt.invoiceNumber,
-        originalId: receipt.id,
-      }))
-      .sort((left, right) => {
-        const leftDate = new Date(left.issuedDate)
-        const rightDate = new Date(right.issuedDate)
-        return sortOrder === 'newest' ? rightDate - leftDate : leftDate - rightDate
-      })
-  }, [currentCustomer, searchQuery, selectedYear, sortOrder])
+    const filtered = filterReceipts(customerReceipts, {
+      searchQuery,
+      selectedYear,
+      selectedPaymentType,
+    })
+    const sorted = sortReceipts(filtered, receiptsSortOrder)
+    return sorted.map(normalizeReceiptForDisplay)
+  }, [currentCustomer, searchQuery, selectedYear, selectedPaymentType, receiptsSortOrder])
 
   const handleViewDetails = (record) => {
     if (activeTab === 'bookings') {
@@ -174,13 +143,18 @@ export default function CustomerHistoryPage() {
               type="search"
               value={searchQuery}
               onChange={(event) => setSearchQuery(event.target.value)}
-              placeholder="Search stays, room types, or receipt IDs"
+              placeholder={activeTab === 'bookings' 
+                ? 'Search by accommodation name'
+                : 'Search by customer name or invoice number'
+              }
             />
           </label>
 
           <div className="customerHistoryFilters">
             <div className="customerHistoryFilter">
-              <label htmlFor="history-year">Year</label>
+              <label htmlFor="history-year">
+                {activeTab === 'bookings' ? 'Year Booked' : 'Year Issued'}
+              </label>
               <select
                 id="history-year"
                 value={selectedYear}
@@ -194,29 +168,54 @@ export default function CustomerHistoryPage() {
               </select>
             </div>
 
-            <div className="customerHistoryFilter">
-              <label htmlFor="history-category">Category</label>
-              <select
-                id="history-category"
-                value={selectedCategory}
-                onChange={(event) => setSelectedCategory(event.target.value)}
-              >
-                {CATEGORY_OPTIONS.map((category) => (
-                  <option key={category.id} value={category.id}>
-                    {category.label}
-                  </option>
-                ))}
-              </select>
-            </div>
+            {activeTab === 'bookings' && (
+              <div className="customerHistoryFilter">
+                <label htmlFor="history-filter">Filter</label>
+                <select
+                  id="history-filter"
+                  value={selectedBookingType}
+                  onChange={(event) => setSelectedBookingType(event.target.value)}
+                >
+                  {BOOKINGS_FILTER_OPTIONS.map((option) => (
+                    <option key={option.id} value={option.id}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            {activeTab === 'billing' && (
+              <div className="customerHistoryFilter">
+                <label htmlFor="history-payment-type">Payment Type</label>
+                <select
+                  id="history-payment-type"
+                  value={selectedPaymentType}
+                  onChange={(event) => setSelectedPaymentType(event.target.value)}
+                >
+                  {RECEIPTS_FILTER_OPTIONS.map((option) => (
+                    <option key={option.id} value={option.id}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
 
             <div className="customerHistoryFilter">
               <label htmlFor="history-sort">Sort</label>
               <select
                 id="history-sort"
-                value={sortOrder}
-                onChange={(event) => setSortOrder(event.target.value)}
+                value={activeTab === 'bookings' ? bookingsSortOrder : receiptsSortOrder}
+                onChange={(event) => {
+                  if (activeTab === 'bookings') {
+                    setBookingsSortOrder(event.target.value)
+                  } else {
+                    setReceiptsSortOrder(event.target.value)
+                  }
+                }}
               >
-                {SORT_OPTIONS.map((option) => (
+                {(activeTab === 'bookings' ? BOOKINGS_SORT_OPTIONS : RECEIPTS_SORT_OPTIONS).map((option) => (
                   <option key={option.id} value={option.id}>
                     {option.label}
                   </option>
@@ -232,8 +231,13 @@ export default function CustomerHistoryPage() {
               Showing{' '}
               <strong>
                 {activeTab === 'bookings' ? 'bookings & stays' : 'billing & receipts'}
-              </strong>{' '}
-              sorted by {sortOrder === 'newest' ? 'newest' : 'oldest'}.
+              </strong>
+              {activeTab === 'bookings' && selectedBookingType !== 'all' && (
+                <> filtered by {selectedBookingType === 'day-tour' ? 'day tours' : selectedBookingType}</>
+              )}
+              {activeTab === 'billing' && selectedPaymentType !== 'all' && (
+                <> filtered by {selectedPaymentType} payments</>
+              )}.
             </p>
           </div>
 

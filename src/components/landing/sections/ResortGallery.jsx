@@ -98,9 +98,9 @@ export default function ResortGallery() {
 
         <div className="textContainer">
           <h2>Experience Inner Peace</h2>
-          <p>World class beach, with stunning corals and shit.</p>
+          <p>Discover a sanctuary where the rhythm of the waves meets the stillness of the cliffs. Immerse yourself in crystal-clear waters and vibrant coral gardens designed by nature.</p>
           <p>
-            <strong>improve typography</strong>
+            <strong>Explore Our Oasis</strong>
           </p>
         </div>
       </div>
