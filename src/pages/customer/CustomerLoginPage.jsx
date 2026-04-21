@@ -22,13 +22,48 @@ export default function CustomerLoginPage() {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [submitNotice, setSubmitNotice] = useState('')
+  const [passwordError, setPasswordError] = useState('')
+  const [confirmPasswordError, setConfirmPasswordError] = useState('')
 
   if (currentCustomer) {
     return <Navigate to={returnTo} replace />
   }
 
+  const getPasswordValidationMessage = (value) => {
+    return value.length > 0 && value.length < 6 ? 'Password must be at least 6 characters long' : ''
+  }
+
+  const getConfirmPasswordValidationMessage = (value, passwordValue) => {
+    return value.length > 0 && value !== passwordValue ? 'Passwords do not match' : ''
+  }
+
+  const handleAuthModeChange = (nextMode) => {
+    setAuthMode(nextMode)
+    setSubmitNotice('')
+    setPasswordError('')
+    setConfirmPasswordError('')
+  }
+
+  const handlePasswordChange = (value) => {
+    setPassword(value)
+    setPasswordError(getPasswordValidationMessage(value))
+    if (authMode === 'signup') {
+      setConfirmPasswordError(getConfirmPasswordValidationMessage(confirmPassword, value))
+    }
+  }
+
+  const handleConfirmPasswordChange = (value) => {
+    setConfirmPassword(value)
+    setConfirmPasswordError(getConfirmPasswordValidationMessage(value, password))
+  }
+
   const handleSubmit = (event) => {
     event.preventDefault()
+
+    if (password.length < 6) {
+      setSubmitNotice('Password must be at least 6 characters long.')
+      return
+    }
 
     if (authMode === 'signup') {
       if (password !== confirmPassword) {
@@ -114,14 +149,13 @@ export default function CustomerLoginPage() {
             confirmPassword={confirmPassword}
             showPassword={showPassword}
             submitNotice={submitNotice}
-            onAuthModeChange={(nextMode) => {
-              setAuthMode(nextMode)
-              setSubmitNotice('')
-            }}
+            passwordError={passwordError}
+            confirmPasswordError={confirmPasswordError}
+            onAuthModeChange={handleAuthModeChange}
             onFullNameChange={setFullName}
             onEmailChange={setEmail}
-            onPasswordChange={setPassword}
-            onConfirmPasswordChange={setConfirmPassword}
+            onPasswordChange={handlePasswordChange}
+            onConfirmPasswordChange={handleConfirmPasswordChange}
             onTogglePassword={() => setShowPassword((current) => !current)}
             onSubmit={handleSubmit}
           />

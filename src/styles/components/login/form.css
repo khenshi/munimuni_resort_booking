@@ -146,6 +146,12 @@
   line-height: 1.55;
 }
 
+.customerLoginNotice.error {
+  border-color: rgba(239, 68, 68, 0.4);
+  background: rgba(239, 68, 68, 0.08);
+  color: #991b1b;
+}
+
 .customerCreateAccountText {
   color: rgba(22, 32, 51, 0.74);
   font-size: 13px;
