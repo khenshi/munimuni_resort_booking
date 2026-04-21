@@ -127,7 +127,7 @@
 
 .conciergeCard:hover {
   transform: translateY(-1px);
-  border-color: rgba(0, 145, 255, 0.18);
+  border-color: rgba(0, 210, 211, 0.28);
 }
 
 .conciergeCardLabel {
@@ -145,7 +145,7 @@
 }
 
 .conciergeCardAction {
-  color: #0f4cbd;
+  color: var(--color-cyan, #00d2d3);
   font-size: 13px;
   font-weight: 700;
 }
@@ -187,14 +187,14 @@
 }
 
 .conciergeDetailsContent a {
-  color: #0f4cbd;
+  color: var(--color-cyan, #00d2d3);
   text-decoration: none;
   font-weight: 600;
   transition: color 0.2s;
 }
 
 .conciergeDetailsContent a:hover {
-  color: #0c3da1;
+  color: var(--color-cyan, #00d2d3);
   text-decoration: underline;
 }
 
@@ -238,7 +238,7 @@
 
 .menuTabBtn.isActive {
   background: #ffffff;
-  color: #0f4cbd;
+  color: var(--color-cyan, #00d2d3);
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
 }
 

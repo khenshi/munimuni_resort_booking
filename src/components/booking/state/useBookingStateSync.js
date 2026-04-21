@@ -4,13 +4,6 @@ import {
   BOOKINGS_CHANGED_EVENT,
 } from "../../login/bookings-storage";
 
-/**
- * useBookingStateSync
- * Synchronize booking state across the application using localStorage and custom events.
- *
- * @param {string|null|undefined} customerId
- * @param {function(Array):void} onBookingsChanged
- */
 export default function useBookingStateSync(customerId, onBookingsChanged) {
   useEffect(() => {
     if (!customerId) return undefined;

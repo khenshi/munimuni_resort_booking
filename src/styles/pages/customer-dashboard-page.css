@@ -273,16 +273,25 @@
   gap: 2rem;
 }
 
-.dashboardBottomGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2.5rem;
-}
-
-.dashboardGridColumn {
+.dashboardBottomStack {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 2.5rem;
+  width: 100%;
+  align-items: stretch;
+}
+
+.dashboardWidgetRow {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+.dashboardWidgetRow .dashboardCard {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .conciergeGroup {
@@ -657,8 +666,8 @@ a {
     margin: 0 1.5rem 0.5rem;
   }
 
-  .dashboardBottomGrid {
-    grid-template-columns: 1fr;
+  .dashboardBottomStack {
+    gap: 2rem;
   }
 }
 

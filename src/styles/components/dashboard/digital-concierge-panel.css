@@ -12,15 +12,16 @@
   display: inline-block;
   margin-top: 8px;
   padding: 8px 16px;
-  background: #1a73e8;
+  background: var(--color-cyan, #00d2d3);
   color: #fff;
   border-radius: 6px;
   text-decoration: none;
   font-weight: 500;
-  transition: background 0.2s;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
 }
 .conciergeDirectionsBtn:hover {
-  background: #155ab6;
+  box-shadow: 0 4px 12px rgba(0, 210, 211, 0.4);
+  transform: translateY(-2px);
 }
 .conciergeContactInfo {
   margin-top: 18px;
@@ -46,7 +47,7 @@
   margin: 0;
 }
 .conciergeSocialLinks a {
-  color: #1a73e8;
+  color: var(--color-cyan, #00d2d3);
   text-decoration: none;
   font-weight: 500;
 }
@@ -57,4 +58,87 @@
 .conciergeCardWrapper {
   display: flex;
   flex-direction: column;
+}
+
+.conciergeContactLocationRow {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 1.25rem;
+  width: 100%;
+}
+
+.conciergeContactColumn,
+.conciergeLocationColumn {
+  background: #f8fafc;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 16px;
+  padding: 1rem;
+}
+
+.conciergeColumnTitle {
+  margin: 0 0 0.85rem;
+  color: #102a43;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.conciergeInfoItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 0.9rem;
+}
+
+.conciergeInfoItem:last-child {
+  margin-bottom: 0;
+}
+
+.conciergeInfoLabel {
+  color: #334155;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.conciergeInfoLink {
+  color: var(--color-cyan, #00d2d3);
+  font-size: 0.92rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.conciergeInfoLink:hover {
+  text-decoration: underline;
+}
+
+.conciergeSocialLinks {
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.conciergeLocationText {
+  margin: 0 0 0.75rem;
+  color: #334155;
+  line-height: 1.5;
+  font-size: 0.92rem;
+}
+
+.conciergeMapFrameWrap {
+  margin-top: 0.9rem;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+}
+
+.conciergeMapFrame {
+  width: 100%;
+  height: 230px;
+  border: 0;
+  display: block;
+}
+
+@media (max-width: 900px) {
+  .conciergeContactLocationRow {
+    grid-template-columns: 1fr;
+  }
 }

@@ -121,13 +121,6 @@ export function updateCustomerBooking(
   return false;
 }
 
-/**
- * Delete a customer booking by reference.
- *
- * @param {string} customerId
- * @param {string} bookingReference
- * @returns {boolean}
- */
 export function deleteCustomerBooking(customerId, bookingReference) {
   if (!customerId) return false;
   const allBookings = readCustomerBookings();

@@ -8,13 +8,18 @@ import {
 } from '../../login/auth-storage'
 
 export default function TopNav({ navItems }) {
+  //dropdown states
   const [profileMenuOpen, setProfileMenuOpen] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  //customer account state
   const [currentCustomer, setCurrentCustomer] = useState(() => readCurrentCustomer())
+
+  //references for DOMS
   const profileMenuRef = useRef(null)
   const menuButtonRef = useRef(null)
   const mobileMenuRef = useRef(null)
 
+  //derive customer initials for profile button
   const customerInitials = useMemo(() => {
     const name = currentCustomer?.fullName?.trim() ?? ''
     if (!name) return 'P'
@@ -24,8 +29,11 @@ export default function TopNav({ navItems }) {
     return `${segments[0].slice(0, 1)}${segments[1].slice(0, 1)}`.toUpperCase()
   }, [currentCustomer])
 
+  // sync current customer on auth change and handle outside clicks for dropdowns and escape key to close
   useEffect(() => {
+    // Sync current customer when auth changes in other tabs or on sign in/sign out
     const syncCurrentCustomer = () => setCurrentCustomer(readCurrentCustomer())
+    // Close dropdowns when clicking outside or pressing escape
     const onDocMouseDown = (event) => {
       if (!profileMenuRef.current?.contains(event.target)) {
         setProfileMenuOpen(false)
@@ -43,8 +51,8 @@ export default function TopNav({ navItems }) {
       }
     }
 
-    window.addEventListener('storage', syncCurrentCustomer)
-    window.addEventListener(AUTH_CHANGED_EVENT, syncCurrentCustomer)
+    window.addEventListener('storage', syncCurrentCustomer) // Listen to storage events to handle auth changes across tabs
+    window.addEventListener(AUTH_CHANGED_EVENT, syncCurrentCustomer) // Custom event for auth changes within the same tab
     document.addEventListener('mousedown', onDocMouseDown)
     document.addEventListener('keydown', onKeyDown)
 
@@ -56,6 +64,7 @@ export default function TopNav({ navItems }) {
     }
   }, [])
 
+  // Handle navigation to sections and close mobile menu
   const onNavigateTo = (event, targetId) => {
     event.preventDefault()
 
@@ -69,10 +78,12 @@ export default function TopNav({ navItems }) {
     setMenuOpen(false)
   }
 
+  // Close mobile menu when clicking "Book Here" in mobile menu
   const onMobileBookNowClick = () => {
     setMenuOpen(false)
   }
 
+  // Handle sign out action
   const handleSignOut = () => {
     clearCurrentCustomer()
     setProfileMenuOpen(false)
@@ -96,6 +107,7 @@ export default function TopNav({ navItems }) {
         </ScrollLink>
 
         <nav className="navLinks" aria-label="Primary navigation">
+          {/* Render navigation links using react-scroll's ScrollLink for smooth scrolling to sections */}
           {navItems.map((item) => (
             <ScrollLink
               activeClass="activeNavLink"
@@ -115,7 +127,9 @@ export default function TopNav({ navItems }) {
           </a>
         </nav>
 
+        {/* Profile menu, Book Now button, and mobile menu button */}
         <div className="navActions">
+          {/* Profile menu with conditional rendering based on authentication state */}
           <div className="profileMenuWrap" ref={profileMenuRef}>
             <button
               type="button"
@@ -131,6 +145,7 @@ export default function TopNav({ navItems }) {
               {customerInitials}
             </button>
 
+            {/* Dropdown menu for profile actions, conditionally rendered based on authentication state */}  
             {profileMenuOpen ? (
               <div className="profileDropdownMenu" role="menu" aria-label="Profile menu">
                 {currentCustomer ? (
@@ -177,6 +192,7 @@ export default function TopNav({ navItems }) {
             Book Here
           </RouterLink>
 
+          {/* Mobile menu button, visible on smaller screens */}
           <button
             type="button"
             className="menuButton"
@@ -197,6 +213,7 @@ export default function TopNav({ navItems }) {
         </div>
       </div>
 
+      {/* Mobile menu, conditionally rendered based on menuOpen state */}
       {menuOpen && (
         <div className="mobileMenu" ref={mobileMenuRef} role="dialog" aria-label="Mobile menu">
           <div className="mobileMenuInner">

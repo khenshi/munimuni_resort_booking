@@ -1,13 +1,4 @@
-/**
- * Utility functions for filtering and sorting bookings and receipts
- * These functions support composable filtering across multiple criteria
- */
 
-/**
- * Parse a date string to the start of the day
- * @param {string} dateText - ISO date string
- * @returns {Date | null}
- */
 function parseDateAtStartOfDay(dateText) {
   if (!dateText) return null
   const parsedDate = new Date(dateText)
@@ -16,11 +7,6 @@ function parseDateAtStartOfDay(dateText) {
   return parsedDate
 }
 
-/**
- * Resolve booking status (upcoming or completed)
- * @param {Object} booking - Booking object
- * @returns {string}
- */
 export function resolveBookingTimelineStatus(booking) {
   const today = new Date()
   today.setHours(0, 0, 0, 0)
@@ -33,11 +19,6 @@ export function resolveBookingTimelineStatus(booking) {
   return checkOutDate < today ? 'completed' : 'upcoming'
 }
 
-/**
- * Determine booking type (day-tour or overnight)
- * @param {Object} booking - Booking object
- * @returns {string | null}
- */
 export function resolveBookingType(booking) {
   const offerType = booking.selectedOffer?.offerType
   if (offerType === 'daytour') return 'day-tour'
@@ -45,15 +26,6 @@ export function resolveBookingType(booking) {
   return null
 }
 
-/**
- * Filter bookings based on multiple criteria
- * @param {Array} bookings - Array of booking objects
- * @param {Object} filters - Filter criteria
- * @param {string} filters.searchQuery - Search term for accommodation name
- * @param {string} filters.selectedYear - Year filter ('All' or specific year)
- * @param {string} filters.selectedType - Booking type filter ('all', 'day-tour', 'overnight', 'upcoming', 'completed')
- * @returns {Array} Filtered bookings
- */
 export function filterBookings(bookings, { searchQuery = '', selectedYear = 'All', selectedType = 'all' } = {}) {
   return bookings.filter((booking) => {
     // Search filter (by accommodation name)
@@ -90,12 +62,6 @@ export function filterBookings(bookings, { searchQuery = '', selectedYear = 'All
   })
 }
 
-/**
- * Sort bookings by specified criteria
- * @param {Array} bookings - Array of booking objects
- * @param {string} sortBy - Sort criteria ('newest-booked', 'oldest-booked', 'newest-checkin', 'oldest-checkin')
- * @returns {Array} Sorted bookings
- */
 export function sortBookings(bookings, sortBy = 'newest-checkin') {
   const sorted = [...bookings]
   
@@ -144,11 +110,6 @@ export function sortBookings(bookings, sortBy = 'newest-checkin') {
   return sorted
 }
 
-/**
- * Normalize booking for display
- * @param {Object} booking - Booking object
- * @returns {Object} Normalized booking display model
- */
 export function normalizeBookingForDisplay(booking) {
   return {
     ...booking,
@@ -164,15 +125,6 @@ export function normalizeBookingForDisplay(booking) {
   }
 }
 
-/**
- * Filter receipts based on multiple criteria
- * @param {Array} receipts - Array of receipt objects
- * @param {Object} filters - Filter criteria
- * @param {string} filters.searchQuery - Search term for customer name or invoice number
- * @param {string} filters.selectedYear - Year filter ('All' or specific year)
- * @param {string} filters.selectedPaymentType - Payment type filter ('all', 'qr', 'debit', 'credit')
- * @returns {Array} Filtered receipts
- */
 export function filterReceipts(receipts, { searchQuery = '', selectedYear = 'All', selectedPaymentType = 'all' } = {}) {
   return receipts.filter((receipt) => {
     // Search filter (by customer name or invoice number)
@@ -201,12 +153,6 @@ export function filterReceipts(receipts, { searchQuery = '', selectedYear = 'All
   })
 }
 
-/**
- * Sort receipts by specified criteria
- * @param {Array} receipts - Array of receipt objects
- * @param {string} sortBy - Sort criteria ('newest-issued', 'oldest-issued')
- * @returns {Array} Sorted receipts
- */
 export function sortReceipts(receipts, sortBy = 'newest-issued') {
   const sorted = [...receipts]
   
@@ -239,11 +185,6 @@ export function sortReceipts(receipts, sortBy = 'newest-issued') {
   return sorted
 }
 
-/**
- * Normalize receipt for display
- * @param {Object} receipt - Receipt object
- * @returns {Object} Normalized receipt display model
- */
 export function normalizeReceiptForDisplay(receipt) {
   return {
     ...receipt,

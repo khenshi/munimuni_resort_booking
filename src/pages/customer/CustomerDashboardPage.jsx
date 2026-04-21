@@ -138,15 +138,19 @@ export default function CustomerDashboardPage() {
           )}
         </section>
 
-        <div className="dashboardBottomGrid">
-          <div className="dashboardGridColumn">
+        <div className="dashboardBottomStack">
+          <div className="dashboardWidgetRow">
             <PreviousBookingsWidget />
           </div>
-          <div className="dashboardGridColumn">
+
+          <div className="dashboardWidgetRow">
             <DigitalConciergeSection />
+          </div>
+
+          <div className="dashboardWidgetRow">
             <DigitalConciergePanel />
           </div>
-        </div>       
+        </div>
       </div>
     </AccountLayout>
   )

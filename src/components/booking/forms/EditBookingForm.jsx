@@ -1,36 +1,6 @@
 import BookingStepsIndicator from '../layout/BookingStepsIndicator'
 import BookingStepContent from '../sections/BookingStepContent'
 
-/**
- * EditBookingForm
- * Reusable booking edit form that renders the same multi-step booking flow
- * used by the regular booking page, but with edit-specific actions.
- *
- * @param {object} props
- * @param {string} props.pageHeading
- * @param {object} props.selectedOffer
- * @param {object} props.formData
- * @param {number} props.step
- * @param {function} props.setStep
- * @param {function} props.submitBooking
- * @param {boolean} props.canProceed
- * @param {string} props.minCheckInDate
- * @param {string} props.checkInValidationMessage
- * @param {string} props.guestValidationMessage
- * @param {object} props.guestInfoErrors
- * @param {string} props.guestCapacityHint
- * @param {number|null} props.maxAllowedGuests
- * @param {function} props.onChange
- * @param {function} props.toggleAddOn
- * @param {Array} props.addOns
- * @param {Array} props.selectedAddOnLabels
- * @param {string} props.activeDateUnavailable
- * @param {boolean} props.isSubmitting
- * @param {string} props.submitError
- * @param {boolean} props.submitSuccess
- * @param {function} [props.onCancel]
- * @param {function} [props.onBackToDashboard]
- */
 export default function EditBookingForm({
   pageHeading,
   selectedOffer,
