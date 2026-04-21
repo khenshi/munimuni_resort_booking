@@ -1,5 +1,5 @@
 import { Link, Navigate, useLocation } from 'react-router-dom'
-import { readCurrentCustomer } from '../../components/login'
+import { getCustomerReceipts, readCurrentCustomer } from '../../components/login'
 import {
   formatReceiptCurrency,
   getReceiptTotals,
@@ -25,7 +25,9 @@ export default function ReceiptDetailPage() {
     return <Navigate to="/customer/login" replace />
   }
 
-  const receipt = location.state?.receiptData
+  const stateReceipt = location.state?.receiptData
+  const latestCustomerReceipt = getCustomerReceipts(currentCustomer.id).at(-1)
+  const receipt = stateReceipt || latestCustomerReceipt
 
   if (!receipt) {
     return (
@@ -35,7 +37,7 @@ export default function ReceiptDetailPage() {
             <p className="customerDetailKicker">Receipt Detail</p>
             <h1 className="customerDetailTitle">Receipt not found</h1>
             <p className="customerDetailDescription">
-              We could not find the receipt data.
+              We could not find a receipt for your account yet.
             </p>
             <div className="customerDetailActions">
               <Link className="customerDetailBtn isPrimary" to="/customer/dashboard">
@@ -73,6 +75,10 @@ export default function ReceiptDetailPage() {
               <div className="customerDetailRow">
                 <span>Invoice number</span>
                 <strong>{receipt.invoiceNumber}</strong>
+              </div>
+              <div className="customerDetailRow">
+                <span>Booking reference</span>
+                <strong>{receipt.bookingReference || 'N/A'}</strong>
               </div>
               <div className="customerDetailRow">
                 <span>Issued date</span>
@@ -125,8 +131,12 @@ export default function ReceiptDetailPage() {
                   <strong>-{formatReceiptCurrency(totals.discount)}</strong>
                 </div>
                 <div className="customerDetailRow emphasis">
-                  <span>Total paid</span>
+                  <span>Booking total</span>
                   <strong>{formatReceiptCurrency(totals.grandTotal)}</strong>
+                </div>
+                <div className="customerDetailRow emphasis">
+                  <span>Amount paid for this invoice</span>
+                  <strong>{formatReceiptCurrency(receipt.amountPaid || 0)}</strong>
                 </div>
               </div>
             </article>

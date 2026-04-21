@@ -1,6 +1,12 @@
 import { useEffect, useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { readCurrentCustomer, writeCurrentCustomer, dispatchAuthChanged, addCustomerReceipt } from '../../login/auth-storage'
+import {
+  readCurrentCustomer,
+  writeCurrentCustomer,
+  dispatchAuthChanged,
+  addCustomerReceipt,
+  getCustomerReceipts,
+} from '../../login/auth-storage'
 
 export default function PaymentSuccessState({
   transactionSummary,
@@ -8,7 +14,6 @@ export default function PaymentSuccessState({
   paymentMethod,
   formatCurrency,
   onReturnToDashboard,
-  onViewHistory,
 }) {
   const [createdReceipt, setCreatedReceipt] = useState(null)
   const navigate = useNavigate()
@@ -30,6 +35,7 @@ export default function PaymentSuccessState({
         const receipt = {
           id: `receipt-${Date.now()}`,
           invoiceNumber: `INV-${Date.now()}`,
+          bookingReference: transactionSummary.bookingReference,
           stayLabel: packageTitle,
           packageName: packageTitle,
           issuedDate: new Date().toISOString().slice(0, 10),
@@ -83,6 +89,26 @@ export default function PaymentSuccessState({
     }
   }, [transactionSummary?.bookingReference]) // Only depend on bookingReference to allow new transactions
 
+  const handleViewInvoice = () => {
+    const currentCustomer = readCurrentCustomer()
+    if (!currentCustomer) {
+      return
+    }
+
+    const latestReceipt = createdReceipt || getCustomerReceipts(currentCustomer.id).at(-1)
+    if (!latestReceipt) {
+      return
+    }
+
+    navigate('/customer/receipts/detail', { state: { receiptData: latestReceipt } })
+  }
+
+  const currentCustomer = readCurrentCustomer()
+  const hasStoredReceipt = currentCustomer
+    ? getCustomerReceipts(currentCustomer.id).length > 0
+    : false
+  const canViewInvoice = Boolean(createdReceipt || hasStoredReceipt)
+
   return (
     <>
       <div className="success-banner">
@@ -108,10 +134,10 @@ export default function PaymentSuccessState({
         <button 
           type="button" 
           className="secondary-btn"
-          onClick={() => createdReceipt && navigate('/customer/receipts/detail', { state: { receiptData: createdReceipt } })}
-          disabled={!createdReceipt}
+          onClick={handleViewInvoice}
+          disabled={!canViewInvoice}
         >
-          View Invoice
+          View Invoice / Receipt
         </button>
       </div>
     </>
