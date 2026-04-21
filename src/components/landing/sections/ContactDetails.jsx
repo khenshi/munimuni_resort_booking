@@ -1,4 +1,5 @@
 export default function ContactDetails() {
+  //map link and embed URL for the resort location
   const mapLink = 'https://maps.app.goo.gl/Ukzys2Q58NGMzrad7'
   const mapQuery = 'MuniMuni Beach Resort Samal, Brgy, Tagbay, Samal, 8119 Davao del Norte'
   const mapEmbedUrl = `https://www.google.com/maps?output=embed&q=${encodeURIComponent(mapQuery)}`

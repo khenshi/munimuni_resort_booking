@@ -42,11 +42,6 @@ export default function Hero() {
         </div>
       </main>
 
-      {/* Anchors for the sections */}
-      <div id="resort" className="sectionAnchor" />
-      <div id="experiences" className="sectionAnchor" />
-      <div id="gallery" className="sectionAnchor" />
-      <div id="booking" className="sectionAnchor bookingAnchor" />
     </section>
   )
 }
