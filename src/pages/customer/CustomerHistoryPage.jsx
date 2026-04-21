@@ -46,6 +46,7 @@ function resolveBookingTimelineStatus(booking) {
   return checkOutDate < today ? 'completed' : 'upcoming'
 }
 
+
 import AccountLayout from '../../components/dashboard/layout/AccountLayout'
 
 export default function CustomerHistoryPage() {
