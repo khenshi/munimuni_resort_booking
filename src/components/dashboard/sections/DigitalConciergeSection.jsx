@@ -21,6 +21,7 @@ const conciergeCards = [
 
 export default function DigitalConciergeSection() {
   const [expandedCard, setExpandedCard] = useState(null)
+  const [menuTab, setMenuTab] = useState('dayTour')
 
   const toggleCard = (cardId) => {
     setExpandedCard(expandedCard === cardId ? null : cardId)
@@ -37,7 +38,7 @@ export default function DigitalConciergeSection() {
 
       <div className="dashboardCardsGrid">
         {conciergeCards.map((item) => (
-          <div key={item.id} className="conciergeCardWrapper">
+          <div key={item.id} className={`conciergeCardWrapper ${expandedCard === item.id ? 'is-expanded' : ''}`}>
             <button
               className="conciergeCard"
               onClick={() => toggleCard(item.id)}
@@ -65,59 +66,50 @@ export default function DigitalConciergeSection() {
                 )}
                 {item.menu && (
                   <div className="conciergeMenuContent">
-                    <h3>Restaurant Menu</h3>
-                    <div className="menuSection">
-                      <h4>Day Tour Packages</h4>
-                      <div className="menuCategory">
-                        <h5>Lunch: 11:00 AM - 1:00 PM</h5>
-                        <ul>
-                          {item.menu.dayTour.lunch.map((dish, index) => (
-                            <li key={index}>{dish}</li>
-                          ))}
-                        </ul>
-                      </div>
-                      <div className="menuCategory">
-                        <h5>Snacks: 2:00 PM - 4:00 PM</h5>
-                        <ul>
-                          {item.menu.dayTour.snacks.map((dish, index) => (
-                            <li key={index}>{dish}</li>
-                          ))}
-                        </ul>
+                    <div className="menuHeader">
+                      <h3>Restaurant Menu</h3>
+                      <div className="menuTabs">
+                        <button 
+                          className={`menuTabBtn ${menuTab === 'dayTour' ? 'isActive' : ''}`}
+                          onClick={() => setMenuTab('dayTour')}
+                        >
+                          Day Tour
+                        </button>
+                        <button 
+                          className={`menuTabBtn ${menuTab === 'nightTour' ? 'isActive' : ''}`}
+                          onClick={() => setMenuTab('nightTour')}
+                        >
+                          Night Tour
+                        </button>
                       </div>
                     </div>
-                    <div className="menuSection">
-                      <h4>Night Tour Packages</h4>
-                      <div className="menuCategory">
-                        <h5>Breakfast: 6:00 AM - 8:00 AM</h5>
-                        <ul>
-                          {item.menu.nightTour.breakfast.map((dish, index) => (
-                            <li key={index}>{dish}</li>
-                          ))}
-                        </ul>
-                      </div>
-                      <div className="menuCategory">
-                        <h5>Lunch: 11:00 AM - 1:00 PM</h5>
-                        <ul>
-                          {item.menu.nightTour.lunch.map((dish, index) => (
-                            <li key={index}>{dish}</li>
-                          ))}
-                        </ul>
-                      </div>
-                      <div className="menuCategory">
-                        <h5>Snacks: 2:00 PM - 4:00 PM</h5>
-                        <ul>
-                          {item.menu.nightTour.snacks.map((dish, index) => (
-                            <li key={index}>{dish}</li>
-                          ))}
-                        </ul>
-                      </div>
-                      <div className="menuCategory">
-                        <h5>Dinner: 6:00 PM - 8:00 PM</h5>
-                        <ul>
-                          {item.menu.nightTour.dinner.map((dish, index) => (
-                            <li key={index}>{dish}</li>
-                          ))}
-                        </ul>
+                    
+                    <div className="menuPackage">
+                      <div className="menuCategories">
+                        {Object.entries(item.menu[menuTab]).map(([time, dishes]) => (
+                          <div key={time} className="menuCategory">
+                            <h5>
+                              {time === 'breakfast' && 'Breakfast: 6:00 AM - 8:00 AM'}
+                              {time === 'lunch' && 'Lunch: 11:00 AM - 1:00 PM'}
+                              {time === 'snacks' && 'Snacks: 2:00 PM - 4:00 PM'}
+                              {time === 'dinner' && 'Dinner: 6:00 PM - 8:00 PM'}
+                            </h5>
+                            <div className="menuItemsList">
+                              {dishes.map((dish, index) => {
+                                const parts = dish.split(' - ')
+                                return (
+                                  <div key={index} className="menuItem">
+                                    <div className="menuItemMain">
+                                      <span className="menuItemName">{parts[0]}</span>
+                                      {parts[2] && <span className="menuItemPrice">{parts[2].replace('Priced at ', '').replace(' per serving', '')}</span>}
+                                    </div>
+                                    {parts[1] && <p className="menuItemDesc">{parts[1]}</p>}
+                                  </div>
+                                )
+                              })}
+                            </div>
+                          </div>
+                        ))}
                       </div>
                     </div>
                   </div>
