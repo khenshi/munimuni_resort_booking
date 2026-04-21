@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
-import { readCurrentCustomer } from '../login/auth-storage'
-import { getCustomerBookingList } from '../login/bookings-storage'
-import '../../styles/components/dashboard/dashboard-widgets.css'
+import { readCurrentCustomer } from '../../login/auth-storage'
+import { getCustomerBookingList } from '../../login/bookings-storage'
+import '../../../styles/components/dashboard/dashboard-widgets.css'
 
 export default function PreviousBookingsWidget() {
   const currentCustomer = readCurrentCustomer()

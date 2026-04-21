@@ -8,9 +8,9 @@ import {
   getCustomerOutstandingBalance,
   readCurrentCustomer,
 } from '../../components/login/auth-storage'
-import PreviousBookingsWidget from '../../components/dashboard/PreviousBookingsWidget'
-import DigitalConciergeSection from '../../components/dashboard/DigitalConciergeSection'
-import DigitalConciergePanel from '../../components/dashboard/DigitalConciergePanel'
+import PreviousBookingsWidget from '../../components/dashboard/sections/PreviousBookingsWidget'
+import DigitalConciergeSection from '../../components/dashboard/sections/DigitalConciergeSection'
+import DigitalConciergePanel from '../../components/dashboard/sections/DigitalConciergePanel'
 import CustomerBookingsList from '../../components/dashboard/sections/CustomerBookingsList'
 import { getCustomerBookingList } from '../../components/login/bookings-storage'
 import useBookingStateSync from '../../components/booking/state/useBookingStateSync'

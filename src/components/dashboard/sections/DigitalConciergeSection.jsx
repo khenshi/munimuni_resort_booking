@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { motorcycleRentalDetails } from '../../data/motor-rent'
-import { filipinoMenu } from '../../data/resto-food'
-import '../../styles/components/dashboard/dashboard-widgets.css'
+import { motorcycleRentalDetails } from '../../../data/motor-rent'
+import { filipinoMenu } from '../../../data/resto-food'
+import '../../../styles/components/dashboard/dashboard-widgets.css'
 
 const conciergeCards = [
   {
