@@ -30,7 +30,7 @@ export default function OffersCardsByTab({
       ) : activeTab === 'addons' ? (
         <div className="addonsGrid" role="list" aria-label="Available add-ons">
           {sortedAddOns.map((item) => (
-            <PackageOfferCard key={item.id} offer={item} to={buildDetailsTo(`/packages/offers/addons/${item.id}`)} />
+            <PackageOfferCard key={item.id} offer={item} />
           ))}
         </div>
       ) : (

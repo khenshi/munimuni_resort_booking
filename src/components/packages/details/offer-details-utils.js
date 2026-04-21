@@ -1,9 +1,8 @@
-import { addOns, cottages, dayTourOffers, overnightOffers } from '../../../data/packages'
+import { cottages, dayTourOffers, overnightOffers } from '../../../data/packages'
 
 export const tabByType = {
   daytour: 'daytour',
   overnight: 'overnight',
-  addons: 'addons',
 }
 
 export const gallerySlots = ['Front view', 'Cottage view', 'Dining area', 'Evening view']
@@ -45,18 +44,6 @@ export function resolveOfferDetail(offerType, offerId) {
       subtitle: offer.description,
       priceInfo: offer.priceLabel,
       details: offer.details,
-    }
-  }
-
-  if (offerType === 'addons') {
-    const addOn = addOns.find((item) => item.id === offerId)
-    if (!addOn) return null
-
-    return {
-      title: addOn.title,
-      subtitle: addOn.description,
-      priceInfo: addOn.priceLabel,
-      details: addOn.details,
     }
   }
 

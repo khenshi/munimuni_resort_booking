@@ -37,7 +37,7 @@ export default function PackageOfferDetailsPage() {
             <PackageOfferGallerySection headingId="offer-gallery-heading" slots={gallerySlots} />
           ) : null}
 
-          {detail && offerType !== 'addons' ? (
+          {detail ? (
             <PackageOfferDateEditor
               key={`${offerType}-${offerId}-${location.search}`}
               offerType={offerType}

@@ -28,9 +28,11 @@ export default function PackageOfferCard({
           {offer.paxLabel ? <p className="paxInfo">{offer.paxLabel}</p> : null}
           <p>{offer.description}</p>
           <div className="offerCardActions">
-            <Link to={to} className="offerCardSecondaryBtn">
-              View details
-            </Link>
+            {to ? (
+              <Link to={to} className="offerCardSecondaryBtn">
+                View details
+              </Link>
+            ) : null}
             {bookingTo ? (
               <Link to={bookingTo} state={bookingState} className="cottageSelectBtn" onClick={handleBookNowClick}>
                 Book now
