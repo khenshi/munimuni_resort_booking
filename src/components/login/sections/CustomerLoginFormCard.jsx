@@ -8,6 +8,8 @@ export default function CustomerLoginFormCard({
   confirmPassword,
   showPassword,
   submitNotice,
+  passwordError,
+  confirmPasswordError,
   onAuthModeChange,
   onFullNameChange,
   onEmailChange,
@@ -86,12 +88,14 @@ export default function CustomerLoginFormCard({
               value={password}
               onChange={(event) => onPasswordChange(event.target.value)}
               placeholder="Enter your password"
+              minLength={6}
               required
             />
             <button type="button" className="customerPasswordToggle" onClick={onTogglePassword}>
               {showPassword ? 'Hide' : 'Show'}
             </button>
           </div>
+          {passwordError ? <p className="customerLoginNotice error">{passwordError}</p> : null}
         </label>
 
         {isSignUp ? (
@@ -103,8 +107,10 @@ export default function CustomerLoginFormCard({
               value={confirmPassword}
               onChange={(event) => onConfirmPasswordChange(event.target.value)}
               placeholder="Confirm your password"
+              minLength={6}
               required
             />
+            {confirmPasswordError ? <p className="customerLoginNotice error">{confirmPasswordError}</p> : null}
           </label>
         ) : null}
 
