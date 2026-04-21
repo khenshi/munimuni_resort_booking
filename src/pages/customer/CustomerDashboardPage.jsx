@@ -1,23 +1,24 @@
 import { useEffect, useState } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
-import FinancialWalletSection from '../../components/dashboard/sections/FinancialWalletSection'
-import { BOOKINGS_CHANGED_EVENT } from '../../components/login/bookings-storage'
 import {
+  BOOKINGS_CHANGED_EVENT,
   AUTH_CHANGED_EVENT,
   OUTSTANDING_BALANCE_CHANGED_EVENT,
   getCustomerOutstandingBalance,
+  getCustomerBookingList,
   readCurrentCustomer,
-} from '../../components/login/auth-storage'
-import PreviousBookingsWidget from '../../components/dashboard/sections/PreviousBookingsWidget'
-import DigitalConciergeSection from '../../components/dashboard/sections/DigitalConciergeSection'
-import DigitalConciergePanel from '../../components/dashboard/sections/DigitalConciergePanel'
-import CustomerBookingsList from '../../components/dashboard/sections/CustomerBookingsList'
-import { getCustomerBookingList } from '../../components/login/bookings-storage'
-import useBookingStateSync from '../../components/booking/state/useBookingStateSync'
+} from '../../components/login'
+import {
+  AccountLayout,
+  CustomerBookingsList,
+  DigitalConciergePanel,
+  DigitalConciergeSection,
+  FinancialWalletSection,
+  PreviousBookingsWidget,
+} from '../../components/dashboard'
+import { useBookingStateSync } from '../../components/booking'
 import '../../styles/pages/customer-dashboard-page.css'
 import '../../styles/components/dashboard/digital-concierge-panel.css'
-
-import AccountLayout from '../../components/dashboard/layout/AccountLayout'
 
 export default function CustomerDashboardPage() {
   const navigate = useNavigate()
@@ -87,7 +88,7 @@ export default function CustomerDashboardPage() {
   const todayISO = getTodayISODate()
   const upcomingBookings = customerBookings
     .filter((b) => b.checkInDate && b.checkInDate > todayISO)
-    .sort((a, b) => a.checkInDate.localeCompare(b.checkInDate));
+    .sort((a, b) => a.checkInDate.localeCompare(b.checkInDate))
 
   return (
     <AccountLayout>

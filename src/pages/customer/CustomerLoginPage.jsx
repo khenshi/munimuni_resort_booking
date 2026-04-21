@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
-import CustomerLoginFormCard from '../../components/login/sections/CustomerLoginFormCard'
 import {
+  CustomerLoginFormCard,
   readCurrentCustomer,
   readCustomerAccounts,
   writeCustomerAccounts,
   writeCurrentCustomer,
-} from '../../components/login/auth-storage'
+} from '../../components/login'
 import '../../styles/pages/customer-login-page.css'
 
 export default function CustomerLoginPage() {

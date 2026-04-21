@@ -4,7 +4,7 @@ import { resolveAutoCheckOutDate, resolveSelectedOffer } from '../utils/booking-
 import { addDaysToISODate, getTodayISODate } from '../../packages/utils/availability-utils'
 import { isItemAvailableForDate } from '../../packages'
 import { readCurrentCustomer } from '../../login/auth-storage'
-import { addOns, cottages, dayTourOffers, overnightOffers } from '../../../data/packages'
+import { addOns } from '../../../data/packages'
 import {
   buildFullName,
   createInitialBookingFormData,
@@ -15,6 +15,12 @@ import {
   sanitizeGuestCountInput,
   sanitizePhoneInput,
 } from '../utils/booking-form-utils'
+import {
+  getActiveDateUnavailable,
+  getCheckInValidationMessage,
+  getMaxAllowedGuests,
+  resolveSelectedAvailabilityItem,
+} from '../utils/booking-validation-utils'
 
 
 function calculateCostBreakdown(selectedOffer, formData) {
@@ -74,25 +80,10 @@ export default function useBookingPageLogic() {
     return `/packages/offers/${detailOfferType}/${detailOfferId}`
   }, [selectedOffer, offerType, offerId])
 
-  const availabilityOfferType = selectedOffer?.offerType ?? offerType
-  const availabilityOfferId = selectedOffer?.offerId ?? offerId
-
-  const selectedAvailabilityItem = useMemo(() => {
-    if (availabilityOfferType === 'daytour' && availabilityOfferId === 'basic') {
-      return dayTourOffers.find((item) => item.id === 'basic') ?? null
-    }
-
-    if (availabilityOfferType === 'daytour' && availabilityOfferId.startsWith('cottage-')) {
-      const cottageId = availabilityOfferId.replace('cottage-', '')
-      return cottages.find((item) => item.id === cottageId) ?? null
-    }
-
-    if (availabilityOfferType === 'overnight') {
-      return overnightOffers.find((item) => item.id === availabilityOfferId) ?? null
-    }
-
-    return null
-  }, [availabilityOfferType, availabilityOfferId])
+  const selectedAvailabilityItem = useMemo(
+    () => resolveSelectedAvailabilityItem(selectedOffer?.offerType ?? offerType, selectedOffer?.offerId ?? offerId),
+    [selectedOffer, offerType, offerId],
+  )
 
   const [step, setStep] = useState(1)
   const stayTab = (selectedOffer?.offerType ?? offerType) === 'overnight' ? 'overnight' : 'daytour'
@@ -105,25 +96,10 @@ export default function useBookingPageLogic() {
   const todayISODate = getTodayISODate()
   const minCheckInDate = addDaysToISODate(todayISODate, 1)
 
-  const maxAllowedGuests = useMemo(() => {
-    if (selectedOffer?.offerType === 'daytour' && selectedOffer?.offerId === 'basic') {
-      const capacity = Number(selectedAvailabilityItem?.availability?.dailySlotCapacity)
-      if (!Number.isFinite(capacity) || capacity <= 0) return null
-
-      if (!formData.checkInDate) return capacity
-
-      const blockedDates = selectedAvailabilityItem?.availability?.unavailableCheckInDates ?? []
-      if (blockedDates.includes(formData.checkInDate)) return 0
-
-      const reservedGuestsByDate = selectedAvailabilityItem?.availability?.reservedGuestsByDate ?? {}
-      const reservedGuests = Number(reservedGuestsByDate[formData.checkInDate] ?? 0)
-      const safeReservedGuests = Number.isFinite(reservedGuests) ? reservedGuests : 0
-      return Math.max(0, capacity - safeReservedGuests)
-    }
-
-    const staticMaxGuests = Number(selectedOffer?.paxMax)
-    return Number.isFinite(staticMaxGuests) ? staticMaxGuests : null
-  }, [selectedOffer, selectedAvailabilityItem, formData.checkInDate])
+  const maxAllowedGuests = useMemo(
+    () => getMaxAllowedGuests(selectedOffer, selectedAvailabilityItem, formData.checkInDate),
+    [selectedOffer, selectedAvailabilityItem, formData.checkInDate],
+  )
 
   const onChange = (key, value) => {
     if (key === 'checkOutDate') return
@@ -164,21 +140,13 @@ export default function useBookingPageLogic() {
     })
   }
 
-  const guestValidationMessage = useMemo(
-    () => getGuestValidationMessage(formData.guests, maxAllowedGuests),
-    [formData.guests, maxAllowedGuests],
-  )
+  const guestValidationMessage = useMemo(() => getGuestValidationMessage(formData.guests, maxAllowedGuests), [formData.guests, maxAllowedGuests])
   const guestInfoErrors = useMemo(
     () => getGuestInfoErrors(formData),
     [formData],
   )
   const hasGuestInfoErrors = Object.values(guestInfoErrors).some(Boolean)
-  const checkInValidationMessage = useMemo(() => {
-    if (!formData.checkInDate) return ''
-    return formData.checkInDate <= todayISODate
-      ? 'Check-in date cannot be today or in the past.'
-      : ''
-  }, [formData.checkInDate, todayISODate])
+  const checkInValidationMessage = useMemo(() => getCheckInValidationMessage(formData.checkInDate, todayISODate), [formData.checkInDate, todayISODate])
 
   const prefilledDateUnavailable = useMemo(
     () => Boolean(prefilledCheckInDate && selectedAvailabilityItem && !isItemAvailableForDate(selectedAvailabilityItem, prefilledCheckInDate)),
@@ -186,8 +154,8 @@ export default function useBookingPageLogic() {
   )
   const isMissingPrefilledDate = Boolean(selectedAvailabilityItem) && !prefilledCheckInDate
   const activeDateUnavailable = useMemo(
-    () => Boolean(formData.checkInDate && selectedAvailabilityItem && !isItemAvailableForDate(selectedAvailabilityItem, formData.checkInDate)),
-    [formData.checkInDate, selectedAvailabilityItem],
+    () => getActiveDateUnavailable(selectedAvailabilityItem, formData.checkInDate),
+    [selectedAvailabilityItem, formData.checkInDate],
   )
 
   const pageHeading = 'Book Your Stay'

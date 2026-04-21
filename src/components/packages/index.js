@@ -1,4 +1,5 @@
 export { default as PackagesPageHeader } from './layout/PackagesPageHeader'
+export { default as PackagesLayout } from './layout/PackagesLayout'
 export { default as PackagesInfoSection } from './sections/PackagesInfoSection'
 export { default as PackagesOffersSection } from './sections/packagesOfferSection/PackagesOffersSection'
 export { default as PackageOfferCard } from './cards/PackageOfferCard'

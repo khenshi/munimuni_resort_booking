@@ -1,11 +1,9 @@
 import { useMemo, useState } from 'react'
 import { Navigate, useNavigate, useLocation } from 'react-router-dom'
-import { readCurrentCustomer } from '../../components/login/auth-storage'
-import { getCustomerReceipts } from '../../components/login/auth-storage'
-import { getCustomerBookingList } from '../../components/login/bookings-storage'
-import useBookingStateSync from '../../components/booking/state/useBookingStateSync'
-import BillingReceiptsList from '../../components/history/BillingReceiptsList'
-import PreviousBookingsList from '../../components/history/PreviousBookingsList'
+import { getCustomerBookingList, getCustomerReceipts, readCurrentCustomer } from '../../components/login'
+import { useBookingStateSync } from '../../components/booking'
+import { BillingReceiptsList, PreviousBookingsList } from '../../components/history'
+import { AccountLayout } from '../../components/dashboard'
 import '../../styles/pages/customer-history-page.css'
 
 const HISTORY_TABS = [
@@ -45,10 +43,6 @@ function resolveBookingTimelineStatus(booking) {
 
   return checkOutDate < today ? 'completed' : 'upcoming'
 }
-
-
-import AccountLayout from '../../components/dashboard/layout/AccountLayout'
-
 export default function CustomerHistoryPage() {
   const currentCustomer = readCurrentCustomer()
   const location = useLocation()

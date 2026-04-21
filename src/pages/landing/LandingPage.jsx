@@ -1,10 +1,12 @@
-import Hero from '../../components/landing/sections/Hero'
-import TopNav from '../../components/landing/layout/TopNav'
-import ResortHighlights from '../../components/landing/sections/ResortHighlights'
-import ResortGallery from '../../components/landing/sections/ResortGallery'
-import Experiences from '../../components/landing/sections/Experiences'
-import ContactDetails from '../../components/landing/sections/ContactDetails'
-import LandingFooter from '../../components/landing/layout/LandingFooter'
+import {
+  ContactDetails,
+  Experiences,
+  Hero,
+  LandingFooter,
+  ResortGallery,
+  ResortHighlights,
+  TopNav,
+} from '../../components/landing'
 import '../../styles/pages/landing-page.css'
 
 export default function LandingPage() {

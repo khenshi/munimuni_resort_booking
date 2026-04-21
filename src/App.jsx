@@ -12,8 +12,9 @@ import EditBookingPage from './pages/booking/EditBookingPage'
 import ReceiptDetailPage from './pages/customer/ReceiptDetailPage'
 import PoliciesAgreementsPage from './pages/content/PoliciesAgreementsPage'
 import FAQPage from './pages/content/FAQPage'
-import CustomerLayout from './components/login/layout/CustomerLayout'
+import { CustomerLayout } from './components/login'
 import PaymentPage from './pages/payment/PaymentPage'
+import { PackagesLayout } from './components/packages'
 
 export default function App() {
   return (
@@ -31,7 +32,7 @@ export default function App() {
         <Route path="/customer/bookings/:bookingReference/edit" element={<EditBookingPage />} />
         <Route path="/customer/payment" element={<PaymentPage />} />
         <Route path="/booking" element={<BookingPage />} />
-        <Route path="/packages">
+        <Route path="/packages" element={<PackagesLayout />}>
           <Route index element={<PackagesPage />} />
           <Route path="offers/:offerType/:offerId" element={<PackageOfferDetailsPage />} />
         </Route>

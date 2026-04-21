@@ -6,7 +6,8 @@ import {
   readCustomerAccounts,
   updateCustomerContactDetails,
   updateCustomerPassword,
-} from '../../components/login/auth-storage'
+} from '../../components/login'
+import { AccountLayout } from '../../components/dashboard'
 import '../../styles/pages/customer-profile-page.css'
 
 function readEditableProfile(customerId, fallbackCustomer) {
@@ -19,9 +20,6 @@ function readEditableProfile(customerId, fallbackCustomer) {
     address: String(matchedAccount?.address ?? fallbackCustomer?.address ?? '').trim(),
   }
 }
-
-import AccountLayout from '../../components/dashboard/layout/AccountLayout'
-
 export default function CustomerEditProfilePage() {
   const [currentCustomer, setCurrentCustomer] = useState(() => readCurrentCustomer())
   const [contactForm, setContactForm] = useState(() => {

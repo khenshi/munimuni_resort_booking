@@ -1,5 +1,5 @@
 import { Link, Navigate, useLocation } from 'react-router-dom'
-import { readCurrentCustomer } from '../../components/login/auth-storage'
+import { readCurrentCustomer } from '../../components/login'
 import {
   formatReceiptCurrency,
   getReceiptTotals,

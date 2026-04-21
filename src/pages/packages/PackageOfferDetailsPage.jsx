@@ -1,6 +1,5 @@
 import { useEffect, useMemo } from 'react'
 import { Link, useLocation, useParams } from 'react-router-dom'
-import { PackagesPageHeader } from '../../components/packages'
 import {
   PackageOfferDateEditor,
   PackageOfferDetailsCard,
@@ -8,7 +7,6 @@ import {
   gallerySlots,
   resolveOfferDetail,
   resolveSelectedAvailabilityItem,
-  tabByType,
 } from '../../components/packages/details'
 import '../../styles/pages/packages-page.css'
 
@@ -18,7 +16,6 @@ export default function PackageOfferDetailsPage() {
   const query = new URLSearchParams(location.search)
   const prefillCheckInDate = query.get('checkInDate') ?? ''
   const prefillGuests = query.get('guests') ?? ''
-  const activeTab = tabByType[offerType] ?? 'daytour'
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -30,7 +27,6 @@ export default function PackageOfferDetailsPage() {
 
   return (
     <div className="packagesPage">
-      <PackagesPageHeader activeTab={activeTab} onTabChange={() => {}} />
       <main className="packagesPageMain">
         <section className="packagesListSection" aria-labelledby="offer-detail-heading">
           <p className="packagesSectionKicker">Offer Details</p>
