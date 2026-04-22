@@ -1,19 +1,17 @@
 import { Link, useNavigate } from 'react-router-dom'
 
+/**
+ * 
+ * @param {Array} bookings - List of customer bookings to display 
+ * @returns 
+ */
 export default function CustomerBookingsList({ bookings }) {
   const navigate = useNavigate()
 
-  if (!bookings || bookings.length === 0) {
-    return (
-      <div className="bookingsList">
-        <p className="bookingsEmpty">You don&apos;t have any bookings yet.</p>
-        <Link to="/packages" className="bookingsEmptyLink">
-          Browse Offers
-        </Link>
-      </div>
-    )
-  }
-
+  /**
+   * Handles click on "Edit Booking" button, navigates to the edit page for the selected booking
+   * @param {Object} booking - The booking to edit
+   */
   const handleEdit = (booking) => {
     navigate(
       `/customer/bookings/${encodeURIComponent(booking.bookingReference)}/edit`,
@@ -23,6 +21,7 @@ export default function CustomerBookingsList({ bookings }) {
   return (
     <div className="bookingsList">
       <div className="bookingsContainer">
+        {/* maps through each booking */}
         {bookings.map((booking) => {
           const createdDate = booking.createdAt ? new Date(booking.createdAt).toLocaleDateString() : 'N/A'
           const checkInDate = booking.checkInDate || 'TBD'
@@ -30,6 +29,7 @@ export default function CustomerBookingsList({ bookings }) {
             ? Math.floor((new Date(booking.checkInDate) - new Date()) / (1000 * 60 * 60 * 24))
             : null
 
+          {/* Booking is editable if check-in date is more than 7 days away. Otherwise, it's locked. */}
           const canEdit = daysUntilCheckIn !== null && daysUntilCheckIn > 7
 
           return (
@@ -75,6 +75,7 @@ export default function CustomerBookingsList({ bookings }) {
                 )}
               </div>
 
+              {/* If booking is locked, show a message indicating that edits are not allowed. Otherwise, show the edit button. */}  
               {!canEdit && (
                 <p className="bookingEditMessage">
                   Booking is locked. Edits are only allowed more than 7 days before check-in.

@@ -20,9 +20,11 @@ const conciergeCards = [
 ]
 
 export default function DigitalConciergeSection() {
+  // State to track which card is expanded and which menu tab is active
   const [expandedCard, setExpandedCard] = useState(null)
   const [menuTab, setMenuTab] = useState('dayTour')
 
+  // Toggle function to expand/collapse cards
   const toggleCard = (cardId) => {
     setExpandedCard(expandedCard === cardId ? null : cardId)
   }
@@ -31,11 +33,12 @@ export default function DigitalConciergeSection() {
     <section className="dashboardCard dashboardConciergeCard" aria-labelledby="digital-concierge-heading">
       <div className="dashboardCardHeader">
         <div>
-          <p className="dashboardKicker">Digital Concierge</p>
+          <p className="dashboardKicker">Offers</p>
           <h2 id="digital-concierge-heading">On-Property Mode</h2>
         </div>
       </div>
 
+      {/* Concierge Cards Grid */}
       <div className="dashboardCardsGrid">
         {conciergeCards.map((item) => (
           <div key={item.id} className={`conciergeCardWrapper ${expandedCard === item.id ? 'is-expanded' : ''}`}>
@@ -54,8 +57,10 @@ export default function DigitalConciergeSection() {
               </span>
             </button>
 
+            {/* Expanded details section, conditionally rendered based on state */}
             {expandedCard === item.id && (
               <div id={`${item.id}-details`} className="conciergeCardDetails">
+
                 {item.details && (
                   <div className="conciergeDetailsContent">
                     <p><strong>Provider:</strong> {item.details.provider}</p>
@@ -64,6 +69,7 @@ export default function DigitalConciergeSection() {
                     <p><strong>Book Online:</strong> <a href={item.details.bookingLink} target="_blank" rel="noopener noreferrer">Facebook Page</a></p>
                   </div>
                 )}
+
                 {item.menu && (
                   <div className="conciergeMenuContent">
                     <div className="menuHeader">
@@ -114,6 +120,7 @@ export default function DigitalConciergeSection() {
                     </div>
                   </div>
                 )}
+                
               </div>
             )}
           </div>

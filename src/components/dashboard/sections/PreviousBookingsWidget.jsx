@@ -4,6 +4,7 @@ import { getCustomerBookingList } from '../../login/bookings-storage'
 import '../../../styles/components/dashboard/dashboard-widgets.css'
 
 export default function PreviousBookingsWidget() {
+  // Read current customer and their bookings directly here to ensure this widget is always up-to-date.
   const currentCustomer = readCurrentCustomer()
   const allBookings = currentCustomer?.id ? getCustomerBookingList(currentCustomer.id) : []
 
@@ -24,26 +25,23 @@ export default function PreviousBookingsWidget() {
     return booking.checkOutDate < todayISO
   }).sort((a, b) => b.checkOutDate.localeCompare(a.checkOutDate))
 
+  // Take the 3 most recent completed bookings for display
   const recentBookings = completedBookings.slice(0, 3)
 
-  const totalNightsStayed = completedBookings.reduce((total, booking) => {
-    const checkIn = new Date(booking.checkInDate)
-    const checkOut = new Date(booking.checkOutDate)
-    if (isNaN(checkIn) || isNaN(checkOut)) return total
-    const nights = Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24))
-    return total + (nights > 0 ? nights : 0)
-  }, 0)
+  // Calculate total completed bookings (past stays)
+  const totalCompletedBookings = completedBookings.length
 
   return (
     <section className="dashboardCard dashboardBookingsCard" aria-labelledby="previous-bookings-heading">
       <div className="dashboardCardHeader">
         <div>
           <p className="dashboardKicker">Stay History</p>
-          <h2 id="previous-bookings-heading">Total Nights Stayed</h2>
+          <h2 id="previous-bookings-heading">Total Completed Bookings</h2>
         </div>
-        <div className="dashboardStatValue">{totalNightsStayed}</div>
+        <div className="dashboardStatValue">{totalCompletedBookings}</div>
       </div>
 
+      {/* If there are recent completed bookings, show them. Otherwise, show a friendly empty state. */}
       <div className="bookingOverviewList">
         {recentBookings.length > 0 ? (
           recentBookings.map((booking) => (

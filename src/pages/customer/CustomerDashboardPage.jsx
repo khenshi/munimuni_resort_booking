@@ -83,11 +83,15 @@ export default function CustomerDashboardPage() {
 
   return (
     <AccountLayout>
+      {/* Dashboard Introduction Section */}
       <header className="dashboardIntro">
         <div className="dashboardIntroText">
           <p className="dashboardKicker">Customer Dashboard</p>
           <h1 className="dashboardTitle">
-            Welcome back, {currentCustomer.fullName.slice(0, 1).toUpperCase() + currentCustomer.fullName.slice(1) || currentCustomer.email}.
+            Welcome back, {
+              (currentCustomer.fullName?.split(/\s+/)[0] || currentCustomer.email) // take first name or email 
+                .replace(/^./, c => c.toUpperCase())
+            }.
           </h1>
           <p className="dashboardCopy">
             Manage your resort experience, track stays, and handle billing from your personal hub.
@@ -98,7 +102,9 @@ export default function CustomerDashboardPage() {
         </button>
       </header>
 
+      {/* Main Dashboard Content Stack */}
       <div className="dashboardContentStack">
+        {/* Financial Wallet Section */}
         <div className="dashboardTopGrid">
           <FinancialWalletSection
             customerName={currentCustomer.fullName || currentCustomer.email}
@@ -107,11 +113,14 @@ export default function CustomerDashboardPage() {
           />
         </div>
 
+        {/* Next Stay Section */}    
         <section className="nextStaySection">
+          <p className="dashboardKicker">Upcoming</p>
           <div className="sectionHeader">
             <h2 className="sectionTitle">Current & Upcoming Stays</h2>
             <Link to="/customer/history?tab=bookings" className="sectionLink">View All Stays</Link>
           </div>
+          {/* If there are upcoming bookings, show the list. Otherwise, show a friendly placeholder with a call to action. */}
           {upcomingBookings.length > 0 ? (
             <div className="nextStayGrid">
               <div className="nextStayMain">

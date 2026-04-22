@@ -14,12 +14,14 @@ import {
 import { AccountLayout } from '../../components/dashboard'
 import '../../styles/pages/customer-history-page.css'
 
+// Define constants for tabs, filters, and sort options
 const HISTORY_TABS = [
   { id: 'bookings', label: 'Bookings & Stays' },
   { id: 'billing', label: 'Billing & Receipts' },
 ]
 
-const YEAR_OPTIONS = ['All', '2025', '2024', '2023', '2022', '2021']
+// Year filter options (same for both tabs)
+const YEAR_OPTIONS = ['All', '2026', '2025', '2024', '2023', '2022', '2021']
 
 // Bookings tab options
 const BOOKINGS_FILTER_OPTIONS = [
@@ -30,6 +32,7 @@ const BOOKINGS_FILTER_OPTIONS = [
   { id: 'completed', label: 'Completed' },
 ]
 
+// Sort options for bookings tab
 const BOOKINGS_SORT_OPTIONS = [
   { id: 'newest-booked', label: 'Newest first (by booked date)' },
   { id: 'oldest-booked', label: 'Oldest first (by booked date)' },
@@ -45,10 +48,12 @@ const RECEIPTS_FILTER_OPTIONS = [
   { id: 'credit', label: 'Credit' },
 ]
 
+// Sort options for receipts tab
 const RECEIPTS_SORT_OPTIONS = [
   { id: 'newest-issued', label: 'Newest first (by issued date)' },
   { id: 'oldest-issued', label: 'Oldest first (by issued date)' },
 ]
+
 export default function CustomerHistoryPage() {
   const currentCustomer = readCurrentCustomer()
   const location = useLocation()

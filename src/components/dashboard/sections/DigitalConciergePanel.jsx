@@ -1,6 +1,7 @@
 import '../../../styles/components/dashboard/digital-concierge-panel.css';
 
 export default function DigitalConciergePanel() {
+  // For the map, the link will open the location in the user's default maps app.
   const mapLink = 'https://maps.app.goo.gl/Ukzys2Q58NGMzrad7';
   const mapQuery = 'MuniMuni Beach Resort Samal, Brgy, Tagbay, Samal, 8119 Davao del Norte';
   const mapEmbedUrl = `https://www.google.com/maps?output=embed&q=${encodeURIComponent(mapQuery)}`;
@@ -46,6 +47,7 @@ export default function DigitalConciergePanel() {
             Open in Maps
           </a>
 
+          {/* Embedded map for quick reference - users can click to open full map if they want */}
           <div className="conciergeMapFrameWrap">
             <iframe
               title="MuniMuni Beach Resort map"
