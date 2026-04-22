@@ -70,6 +70,14 @@ export function filterBookings(bookings, { searchQuery = '', selectedYear = 'All
 // function for sorting bookings
 export function sortBookings(bookings, sortBy = 'newest-checkin') {
   const sorted = [...bookings]
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+
+  const getDaysFromToday = (dateText) => {
+    const parsedDate = parseDateAtStartOfDay(dateText)
+    if (!parsedDate) return Number.POSITIVE_INFINITY
+    return Math.abs((parsedDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24))
+  }
   
   switch (sortBy) {
     case 'newest-booked':
@@ -90,26 +98,44 @@ export function sortBookings(bookings, sortBy = 'newest-checkin') {
       
     case 'newest-checkin':
       sorted.sort((left, right) => {
-        const leftDate = parseDateAtStartOfDay(left.checkInDate) || new Date(0)
-        const rightDate = parseDateAtStartOfDay(right.checkInDate) || new Date(0)
-        return rightDate - leftDate
-      })
-      break
-      
-    case 'oldest-checkin':
-      sorted.sort((left, right) => {
+        const leftDistance = getDaysFromToday(left.checkInDate)
+        const rightDistance = getDaysFromToday(right.checkInDate)
+        if (leftDistance !== rightDistance) {
+          return leftDistance - rightDistance
+        }
+
         const leftDate = parseDateAtStartOfDay(left.checkInDate) || new Date(0)
         const rightDate = parseDateAtStartOfDay(right.checkInDate) || new Date(0)
         return leftDate - rightDate
       })
       break
       
-    default:
-      // Default to newest check-in
+    case 'oldest-checkin':
       sorted.sort((left, right) => {
+        const leftDistance = getDaysFromToday(left.checkInDate)
+        const rightDistance = getDaysFromToday(right.checkInDate)
+        if (leftDistance !== rightDistance) {
+          return rightDistance - leftDistance
+        }
+
         const leftDate = parseDateAtStartOfDay(left.checkInDate) || new Date(0)
         const rightDate = parseDateAtStartOfDay(right.checkInDate) || new Date(0)
         return rightDate - leftDate
+      })
+      break
+      
+    default:
+      // Default to nearest check-in date
+      sorted.sort((left, right) => {
+        const leftDistance = getDaysFromToday(left.checkInDate)
+        const rightDistance = getDaysFromToday(right.checkInDate)
+        if (leftDistance !== rightDistance) {
+          return leftDistance - rightDistance
+        }
+
+        const leftDate = parseDateAtStartOfDay(left.checkInDate) || new Date(0)
+        const rightDate = parseDateAtStartOfDay(right.checkInDate) || new Date(0)
+        return leftDate - rightDate
       })
   }
   

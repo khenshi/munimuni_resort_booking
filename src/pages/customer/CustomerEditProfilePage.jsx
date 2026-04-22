@@ -10,6 +10,13 @@ import {
 import { AccountLayout } from '../../components/dashboard'
 import '../../styles/pages/customer-profile-page.css'
 
+/**
+ * 
+ * @param {string} customerId 
+ * @param {object} fallbackCustomer 
+ * @returns 
+ * This function attempts to read the editable profile information for a given customer ID. It first looks up the customer account from the list of all customer accounts. If a matching account is found, it uses that data. If not, it falls back to using the provided fallbackCustomer data (which may be the currently logged-in customer). The function ensures that all returned fields are strings and trims any whitespace. This allows the profile form to be pre-filled with existing data when editing, while also handling cases where the account information might not be fully available.
+ */
 function readEditableProfile(customerId, fallbackCustomer) {
   const matchedAccount = readCustomerAccounts().find((account) => account.id === customerId)
 
@@ -21,10 +28,17 @@ function readEditableProfile(customerId, fallbackCustomer) {
   }
 }
 
+// Validation functions for phone number input
 function isValidPhoneNumber(phoneValue) {
   return /^(09\d{9}|\+639\d{9})$/.test(phoneValue)
 }
 
+// Validation function for email input
+function isValidEmailAddress(emailValue) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailValue)
+}
+
+// Sanitization function to allow only digits and an optional leading + for phone number input, while enforcing maximum length based on the format.
 function sanitizePhoneInput(rawValue) {
   const normalizedValue = String(rawValue ?? '')
   if (normalizedValue.startsWith('+')) {
@@ -35,6 +49,7 @@ function sanitizePhoneInput(rawValue) {
   return normalizedValue.replace(/\D/g, '').slice(0, 11)
 }
 
+// get validation message for phone number input based on the current value, providing specific feedback for common formatting issues.
 function getPhoneValidationMessage(phoneValue) {
   if (!phoneValue) return ''
   if (isValidPhoneNumber(phoneValue)) return ''
@@ -50,8 +65,17 @@ function getPhoneValidationMessage(phoneValue) {
   return 'Use 09XXXXXXXXX or +639XXXXXXXXX format.'
 }
 
+// get validation message for email input based on the current value, ensuring that the user is aware of the requirement for a valid email format.
+function getEmailValidationMessage(emailValue) {
+  if (!emailValue) return 'Email address is required.'
+  if (isValidEmailAddress(emailValue)) return ''
+
+  return 'Enter a valid email address.'
+}
+
 export default function CustomerEditProfilePage() {
   const [currentCustomer, setCurrentCustomer] = useState(() => readCurrentCustomer())
+  // contact form state
   const [contactForm, setContactForm] = useState(() => {
     const initialCustomer = readCurrentCustomer()
     if (!initialCustomer?.id) {
@@ -69,7 +93,9 @@ export default function CustomerEditProfilePage() {
   const [passwordNotice, setPasswordNotice] = useState('')
   const [passwordNoticeType, setPasswordNoticeType] = useState('error')
   const phoneValidationMessage = getPhoneValidationMessage(contactForm.phone)
+  const emailValidationMessage = getEmailValidationMessage(contactForm.email)
 
+  // Sync current customer data on auth changes and handle form submissions for updating contact details and password.
   useEffect(() => {
     const syncCustomer = () => {
       const nextCustomer = readCurrentCustomer()
@@ -89,13 +115,16 @@ export default function CustomerEditProfilePage() {
     }
   }, [currentCustomer?.id])
 
+  // If there is no logged-in customer, redirect to the login page. This ensures that only authenticated users can access the profile editing page.
   if (!currentCustomer) {
     return <Navigate to="/customer/login" replace />
   }
 
+  // Handle contact information submission
   const handleContactSubmit = (event) => {
     event.preventDefault()
 
+    // validate phone number format before submitting
     const normalizedPhone = String(contactForm.phone ?? '').trim()
     if (normalizedPhone && !isValidPhoneNumber(normalizedPhone)) {
       setContactNoticeType('error')
@@ -103,8 +132,17 @@ export default function CustomerEditProfilePage() {
       return
     }
 
+    const normalizedEmail = String(contactForm.email ?? '').trim()
+    if (!normalizedEmail || !isValidEmailAddress(normalizedEmail)) {
+      setContactNoticeType('error')
+      setContactNotice('Enter a valid email address.')
+      return
+    }
+
+    // Attempt to update contact details and provide feedback based on the result
     const result = updateCustomerContactDetails(currentCustomer.id, contactForm)
 
+    // If the update fails, show an error message. If it succeeds, show a success message.
     if (!result.ok) {
       setContactNoticeType('error')
       setContactNotice(result.error || 'Unable to update contact details.')
@@ -115,29 +153,35 @@ export default function CustomerEditProfilePage() {
     setContactNotice('Contact details updated successfully.')
   }
 
+  // Handle password submission
   const handlePasswordSubmit = (event) => {
     event.preventDefault()
 
+    // Validate that the new password is different from the current password and that the new password matches the confirmation before attempting to update. Provide specific feedback for each validation failure case.
     if (currentPassword === newPassword) {
       setPasswordNoticeType('error')
       setPasswordNotice('New password must be different from your current password.')
       return
     }
 
+    // Validate that the new password and confirmation match before submitting
     if (newPassword !== confirmNewPassword) {
       setPasswordNoticeType('error')
       setPasswordNotice('New password and confirmation do not match.')
       return
     }
 
+    // Attempt to update the password and provide feedback based on the result
     const result = updateCustomerPassword(currentCustomer.id, currentPassword, newPassword)
 
+    // If the update fails, show an error message. If it succeeds, show a success message and clear the password fields.
     if (!result.ok) {
       setPasswordNoticeType('error')
       setPasswordNotice(result.error || 'Unable to update password.')
       return
     }
 
+    // Clear password fields and show success message on successful update
     setPasswordNoticeType('success')
     setPasswordNotice('Password updated successfully.')
     setCurrentPassword('')
@@ -186,6 +230,7 @@ export default function CustomerEditProfilePage() {
                   placeholder="you@example.com"
                   required
                 />
+                {emailValidationMessage ? <p className="customerProfileNotice error">{emailValidationMessage}</p> : null}
               </div>
 
               <div className="formField">
