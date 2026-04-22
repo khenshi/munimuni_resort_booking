@@ -6,6 +6,7 @@ import {
 } from '../../data/receipts'
 import '../../styles/pages/customer-detail-pages.css'
 
+// Utility function to format date strings into a more readable format. If the input is invalid or missing, it returns 'N/A' or the original text.
 function formatDate(dateText) {
   if (!dateText) return 'N/A'
   const parsedDate = new Date(dateText)
@@ -21,10 +22,12 @@ export default function ReceiptDetailPage() {
   const location = useLocation()
   const currentCustomer = readCurrentCustomer()
 
+  // If there is no logged-in customer, redirect to the login page. This ensures that only authenticated users can access receipt details.
   if (!currentCustomer) {
     return <Navigate to="/customer/login" replace />
   }
 
+  // Attempt to get receipt data from location state (if navigated from a recent transaction) or fallback to the latest receipt for the customer. 
   const stateReceipt = location.state?.receiptData
   const latestCustomerReceipt = getCustomerReceipts(currentCustomer.id).at(-1)
   const receipt = stateReceipt || latestCustomerReceipt
@@ -53,6 +56,7 @@ export default function ReceiptDetailPage() {
     )
   }
 
+  // Calculate totals for the receipt using the getReceiptTotals function
   const totals = getReceiptTotals(receipt)
 
   return (

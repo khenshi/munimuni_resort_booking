@@ -7,6 +7,7 @@ export const OUTSTANDING_BALANCE_CHANGED_EVENT =
   "munimuni-outstanding-balance-changed";
 export const CUSTOMER_RECEIPTS_STORAGE_KEY = "munimuni-customer-receipts";
 
+// Helper function to normalize email addresses for consistent storage and comparison
 function normalizeEmail(emailValue) {
   return String(emailValue ?? "")
     .trim()
@@ -28,6 +29,7 @@ export function readCustomerAccounts() {
   }
 }
 
+// writes the full list of customer accounts.
 export function writeCustomerAccounts(accounts) {
   window.localStorage.setItem(
     CUSTOMER_ACCOUNTS_STORAGE_KEY,
@@ -35,6 +37,7 @@ export function writeCustomerAccounts(accounts) {
   );
 }
 
+// updates the current customer data
 function updateCurrentCustomerFromAccount(account) {
   const currentCustomer = readCurrentCustomer();
   if (!currentCustomer || currentCustomer.id !== account.id) {
@@ -78,11 +81,14 @@ export function dispatchAuthChanged() {
   window.dispatchEvent(new Event(AUTH_CHANGED_EVENT));
 }
 
+// updates customer details
 export function updateCustomerContactDetails(customerId, contactDetails) {
+  // validates if there is an customer ID to update, if not return an error
   if (!customerId) {
     return { ok: false, error: "Missing customer id." };
   }
 
+  // Get the list of customer accounts and find the index of the account to update. If not found, return an error.
   const accounts = readCustomerAccounts();
   const accountIndex = accounts.findIndex(
     (account) => account.id === customerId,
@@ -91,12 +97,14 @@ export function updateCustomerContactDetails(customerId, contactDetails) {
     return { ok: false, error: "Account not found." };
   }
 
+  // Validate the new email address (if provided) for proper format and uniqueness. If invalid, return an error.
   const currentAccount = accounts[accountIndex];
   const nextEmail = normalizeEmail(contactDetails.email);
   if (!nextEmail) {
     return { ok: false, error: "Email is required." };
   }
 
+  // Check for duplicate email addresses in other accounts (excluding the current account). If a duplicate is found, return an error.
   const duplicateEmail = accounts.some(
     (account) => account.id !== customerId && account.email === nextEmail,
   );
@@ -107,6 +115,7 @@ export function updateCustomerContactDetails(customerId, contactDetails) {
     };
   }
 
+  // If all validations pass, create an updated account object with the new contact details and current timestamp. 
   const updatedAccount = {
     ...currentAccount,
     fullName: String(contactDetails.fullName ?? "").trim(),
@@ -116,6 +125,7 @@ export function updateCustomerContactDetails(customerId, contactDetails) {
     updatedAt: new Date().toISOString(),
   };
 
+  // Update the accounts list with the modified account, write it back to storage, update the current customer if it's the same account, and dispatch an auth change event to notify the app of the update.
   const nextAccounts = [...accounts];
   nextAccounts[accountIndex] = updatedAccount;
   writeCustomerAccounts(nextAccounts);
@@ -125,6 +135,7 @@ export function updateCustomerContactDetails(customerId, contactDetails) {
   return { ok: true, account: updatedAccount };
 }
 
+// updates the customer's password after validating the current password and ensuring the new password meets criteria. Returns an object indicating success or failure with an error message if applicable.
 export function updateCustomerPassword(
   customerId,
   currentPassword,
@@ -137,6 +148,7 @@ export function updateCustomerPassword(
   const currentPasswordValue = String(currentPassword ?? "");
   const nextPasswordValue = String(nextPassword ?? "");
 
+  // Validate that the new password is at least 6 characters long. If not, return an error.
   if (nextPasswordValue.length < 6) {
     return {
       ok: false,
@@ -144,6 +156,7 @@ export function updateCustomerPassword(
     };
   }
 
+  // Get the list of customer accounts and find the index of the account to update. If not found, return an error.
   const accounts = readCustomerAccounts();
   const accountIndex = accounts.findIndex(
     (account) => account.id === customerId,
@@ -152,17 +165,20 @@ export function updateCustomerPassword(
     return { ok: false, error: "Account not found." };
   }
 
+  // Validate that the current password matches the stored password for the account. If it doesn't match, return an error.
   const currentAccount = accounts[accountIndex];
   if (currentAccount.password !== currentPasswordValue) {
     return { ok: false, error: "Current password is incorrect." };
   }
 
+  // If all validations pass, create an updated account object with the new password and current timestamp. Update the accounts list with the modified account, write it back to storage, and dispatch an auth change event to notify the app of the update.
   const updatedAccount = {
     ...currentAccount,
     password: nextPasswordValue,
     updatedAt: new Date().toISOString(),
   };
 
+  // Update the accounts list with the modified account, write it back to storage, and dispatch an auth change event to notify the app of the update.
   const nextAccounts = [...accounts];
   nextAccounts[accountIndex] = updatedAccount;
   writeCustomerAccounts(nextAccounts);

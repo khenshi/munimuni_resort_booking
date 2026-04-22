@@ -36,8 +36,8 @@ const BOOKINGS_FILTER_OPTIONS = [
 const BOOKINGS_SORT_OPTIONS = [
   { id: 'newest-booked', label: 'Newest first (by booked date)' },
   { id: 'oldest-booked', label: 'Oldest first (by booked date)' },
-  { id: 'newest-checkin', label: 'Newest first (by check-in date)' },
-  { id: 'oldest-checkin', label: 'Oldest first (by check-in date)' },
+  { id: 'newest-checkin', label: 'Nearest booking date (by check-in)' },
+  { id: 'oldest-checkin', label: 'Farthest booking date (by check-in)' },
 ]
 
 // Receipts tab options

@@ -1,3 +1,4 @@
+// formats currency
 function formatCurrency(amount) {
   return `PHP ${Number(amount).toLocaleString()}`
 }
@@ -10,6 +11,7 @@ function formatDateLabel(isoDate) {
   })
 }
 
+// calculates money totals for a single receipt object.
 export function getReceiptTotals(receipt) {
   const subtotal = receipt.lineItems.reduce((runningTotal, item) => {
     return runningTotal + item.quantity * item.unitPrice
@@ -22,6 +24,7 @@ export function getReceiptTotals(receipt) {
   return { subtotal, serviceFee, discount, grandTotal }
 }
 
+// formats currency for receipt amounts
 export function formatReceiptCurrency(amount) {
   return formatCurrency(amount)
 }
