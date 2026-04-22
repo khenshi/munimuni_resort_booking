@@ -127,7 +127,7 @@ export default function TopNav({ navItems }) {
               {item.label}
             </ScrollLink>
           ))}
-          <a href={`${window.location.origin}/faq`} className="navLink" target="_blank" >
+          <a href="/faq" className="navLink" target="_blank" >
             FAQ
           </a>
         </nav>
