@@ -171,6 +171,7 @@ export function updateCustomerPassword(
   return { ok: true };
 }
 
+// Get outstanding balances for all customers, keyed by customer ID
 export function readCustomerOutstandingBalances() {
   try {
     const parsed = JSON.parse(
@@ -191,6 +192,7 @@ export function writeCustomerOutstandingBalances(balancesMap) {
   dispatchOutstandingBalanceChanged();
 }
 
+// Get the outstanding balance for a specific customer ID, or 0 if not found or invalid
 export function getCustomerOutstandingBalance(customerId) {
   if (!customerId) {
     return 0;

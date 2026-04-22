@@ -7,6 +7,11 @@ import {
   readCurrentCustomer,
 } from '../../login/auth-storage'
 
+
+/**
+ * @param {Object[]} navItems - An array of navigation items, each containing a 'label' for display and a 'targetId' corresponding to the ID of the section to scroll to when clicked.
+ * @returns {JSX.Element} The top navigation component.
+ */
 export default function TopNav({ navItems }) {
   //dropdown states
   const [profileMenuOpen, setProfileMenuOpen] = useState(false)
@@ -26,7 +31,7 @@ export default function TopNav({ navItems }) {
 
     const segments = name.split(/\s+/).filter(Boolean) //regex to split by whitespace and filter out empty segments (in case of multiple spaces)
     if (segments.length === 1) return segments[0].slice(0, 1).toUpperCase()
-    return `${segments[0].slice(0, 1)}${segments[1].slice(0, 1)}`.toUpperCase()
+    return `${segments[0].slice(0, 1)}${segments[segments.length - 1].slice(0, 1)}`.toUpperCase()
   }, [currentCustomer])
 
   // sync current customer on auth change and handle outside clicks for dropdowns and escape key to close

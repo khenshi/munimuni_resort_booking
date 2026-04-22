@@ -28,3 +28,4 @@ export {
 export { default as CustomerLayout } from './layout/CustomerLayout'
 export { default as LoginPageHeader } from './layout/LoginPageHeader'
 export { default as CustomerLoginFormCard } from './sections/CustomerLoginFormCard'
+export { default as useCustomerLoginPageLogic } from './state/useCustomerLoginPageLogic'

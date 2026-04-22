@@ -20,7 +20,7 @@ export default function PackagesPageHeader({ activeTab, onTabChange }) {
 
     const segments = name.split(/\s+/).filter(Boolean)
     if (segments.length === 1) return segments[0].slice(0, 1).toUpperCase()
-    return `${segments[0].slice(0, 1)}${segments[1].slice(0, 1)}`.toUpperCase()
+    return `${segments[0].slice(0, 1)}${segments[segments.length - 1].slice(0, 1)}`.toUpperCase()
   }, [currentCustomer])
 
   useEffect(() => {

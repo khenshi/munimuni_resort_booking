@@ -7,10 +7,12 @@ import {
 } from '../auth-storage'
 
 export default function LoginPageHeader() {
+  // Profile menu states
   const [profileMenuOpen, setProfileMenuOpen] = useState(false)
   const [currentCustomer, setCurrentCustomer] = useState(() => readCurrentCustomer())
   const profileMenuRef = useRef(null)
 
+  // Compute customer initials for profile button display
   const customerInitials = useMemo(() => {
     const name = currentCustomer?.fullName?.trim() ?? ''
     if (!name) {
@@ -20,9 +22,10 @@ export default function LoginPageHeader() {
 
     const segments = name.split(/\s+/).filter(Boolean)
     if (segments.length === 1) return segments[0].slice(0, 1).toUpperCase()
-    return `${segments[0].slice(0, 1)}${segments[1].slice(0, 1)}`.toUpperCase()
+    return `${segments[0].slice(0, 1)}${segments[segments.length - 1].slice(0, 1)}`.toUpperCase()
   }, [currentCustomer])
 
+  // Sync current customer state with localStorage and handle outside clicks and Escape key for profile menu
   useEffect(() => {
     const syncCurrentCustomer = () => setCurrentCustomer(readCurrentCustomer())
     const onDocMouseDown = (event) => {
@@ -47,6 +50,7 @@ export default function LoginPageHeader() {
     }
   }, [])
 
+  // Handle sign out action
   const handleSignOut = () => {
     clearCurrentCustomer()
     setProfileMenuOpen(false)

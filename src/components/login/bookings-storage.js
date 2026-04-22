@@ -50,6 +50,7 @@ function dispatchBookingsChanged() {
   window.dispatchEvent(new Event(BOOKINGS_CHANGED_EVENT));
 }
 
+// get bookings for all customers, keyed by customer ID
 export function readCustomerBookings() {
   try {
     const parsed = JSON.parse(
@@ -69,6 +70,7 @@ export function writeCustomerBookings(bookingsMap) {
   dispatchBookingsChanged();
 }
 
+// get list of bookings for a specific customer ID
 export function getCustomerBookingList(customerId) {
   if (!customerId) {
     return [];

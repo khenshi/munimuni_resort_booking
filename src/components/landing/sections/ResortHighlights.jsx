@@ -8,6 +8,7 @@ export default function ResortHighlights() {
         <h2>Small reasons guests love Muni-Muni</h2>
 
         <div className="resortHighlightsGrid">
+          {/* Iterate over the resortHighlights data to render a card for each highlight, including an icon, title, and description, with appropriate ARIA attributes for accessibility */}
           {resortHighlights.map((item) => (
             <article className="resortHighlightCard" key={item.title}>
               <span className="resortHighlightIcon">

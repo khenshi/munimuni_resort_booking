@@ -2,18 +2,20 @@ import { useRef, useState } from 'react'
 import { resortImages } from '../../../data/landing'
 
 export default function ResortGallery() {
-  const [activeIndex, setActiveIndex] = useState(0)
-  const touchStartX = useRef(0)
-  const touchCurrentX = useRef(0)
+  const [activeIndex, setActiveIndex] = useState(0)   // State to track the currently active image index in the gallery
+  const touchStartX = useRef(0) // Ref to store the starting X coordinate of a touch event for swipe detection
+  const touchCurrentX = useRef(0) // Ref to store the current X coordinate during a touch move event for swipe detection
 
+  // Handlers for navigating to the previous and next images in the gallery, with wrap-around logic
   const goToPrev = () => {
     setActiveIndex((index) => (index === 0 ? resortImages.length - 1 : index - 1))
   }
 
   const goToNext = () => {
-    setActiveIndex((index) => (index + 1) % resortImages.length)
+    setActiveIndex((index) => (index + 1) % resortImages.length) 
   }
 
+  // Handlers for touch events to enable swipe navigation on mobile devices
   const onTouchStart = (event) => {
     touchStartX.current = event.changedTouches[0].clientX
     touchCurrentX.current = event.changedTouches[0].clientX
@@ -55,6 +57,7 @@ export default function ResortGallery() {
             <span aria-hidden="true">‹</span>
           </button>
 
+          {/* Main image display area, showing the currently active image in the gallery with appropriate alt text for accessibility */}
           <figure className="resortFrame">
             <img
               src={resortImages[activeIndex].src}
@@ -72,6 +75,7 @@ export default function ResortGallery() {
             <span aria-hidden="true">›</span>
           </button>
 
+          {/* Thumbnail navigation row, allowing users to click on thumbnails to navigate directly to a specific image in the gallery, with ARIA attributes for accessibility */}
           <div className="resortThumbRow" role="tablist" aria-label="Resort gallery thumbnails">
             {resortImages.map((image, index) => (
               <button
@@ -88,6 +92,7 @@ export default function ResortGallery() {
             ))}
           </div>
 
+          {/* Meta information about the gallery, including the current image index and a hint for users to swipe or tap thumbnails for navigation, with ARIA live region for announcing changes to assistive technologies */}
           <div className="resortGalleryMeta" aria-live="polite">
             <span className="resortGalleryCount">
               {activeIndex + 1} / {resortImages.length}

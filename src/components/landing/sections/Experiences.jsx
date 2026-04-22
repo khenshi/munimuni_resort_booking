@@ -2,6 +2,7 @@
 import { Link } from 'react-router-dom'
 import { cottages } from '../../../data/packages'
 
+// Select the first 3 cottages to feature as highlighted offers on the landing page, adding a 'to' property for linking to their details page
 const featuredOffers = cottages.slice(0, 3).map((cottage) => ({
   ...cottage,
   to: `/packages/offers/daytour/cottage-${cottage.id}`,

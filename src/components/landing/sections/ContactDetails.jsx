@@ -81,6 +81,7 @@ export default function ContactDetails() {
             </article>
           </div>
 
+          {/* Map card with embedded Google Map iframe for location preview */}
           <article className="locationCard locationMapCard">
             <h3>Map</h3>
             <p>Preview the exact location below and tap the map to open navigation.</p>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Link, Navigate, useNavigate } from 'react-router-dom'
 import {
   BOOKINGS_CHANGED_EVENT,
@@ -16,62 +16,52 @@ import {
   FinancialWalletSection,
   PreviousBookingsWidget,
 } from '../../components/dashboard'
-import { useBookingStateSync } from '../../components/booking'
 import '../../styles/pages/customer-dashboard-page.css'
 import '../../styles/components/dashboard/digital-concierge-panel.css'
 
 export default function CustomerDashboardPage() {
   const navigate = useNavigate()
+  // State for current customer, their bookings, and outstanding balance
   const [currentCustomer, setCurrentCustomer] = useState(() => readCurrentCustomer())
-  const [customerBookings, setCustomerBookings] = useState(() => {
-    const initialCustomer = readCurrentCustomer()
-    return initialCustomer?.id ? getCustomerBookingList(initialCustomer.id) : []
-  })
-  const [outstandingBalance, setOutstandingBalance] = useState(() => {
-    const initialCustomer = readCurrentCustomer()
-    return initialCustomer?.id ? getCustomerOutstandingBalance(initialCustomer.id) : 0
-  })
+  const [customerBookings, setCustomerBookings] = useState([])
+  const [outstandingBalance, setOutstandingBalance] = useState(0)
 
+  // Centralized sync function (used useCallback to avoid unnecessary re-renders)
+  const syncAll = useCallback(() => {
+    const customer = readCurrentCustomer()
+    setCurrentCustomer(customer)
+
+    if (customer?.id) {
+      setCustomerBookings(getCustomerBookingList(customer.id))
+      setOutstandingBalance(getCustomerOutstandingBalance(customer.id))
+    } else {
+      // Reset when logged out
+      setCustomerBookings([])
+      setOutstandingBalance(0)
+    }
+  }, [])
+
+  // Initial load
   useEffect(() => {
-    const syncCurrentCustomer = () => {
-      const nextCustomer = readCurrentCustomer()
-      setCurrentCustomer(nextCustomer)
+    syncAll()
+  }, [syncAll])
 
-      if (nextCustomer) {
-        const bookings = getCustomerBookingList(nextCustomer.id)
-        setCustomerBookings(bookings)
-        setOutstandingBalance(getCustomerOutstandingBalance(nextCustomer.id))
-      }
-    }
-
-    const refreshBookings = () => {
-      if (currentCustomer?.id) {
-        const bookings = getCustomerBookingList(currentCustomer.id)
-        setCustomerBookings(bookings)
-      }
-    }
-
-    const refreshBalance = () => {
-      if (currentCustomer?.id) {
-        setOutstandingBalance(getCustomerOutstandingBalance(currentCustomer.id))
-      }
-    }
-
-    window.addEventListener('storage', syncCurrentCustomer)
-    window.addEventListener(AUTH_CHANGED_EVENT, syncCurrentCustomer)
-    window.addEventListener(BOOKINGS_CHANGED_EVENT, refreshBookings)
-    window.addEventListener(OUTSTANDING_BALANCE_CHANGED_EVENT, refreshBalance)
+  // Event listeners 
+  useEffect(() => {
+    window.addEventListener('storage', syncAll)
+    window.addEventListener(AUTH_CHANGED_EVENT, syncAll)
+    window.addEventListener(BOOKINGS_CHANGED_EVENT, syncAll)
+    window.addEventListener(OUTSTANDING_BALANCE_CHANGED_EVENT, syncAll)
 
     return () => {
-      window.removeEventListener('storage', syncCurrentCustomer)
-      window.removeEventListener(AUTH_CHANGED_EVENT, syncCurrentCustomer)
-      window.removeEventListener(BOOKINGS_CHANGED_EVENT, refreshBookings)
-      window.removeEventListener(OUTSTANDING_BALANCE_CHANGED_EVENT, refreshBalance)
+      window.removeEventListener('storage', syncAll)
+      window.removeEventListener(AUTH_CHANGED_EVENT, syncAll)
+      window.removeEventListener(BOOKINGS_CHANGED_EVENT, syncAll)
+      window.removeEventListener(OUTSTANDING_BALANCE_CHANGED_EVENT, syncAll)
     }
-  }, [currentCustomer?.id])
+  }, [syncAll])
 
-  useBookingStateSync(currentCustomer?.id, setCustomerBookings)
-
+  // If not logged in, redirect to login page
   if (!currentCustomer) {
     return <Navigate to="/customer/login" replace />
   }
@@ -85,6 +75,7 @@ export default function CustomerDashboardPage() {
     return `${year}-${month}-${day}`
   }
 
+  // Filter for upcoming bookings (check-in date in the future) and sort by check-in date
   const todayISO = getTodayISODate()
   const upcomingBookings = customerBookings
     .filter((b) => b.checkInDate && b.checkInDate > todayISO)
