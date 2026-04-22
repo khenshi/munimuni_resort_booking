@@ -4,7 +4,6 @@ import {
   PackageOfferDateEditor,
   PackageOfferDetailsCard,
   PackageOfferGallerySection,
-  gallerySlots,
   resolveOfferDetail,
   resolveSelectedAvailabilityItem,
 } from '../../components/packages/details'
@@ -34,7 +33,7 @@ export default function PackageOfferDetailsPage() {
           <PackageOfferDetailsCard detail={detail} headingId="offer-detail-heading" />
 
           {detail ? (
-            <PackageOfferGallerySection headingId="offer-gallery-heading" slots={gallerySlots} />
+            <PackageOfferGallerySection headingId="offer-gallery-heading" galleryImages={detail.galleryImages} />
           ) : null}
 
           {detail ? (

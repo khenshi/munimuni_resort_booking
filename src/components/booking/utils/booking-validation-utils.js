@@ -1,4 +1,4 @@
-import { addOns, cottages, dayTourOffers, overnightOffers } from '../../../data/packages'
+import { cottages, dayTourOffers, overnightOffers } from '../../../data/packages'
 import { isItemAvailableForDate } from '../../packages'
 
 export function resolveSelectedAvailabilityItem(offerType, offerId) {

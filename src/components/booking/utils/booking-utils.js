@@ -1,7 +1,7 @@
 import { cottages, dayTourOffers, overnightOffers } from '../../../data/packages'
 import { addDaysToISODate } from '../../packages/utils/availability-utils'
 
-export const stepLabels = ['Stay Details', 'Guest Info', 'Add-ons', 'Review']
+export const stepLabels = ['Stay Details', 'Guest Info', 'Review']
 
 export function resolveAutoCheckOutDate(checkInDate, stayTab) {
   if (!checkInDate) return ''

@@ -3,12 +3,10 @@ import { getCustomerBooking, updateCustomerBooking } from '../../login/bookings-
 import { resolveAutoCheckOutDate, resolveSelectedOffer } from '../utils/booking-utils'
 import { getTodayISODate, addDaysToISODate } from '../../packages/utils/availability-utils'
 import { isItemAvailableForDate } from '../../packages'
-import { addOns } from '../../../data/packages'
 import {
   getGuestCapacityHint,
   getGuestInfoErrors,
   getGuestValidationMessage,
-  getSelectedAddOnLabels,
   sanitizeGuestCountInput,
   sanitizePhoneInput,
 } from '../utils/booking-form-utils'
@@ -30,7 +28,6 @@ function createInitialEditBookingFormData(existingBooking) {
     email: existingBooking?.email || '',
     address: existingBooking?.address || '',
     specialRequest: existingBooking?.specialRequest || '',
-    selectedAddOns: Array.isArray(existingBooking?.selectedAddOns) ? [...existingBooking.selectedAddOns] : [],
     termsAccepted: existingBooking?.termsAccepted || false,
   }
 }
@@ -102,18 +99,6 @@ export default function useEditBookingLogic(bookingReference, customerId) {
     setFormData((prev) => ({ ...prev, [key]: value }))
   }
 
-  const toggleAddOn = (addOnId) => {
-    setFormData((prev) => {
-      const alreadySelected = prev.selectedAddOns.includes(addOnId)
-      return {
-        ...prev,
-        selectedAddOns: alreadySelected
-          ? prev.selectedAddOns.filter((id) => id !== addOnId)
-          : [...prev.selectedAddOns, addOnId],
-      }
-    })
-  }
-
   const guestValidationMessage = useMemo(
     () => getGuestValidationMessage(formData.guests, maxAllowedGuests),
     [formData.guests, maxAllowedGuests],
@@ -142,13 +127,7 @@ export default function useEditBookingLogic(bookingReference, customerId) {
       formData.phone !== (existingBooking?.phone || '') ||
       formData.email !== (existingBooking?.email || '') ||
       formData.address !== (existingBooking?.address || '') ||
-      formData.specialRequest !== (existingBooking?.specialRequest || '') ||
-      JSON.stringify(formData.selectedAddOns) !==
-        JSON.stringify(
-          Array.isArray(existingBooking?.selectedAddOns)
-            ? existingBooking.selectedAddOns
-            : [],
-        )
+      formData.specialRequest !== (existingBooking?.specialRequest || '')
     );
   }, [formData, existingBooking])
 
@@ -161,6 +140,7 @@ export default function useEditBookingLogic(bookingReference, customerId) {
     if (!hasBasicDetails) return false;
     if (checkInValidationMessage) return false;
     if (guestValidationMessage) return false;
+    if (hasGuestInfoErrors) return false;
 
     if (!selectedAvailabilityItem) return true;
     return isItemAvailableForDate(
@@ -171,6 +151,7 @@ export default function useEditBookingLogic(bookingReference, customerId) {
     formData,
     checkInValidationMessage,
     guestValidationMessage,
+    hasGuestInfoErrors,
     selectedAvailabilityItem,
   ]);
 
@@ -201,7 +182,6 @@ export default function useEditBookingLogic(bookingReference, customerId) {
         phone: formData.phone,
         email: formData.email,
         address: formData.address,
-        selectedAddOns: formData.selectedAddOns,
         termsAccepted: formData.termsAccepted,
       }
 
@@ -213,11 +193,6 @@ export default function useEditBookingLogic(bookingReference, customerId) {
       setIsSubmitting(false)
     }
   }
-
-  const selectedAddOnLabels = useMemo(
-    () => getSelectedAddOnLabels(formData.selectedAddOns, addOns),
-    [formData.selectedAddOns],
-  )
 
   const guestCapacityHint = useMemo(
     () => getGuestCapacityHint(selectedOffer, formData.checkInDate, maxAllowedGuests),
@@ -233,13 +208,11 @@ export default function useEditBookingLogic(bookingReference, customerId) {
     bookingReference,
     formData,
     onChange,
-    toggleAddOn,
     guestValidationMessage,
     guestInfoErrors,
     checkInValidationMessage,
     guestCapacityHint,
     maxAllowedGuests,
-    selectedAddOnLabels,
     activeDateUnavailable,
     submitBooking,
     canProceed,

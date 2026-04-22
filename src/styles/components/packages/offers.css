@@ -509,6 +509,14 @@
   text-align: center;
 }
 
+.offerDetailsGalleryImage {
+  width: 100%;
+  height: 168px;
+  border-radius: 14px;
+  object-fit: cover;
+  display: block;
+}
+
 .offerDetailsGalleryPlaceholder span {
   font-size: 13px;
   font-weight: 600;

@@ -9,12 +9,11 @@ function toSafeNumber(value, fallback = 0) {
 function normalizeBookingRecord(booking) {
   const itemizedCosts = {
     room: toSafeNumber(booking?.itemizedCosts?.room, 0),
-    addOns: toSafeNumber(booking?.itemizedCosts?.addOns, 0),
     rentals: toSafeNumber(booking?.itemizedCosts?.rentals, 0),
   };
 
   const fallbackTotal =
-    itemizedCosts.room + itemizedCosts.addOns + itemizedCosts.rentals;
+    itemizedCosts.room + itemizedCosts.rentals;
   const totalAmount = toSafeNumber(booking?.totalAmount, fallbackTotal);
   const fallbackPaid =
     String(booking?.paymentStatus ?? booking?.status ?? "").toLowerCase() === "paid"

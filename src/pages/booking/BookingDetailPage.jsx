@@ -149,16 +149,6 @@ export default function BookingDetailPage() {
                 <strong>{booking.address || 'N/A'}</strong>
               </div>
               <div className="customerDetailStackedRow">
-                <span>Selected add-ons</span>
-                <ul>
-                  {Array.isArray(booking.selectedAddOns) && booking.selectedAddOns.length > 0 ? (
-                    booking.selectedAddOns.map((addOnId) => <li key={addOnId}>{addOnId}</li>)
-                  ) : (
-                    <li>No add-ons selected</li>
-                  )}
-                </ul>
-              </div>
-              <div className="customerDetailStackedRow">
                 <span>Special requests</span>
                 <p>{booking.specialRequest || 'No special requests provided.'}</p>
               </div>

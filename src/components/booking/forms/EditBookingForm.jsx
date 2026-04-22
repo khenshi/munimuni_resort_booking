@@ -16,9 +16,6 @@ export default function EditBookingForm({
   guestCapacityHint,
   maxAllowedGuests,
   onChange,
-  toggleAddOn,
-  addOns,
-  selectedAddOnLabels,
   activeDateUnavailable,
   isSubmitting,
   submitError,
@@ -72,9 +69,6 @@ export default function EditBookingForm({
                 guestCapacityHint={guestCapacityHint}
                 maxAllowedGuests={maxAllowedGuests}
                 onChange={onChange}
-                toggleAddOn={toggleAddOn}
-                addOns={addOns}
-                selectedAddOnLabels={selectedAddOnLabels}
                 availabilityMessage={
                   activeDateUnavailable
                     ? `This offer is unavailable on ${formData.checkInDate}. Pick another check-in date to continue.`
@@ -102,12 +96,12 @@ export default function EditBookingForm({
                 Previous
               </button>
 
-              {step < 4 ? (
+              {step < 3 ? (
                 <button
                   type="button"
                   className="bookingActionBtn isPrimary"
                   disabled={!canProceed || isSubmitting}
-                  onClick={() => setStep((current) => Math.min(4, current + 1))}
+                  onClick={() => setStep((current) => Math.min(3, current + 1))}
                 >
                   Next Step
                 </button>

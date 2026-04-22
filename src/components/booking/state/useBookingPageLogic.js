@@ -4,14 +4,12 @@ import { resolveAutoCheckOutDate, resolveSelectedOffer } from '../utils/booking-
 import { addDaysToISODate, getTodayISODate } from '../../packages/utils/availability-utils'
 import { isItemAvailableForDate } from '../../packages'
 import { readCurrentCustomer } from '../../login/auth-storage'
-import { addOns } from '../../../data/packages'
 import {
   buildFullName,
   createInitialBookingFormData,
   getGuestCapacityHint,
   getGuestInfoErrors,
   getGuestValidationMessage,
-  getSelectedAddOnLabels,
   sanitizeGuestCountInput,
   sanitizePhoneInput,
 } from '../utils/booking-form-utils'
@@ -31,16 +29,11 @@ function calculateCostBreakdown(selectedOffer, formData) {
     offerCost = (Number(selectedOffer?.price) || 0) * guestCount
   }
 
-  const addOnsCost = formData.selectedAddOns.reduce((total, addOnId) => {
-    const addOn = addOns.find((item) => item.id === addOnId)
-    return total + (Number(addOn?.price) || 0)
-  }, 0)
-
   return {
     room: offerCost,
-    addOns: addOnsCost,
+    addOns: 0,
     rentals: 0,
-    totalAmount: offerCost + addOnsCost,
+    totalAmount: offerCost,
   }
 }
 
@@ -128,18 +121,6 @@ export default function useBookingPageLogic() {
     setFormData((prev) => ({ ...prev, [key]: value }))
   }
 
-  const toggleAddOn = (addOnId) => {
-    setFormData((prev) => {
-      const alreadySelected = prev.selectedAddOns.includes(addOnId)
-      return {
-        ...prev,
-        selectedAddOns: alreadySelected
-          ? prev.selectedAddOns.filter((id) => id !== addOnId)
-          : [...prev.selectedAddOns, addOnId],
-      }
-    })
-  }
-
   const guestValidationMessage = useMemo(() => getGuestValidationMessage(formData.guests, maxAllowedGuests), [formData.guests, maxAllowedGuests])
   const guestInfoErrors = useMemo(
     () => getGuestInfoErrors(formData),
@@ -161,11 +142,6 @@ export default function useBookingPageLogic() {
   const pageHeading = 'Book Your Stay'
   const isAuthenticated = Boolean(currentCustomer?.id)
 
-  const selectedAddOnLabels = useMemo(
-    () => getSelectedAddOnLabels(formData.selectedAddOns, addOns),
-    [formData.selectedAddOns],
-  )
-
   const guestCapacityHint = useMemo(
     () => getGuestCapacityHint(selectedOffer, formData.checkInDate, maxAllowedGuests),
     [selectedOffer, formData.checkInDate, maxAllowedGuests],
@@ -185,8 +161,7 @@ export default function useBookingPageLogic() {
     if (step === 2) {
       return Boolean(formData.firstName && formData.lastName && formData.phone && formData.email) && !hasGuestInfoErrors
     }
-    if (step === 3) return true
-    if (step === 4) return Boolean(formData.termsAccepted)
+    if (step === 3) return Boolean(formData.termsAccepted)
     return false
   }, [
     step,
@@ -225,7 +200,6 @@ export default function useBookingPageLogic() {
       phone: formData.phone,
       email: formData.email,
       address: formData.address,
-      selectedAddOns: formData.selectedAddOns,
       termsAccepted: formData.termsAccepted,
       itemizedCosts: {
         room: costBreakdown.room,
@@ -256,14 +230,12 @@ export default function useBookingPageLogic() {
     submitBooking,
     canProceed,
     onChange,
-    toggleAddOn,
     minCheckInDate,
     checkInValidationMessage,
     guestValidationMessage,
     guestInfoErrors,
     guestCapacityHint,
     maxAllowedGuests,
-    selectedAddOnLabels,
     activeDateUnavailable,
     isAuthenticated,
     loginActionState: {

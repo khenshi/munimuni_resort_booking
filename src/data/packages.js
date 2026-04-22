@@ -15,6 +15,33 @@ import veranda from '../assets/veranda.webp'
 import cabana from '../assets/cabana.webp'
 import alfresco from '../assets/alfresco.webp'
 
+import cove1 from '../assets/cove1.webp'
+import cove2 from '../assets/cove2.webp'
+import cove3 from '../assets/cove3.webp'
+import jungle1 from '../assets/jungle1.webp'
+import jungle2 from '../assets/jungle2.webp'
+import seaside1 from '../assets/seaside1.webp'
+import seaside2 from '../assets/seaside2.webp'
+import seaside3 from '../assets/seaside3.webp'
+import veranda1 from '../assets/veranda1.webp'
+import veranda2 from '../assets/veranda2.webp'
+import cabana1 from '../assets/cabana1.webp'
+import cabana2 from '../assets/cabana2.webp'
+import cabana3 from '../assets/cabana3.webp'
+import alfresco1 from '../assets/alfresco1.webp'
+import alfresco2 from '../assets/alfresco2.webp'
+import alfresco3 from '../assets/alfresco3.webp'
+import cliffside1 from '../assets/cliffside1.webp'
+import cliffside2 from '../assets/cliffside2.webp'
+import cliffside3 from '../assets/cliffside3.webp'
+import griller from '../assets/griller.jpg'
+import waterjug from '../assets/waterjug.jpg'
+import orangekayak from '../assets/orangekayak.jpg'
+import bluekayak from '../assets/bluekayak.jpg'
+import snorkling from '../assets/snorkling.jpg'
+import lifevest from '../assets/lifevest.jpg'
+
+
 export const cottages = [
   {
     id: 'cove',
@@ -31,6 +58,7 @@ export const cottages = [
     availability: {
       unavailableCheckInDates: ['2026-04-06', '2026-04-12', '2026-04-20'],
     },
+    galleryImages: [cove1, cove2, cove3, cove],
     details: [
       'Beach access — Beachfront',
       'Private open cottage with tables and chairs',
@@ -55,6 +83,7 @@ export const cottages = [
     availability: {
       unavailableCheckInDates: ['2026-04-06', '2026-04-12', '2026-04-20'],
     },
+    galleryImages: [jungle1, jungle2, jungle, jungle1],
     details: [
       'Beach access — beachfront',
       'Private open cottage with tables and chairs',
@@ -79,6 +108,7 @@ export const cottages = [
     availability: {
       unavailableCheckInDates: ['2026-04-06', '2026-04-12', '2026-04-20'],
     },
+    galleryImages: [cliffside, cliffside1, cliffside2, cliffside3],
     details: [
       'Inclusions: Suspended net above the sea and direct view of the rock formations.',
       'Location: Most secluded area, beachfront access.',
@@ -128,14 +158,13 @@ export const infoContentByTab = {
     heading: 'Add-Ons Notes and Details',
     reminders: [
       'Add-ons are subject to availability on your selected date.',
-      'Some add-ons require advance reservation and confirmation.',
       'Add-ons may have separate capacity or usage limits.',
       'Add-ons are non-transferable once confirmed.',
+      'Add-ons are first-come, first-served and cannot be guaranteed until added to your check in date.',
     ],
     details: [
       'Add-ons are optional and can be combined with day tour or overnight bookings.',
       'Rates for add-ons are charged on top of your selected package.',
-      'Final add-on list and rates are confirmed during reservation processing.',
       'On-site staff can assist with recommended add-ons for your group size.',
     ],
   },
@@ -156,6 +185,7 @@ export const overnightOffers = [
     availability: {
       unavailableCheckInDates: ['2026-04-05', '2026-04-11', '2026-04-19'],
     },
+    galleryImages: [seaside, seaside1, seaside2, seaside3],
     details: [
       'Sleeping Arrangements: 1 Full-Sized Bed.',
       'Inclusions: Air conditioning, Mini refrigerator, 2 Towels, Tables and chairs, and Pisonet Wifi.',
@@ -182,6 +212,7 @@ export const overnightOffers = [
     availability: {
       unavailableCheckInDates: ['2026-04-06', '2026-04-12', '2026-04-20'],
     },
+    galleryImages: [veranda, veranda1, veranda2, veranda],
     details: [
       'Sleeping Arrangements: 6 Beds (2 Triple Deck Beds).',
       'Inclusions: Air conditioning, Private shower and toilet, Tables and chairs, Pisonet Wifi.',
@@ -206,6 +237,7 @@ export const overnightOffers = [
     availability: {
       unavailableCheckInDates: ['2026-04-06', '2026-04-12', '2026-04-20'],
     },
+    galleryImages: [cabana, cabana1, cabana2, cabana3],
     details: [
       'Sleeping Arrangements: 1 Super King Size Bed, 2 Single Beds, 2 Queen Floor Mattresses, and 1 Single Floor Mattress.',
       'Inclusions: Ceiling fans, Water Jug (19L), Tables and chairs, Pisonet Wifi, and Shared shower and toilet.',
@@ -231,6 +263,7 @@ export const overnightOffers = [
     availability: {
       unavailableCheckInDates: ['2026-04-06', '2026-04-12', '2026-04-20'],
     },
+    galleryImages: [alfresco, alfresco1, alfresco2, alfresco3],
     details: [
       'Sleeping Arrangements: 12 beds total (8 Twin-Sized Beds and 4 Full-Sized Floor Mattresses).',
       'Inclusions: Hanging swings, Standing fans, Water Jug (19L), Tables and chairs, and Pisonet Wifi.',
@@ -256,6 +289,7 @@ export const dayTourOffers = [
     paxLabel: 'Any pax',
     description: 'Includes free use of tables and chairs.',
     imageUrl: galleryImage1,
+    galleryImages: [galleryImage1, galleryImage2, galleryImage3, galleryImage4],
     availability: {
       dailySlotCapacity: 120,
       reservedGuestsByDate: {
@@ -290,7 +324,7 @@ export const addOns = [
     paxMax: null,
     paxLabel: 'Any pax',
     description: 'Includes 1 kg charcoal for your BBQ needs.',
-    imageUrl: galleryImage6,
+    imageUrl: griller,
     details: [
       'Includes: Griller unit and 1 kg of charcoal.',
       'Perfect for: Groups who want to enjoy a freshly grilled meal by the beach.',
@@ -306,7 +340,7 @@ export const addOns = [
     paxMax: null,
     paxLabel: 'Any pax',
     description: 'Large 19L water jug for group hydration.',
-    imageUrl: galleryImage4,
+    imageUrl: waterjug,
     details: [
       'Capacity: 19 Liters.',
       'Ideal for: Ensuring the whole group stays hydrated throughout the day.',
@@ -321,7 +355,7 @@ export const addOns = [
     paxMax: null,
     paxLabel: 'Per hour',
     description: 'Explore the waters with our premium orange kayak.',
-    imageUrl: galleryImage8,
+    imageUrl: orangekayak,
     details: [
       'Rate: ₱600 per hour of use.',
       'Activity: Great for sightseeing and light exercise on the water.',
@@ -336,7 +370,7 @@ export const addOns = [
     paxMax: null,
     paxLabel: 'Per hour',
     description: 'Standard blue kayak for ocean exploration.',
-    imageUrl: galleryImage8,
+    imageUrl: bluekayak,
     details: [
       'Rate: ₱500 per hour of use.',
     ],
@@ -350,7 +384,7 @@ export const addOns = [
     paxMax: null,
     paxLabel: 'Per hour',
     description: 'Discover the underwater beauty of the cove.',
-    imageUrl: galleryImage2,
+    imageUrl: snorkling,
     details: [
       'Rate: ₱100 per hour.',
       'Includes: Mask and snorkel set.',
@@ -365,25 +399,10 @@ export const addOns = [
     paxMax: null,
     paxLabel: 'Per hour',
     description: 'Essential safety gear for swimming and water activities.',
-    imageUrl: galleryImage2,
+    imageUrl: lifevest,
     details: [
       'Rate: ₱50 per hour.',
       'Safety: Highly recommended for all guests engaging in water sports.',
-    ],
-  },
-  {
-    id: 'swimming-noodle-addon',
-    title: 'Swimming Noodle',
-    price: 50,
-    priceLabel: '₱50 / hour',
-    paxMin: 1,
-    paxMax: null,
-    paxLabel: 'Per hour',
-    description: 'Fun flotation aid for relaxed swimming.',
-    imageUrl: galleryImage2,
-    details: [
-      'Rate: ₱50 per hour.',
-      'Perfect for: Casual lounging in the water.',
     ],
   },
 ]

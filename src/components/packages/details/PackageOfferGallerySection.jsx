@@ -1,4 +1,6 @@
-export default function PackageOfferGallerySection({ headingId, slots }) {
+export default function PackageOfferGallerySection({ headingId, galleryImages = [] }) {
+  const visibleImages = galleryImages.slice(0, 4)
+
   return (
     <section className="offerDetailsGallerySection" aria-labelledby={headingId}>
       <div className="offerDetailsSectionHeader">
@@ -9,12 +11,12 @@ export default function PackageOfferGallerySection({ headingId, slots }) {
       </div>
 
       <div className="offerDetailsGalleryGrid">
-        {slots.map((slotLabel) => (
-          <div key={slotLabel} className="offerDetailsGalleryCard" role="presentation">
-            <div className="offerDetailsGalleryPlaceholder" aria-hidden="true">
-              <span>{slotLabel}</span>
+        {visibleImages.map((imageSrc, index) => (
+          <div key={`${imageSrc}-${index}`} className="offerDetailsGalleryCard" role="presentation">
+            <div className="offerDetailsGalleryPlaceholder">
+              <img className="offerDetailsGalleryImage" src={imageSrc} alt={`Package view ${index + 1}`} loading="lazy" />
             </div>
-            <p>{slotLabel}</p>
+            <p>{`View ${index + 1}`}</p>
           </div>
         ))}
       </div>

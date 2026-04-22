@@ -3,7 +3,7 @@
  * Defines the standardized Transaction Object and provides localStorage utilities
  */
 
-import { cottages, overnightOffers, dayTourOffers, addOns } from '../../../data/packages'
+import { cottages, overnightOffers, dayTourOffers } from '../../../data/packages'
 
 // Transaction Object Structure
 export const createTransaction = ({
@@ -23,7 +23,7 @@ export const createTransaction = ({
   bookingId,
   timestamp,
   customerDetails,
-  itemizedCosts, // { room: number, addOns: number, rentals: number }
+  itemizedCosts, // { room: number, rentals: number }
   paymentMethod,
   totalAmount,
   amountPaid,
@@ -94,7 +94,6 @@ export const ensureBookingCosts = (booking) => {
 
   // Ensure totalAmount is calculated
   booking.totalAmount = (booking.itemizedCosts.room || 0) + 
-                       (booking.itemizedCosts.addOns || 0) + 
                        (booking.itemizedCosts.rentals || 0)
 
   return booking
@@ -106,7 +105,6 @@ export const calculateBookingCosts = (booking) => {
     return {
       itemizedCosts: {
         room: Number(booking.itemizedCosts.room) || 0,
-        addOns: Number(booking.itemizedCosts.addOns) || 0,
         rentals: Number(booking.itemizedCosts.rentals) || 0,
       },
       totalAmount: Number(booking.totalAmount) || 0,
@@ -114,7 +112,6 @@ export const calculateBookingCosts = (booking) => {
   }
 
   let roomCost = 0
-  let addOnsCost = 0
   let rentalsCost = 0
   const guestCount = Math.max(1, Number.parseInt(booking?.guests, 10) || Number.parseInt(booking?.guestCount, 10) || 1)
 
@@ -143,31 +140,15 @@ export const calculateBookingCosts = (booking) => {
     }
   }
 
-  // Calculate add-ons cost
-  if (booking.selectedAddOns && Array.isArray(booking.selectedAddOns)) {
-    addOnsCost = booking.selectedAddOns.reduce((total, addOnId) => {
-      const matchedAddOn = addOns.find(addon => addon.id === addOnId || addon.title === addOnId)
-      return total + (matchedAddOn ? matchedAddOn.price : 0)
-    }, 0)
-  } else if (booking.addOns && Array.isArray(booking.addOns)) {
-    addOnsCost = booking.addOns.reduce((total, addOnId) => {
-      const matchedAddOn = addOns.find(addon => addon.id === addOnId || addon.title === addOnId)
-      return total + (matchedAddOn ? matchedAddOn.price : 0)
-    }, 0)
-  } else {
-    addOnsCost = booking.itemizedCosts?.addOns || 0
-  }
-
   // Rentals cost (keep existing or 0)
   rentalsCost = booking.itemizedCosts?.rentals || 0
 
   const itemizedCosts = {
     room: roomCost,
-    addOns: addOnsCost,
     rentals: rentalsCost
   }
 
-  const totalAmount = roomCost + addOnsCost + rentalsCost
+  const totalAmount = roomCost + rentalsCost
 
   return { itemizedCosts, totalAmount }
 }

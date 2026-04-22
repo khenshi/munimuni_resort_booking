@@ -5,13 +5,14 @@ export const tabByType = {
   overnight: 'overnight',
 }
 
-export const gallerySlots = ['Front view', 'Cottage view', 'Dining area', 'Evening view']
-
 export function resolveOfferDetail(offerType, offerId) {
   if (offerType === 'daytour' && offerId === 'basic') {
+    const basicOffer = dayTourOffers.find((item) => item.id === 'basic')
+
     return {
       title: 'Basic Type - Entrance Fee',
       subtitle: 'Entrance & facilities access',
+      galleryImages: basicOffer?.galleryImages ?? [],
       details: [
         'Monday to Thursday: PHP 275 per person',
         'Friday to Sunday and Holidays: PHP 325 per person',
@@ -31,6 +32,7 @@ export function resolveOfferDetail(offerType, offerId) {
       title: cottage.name,
       subtitle: cottage.description,
       priceInfo: `${cottage.priceLabel} (${cottage.paxLabel})`,
+      galleryImages: cottage.galleryImages ?? [],
       details: cottage.details,
     }
   }
@@ -43,6 +45,7 @@ export function resolveOfferDetail(offerType, offerId) {
       title: offer.title,
       subtitle: offer.description,
       priceInfo: offer.priceLabel,
+      galleryImages: offer.galleryImages ?? [],
       details: offer.details,
     }
   }

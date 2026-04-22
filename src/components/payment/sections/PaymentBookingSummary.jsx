@@ -21,10 +21,6 @@ export default function PaymentBookingSummary({
           <span>Room Charges</span>
           <span>{formatCurrency(bookingData.itemizedCosts?.room || 0)}</span>
         </div>
-        <div className="cost-item">
-          <span>Add-ons</span>
-          <span>{formatCurrency(bookingData.itemizedCosts?.addOns || 0)}</span>
-        </div>
         <div className="cost-item total">
           <span><strong>Total</strong></span>
           <span><strong>{formatCurrency(totalAmount)}</strong></span>

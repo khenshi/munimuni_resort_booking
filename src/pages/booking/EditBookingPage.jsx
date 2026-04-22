@@ -2,7 +2,6 @@ import { useMemo, useState } from 'react'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { readCurrentCustomer } from '../../components/login'
 import { EditBookingForm, useEditBookingLogic } from '../../components/booking'
-import { addOns } from '../../data/packages'
 import '../../styles/pages/customer-detail-pages.css'
 
 /**
@@ -18,17 +17,13 @@ export default function EditBookingPage() {
     () => decodeURIComponent(bookingReference || ''),
     [bookingReference],
   )
-
-  if (!currentCustomer) {
-    return <Navigate to="/customer/login" replace />
-  }
+  const customerId = currentCustomer?.id
 
   const {
     existingBooking,
     selectedOffer,
     formData,
     onChange,
-    toggleAddOn,
     submitBooking,
     canProceed,
     minCheckInDate,
@@ -37,14 +32,17 @@ export default function EditBookingPage() {
     guestInfoErrors,
     guestCapacityHint,
     maxAllowedGuests,
-    selectedAddOnLabels,
     activeDateUnavailable,
     isSubmitting,
     submitError,
     submitSuccess,
-  } = useEditBookingLogic(decodedReference, currentCustomer.id)
+  } = useEditBookingLogic(decodedReference, customerId)
 
   const [step, setStep] = useState(1)
+
+  if (!currentCustomer) {
+    return <Navigate to="/customer/login" replace />
+  }
 
   const handleCancel = () => {
     navigate(-1)
@@ -90,9 +88,6 @@ export default function EditBookingPage() {
           guestCapacityHint={guestCapacityHint}
           maxAllowedGuests={maxAllowedGuests}
           onChange={onChange}
-          toggleAddOn={toggleAddOn}
-          addOns={addOns}
-          selectedAddOnLabels={selectedAddOnLabels}
           activeDateUnavailable={activeDateUnavailable}
           isSubmitting={isSubmitting}
           submitError={submitError}

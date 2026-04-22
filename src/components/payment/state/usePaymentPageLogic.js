@@ -41,7 +41,7 @@ function calculateBookingFinancials(booking) {
   const itemizedCosts = booking.itemizedCosts ?? fallbackCost.itemizedCosts
   const totalAmount = roundCurrency(
     Number(booking.totalAmount)
-      || Number(itemizedCosts?.room || 0) + Number(itemizedCosts?.addOns || 0) + Number(itemizedCosts?.rentals || 0)
+      || Number(itemizedCosts?.room || 0) + Number(itemizedCosts?.rentals || 0)
       || fallbackCost.totalAmount,
   )
   const amountPaid = roundCurrency(

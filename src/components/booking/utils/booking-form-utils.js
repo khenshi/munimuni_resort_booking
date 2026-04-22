@@ -18,7 +18,6 @@ export function createInitialBookingFormData({
     phone: '',
     email: '',
     address: '',
-    selectedAddOns: [],
     termsAccepted: false,
   }
 }
@@ -105,12 +104,6 @@ export function buildFullName(firstName, lastName) {
     .map((value) => String(value ?? '').trim())
     .filter(Boolean)
     .join(' ')
-}
-
-export function getSelectedAddOnLabels(selectedAddOnIds, addOnList) {
-  return selectedAddOnIds
-    .map((id) => addOnList.find((item) => item.id === id)?.title)
-    .filter(Boolean)
 }
 
 export function getGuestCapacityHint(selectedOffer, checkInDate, maxAllowedGuests) {

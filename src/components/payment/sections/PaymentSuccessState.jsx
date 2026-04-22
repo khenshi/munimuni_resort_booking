@@ -58,14 +58,6 @@ export default function PaymentSuccessState({
             unitPrice: itemizedCosts.room,
           })
         }
-        if (itemizedCosts.addOns) {
-          receipt.lineItems.push({
-            id: 'add-ons',
-            label: 'Add-ons',
-            quantity: 1,
-            unitPrice: itemizedCosts.addOns,
-          })
-        }
         if (itemizedCosts.rentals) {
           receipt.lineItems.push({
             id: 'rentals',

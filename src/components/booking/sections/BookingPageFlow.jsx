@@ -1,7 +1,6 @@
 import BookingStateNotice from './BookingStateNotice'
 import BookingStepContent from './BookingStepContent'
 import BookingStepsIndicator from '../layout/BookingStepsIndicator'
-import { addOns } from '../../../data/packages'
 
 export default function BookingPageFlow({
   pageHeading,
@@ -21,8 +20,6 @@ export default function BookingPageFlow({
   guestCapacityHint,
   maxAllowedGuests,
   onChange,
-  toggleAddOn,
-  selectedAddOnLabels,
   activeDateUnavailable,
   isAuthenticated,
   loginActionState,
@@ -78,9 +75,6 @@ export default function BookingPageFlow({
                 guestCapacityHint={guestCapacityHint}
                 maxAllowedGuests={maxAllowedGuests}
                 onChange={onChange}
-                toggleAddOn={toggleAddOn}
-                addOns={addOns}
-                selectedAddOnLabels={selectedAddOnLabels}
                 availabilityMessage={
                   activeDateUnavailable ? `This offer is unavailable on ${formData.checkInDate}. Pick another check-in date to continue.` : ''
                 }
@@ -97,12 +91,12 @@ export default function BookingPageFlow({
                 Previous
               </button>
 
-              {step < 4 ? (
+              {step < 3 ? (
                 <button
                   type="button"
                   className="bookingActionBtn isPrimary"
                   disabled={!canProceed}
-                  onClick={() => setStep((s) => Math.min(4, s + 1))}
+                  onClick={() => setStep((s) => Math.min(3, s + 1))}
                 >
                   Next Step
                 </button>
