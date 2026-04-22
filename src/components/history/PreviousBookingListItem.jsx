@@ -1,3 +1,9 @@
+/**
+ * 
+ * @param {object} - booking record to display in the list item, should contain at least id, title, dateRange, guests, status, and bookingReference fields
+ * @param {Function} - onViewDetails - callback function to trigger when "View Details" button is clicked, receives the booking object as an argument 
+ * @returns 
+ */
 export default function PreviousBookingListItem({ booking, onViewDetails }) {
   const bookingReference = booking.bookingReference || booking.reference || booking.id
   const statusVariant = String(booking.status ?? '')

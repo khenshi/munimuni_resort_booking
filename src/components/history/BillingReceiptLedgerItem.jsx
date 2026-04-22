@@ -1,3 +1,9 @@
+/**
+ * 
+ * @param {object} - receipt - receipt record to display in the list item
+ * @param {Function} - onViewDetails - callback function to trigger when "View Details" button is clicked, receives the receipt object as an argument
+ * @returns 
+ */
 export default function BillingReceiptLedgerItem({ receipt, onViewDetails }) {
   return (
     <article className="historyReceiptRow" aria-label={`Receipt ${receipt.id}`}>

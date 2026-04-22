@@ -1,18 +1,12 @@
 import BillingReceiptLedgerItem from './BillingReceiptLedgerItem'
 
-export default function BillingReceiptsList({ records, onViewDetails, isLoading = false }) {
-  if (isLoading) {
-    return (
-      <section className="historyList" aria-label="Billing and receipts list">
-        <div className="historyListSkeleton" aria-hidden="true">
-          <div className="historySkeletonRow" />
-          <div className="historySkeletonRow" />
-          <div className="historySkeletonRow" />
-        </div>
-      </section>
-    )
-  }
-
+/**
+ * 
+ * @param {Array} - recorsds - array of receipt records to display in the list
+ * @param {Function} - onViewDetails - callback 
+ * @returns 
+ */
+export default function BillingReceiptsList({ records, onViewDetails }) {
   if (!records?.length) {
     return (
       <section className="historyList" aria-label="Billing and receipts list">

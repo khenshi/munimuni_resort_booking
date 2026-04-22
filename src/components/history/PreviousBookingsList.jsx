@@ -1,19 +1,13 @@
 
 import PreviousBookingListItem from './PreviousBookingListItem'
 
-export default function PreviousBookingsList({ records, onViewDetails, isLoading = false }) {
-  if (isLoading) {
-    return (
-      <section className="historyList" aria-label="Bookings and stays list">
-        <div className="historyListSkeleton" aria-hidden="true">
-          <div className="historySkeletonRow" />
-          <div className="historySkeletonRow" />
-          <div className="historySkeletonRow" />
-        </div>
-      </section>
-    )
-  }
-
+/**
+ * 
+ * @param {Array} - records - array of booking records to display in the list
+ * @param {Function} - onViewDetails - callback function to trigger when "View Details" button is clicked on any list item, receives the corresponding booking object as an argument
+ * @returns 
+ */
+export default function PreviousBookingsList({ records, onViewDetails }) {
   if (!records?.length) {
     return (
       <section className="historyList" aria-label="Bookings and stays list">

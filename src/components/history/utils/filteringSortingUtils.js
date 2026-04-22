@@ -1,4 +1,5 @@
 
+// function for date parsing that normalizes to start of day for consistent comparison
 function parseDateAtStartOfDay(dateText) {
   if (!dateText) return null
   const parsedDate = new Date(dateText)
@@ -7,6 +8,7 @@ function parseDateAtStartOfDay(dateText) {
   return parsedDate
 }
 
+// Determine if a booking is upcoming or completed based on current date and check-out date
 export function resolveBookingTimelineStatus(booking) {
   const today = new Date()
   today.setHours(0, 0, 0, 0)
@@ -19,6 +21,7 @@ export function resolveBookingTimelineStatus(booking) {
   return checkOutDate < today ? 'completed' : 'upcoming'
 }
 
+// Determine booking type based on offerType
 export function resolveBookingType(booking) {
   const offerType = booking.selectedOffer?.offerType
   if (offerType === 'daytour') return 'day-tour'
@@ -26,6 +29,7 @@ export function resolveBookingType(booking) {
   return null
 }
 
+// function for filtering bookings
 export function filterBookings(bookings, { searchQuery = '', selectedYear = 'All', selectedType = 'all' } = {}) {
   return bookings.filter((booking) => {
     // Search filter (by accommodation name)
@@ -33,6 +37,7 @@ export function filterBookings(bookings, { searchQuery = '', selectedYear = 'All
     const bookingTitle = (booking.selectedOffer?.title || booking.propertyName || '').toLowerCase()
     const bookingReference = (booking.bookingReference || booking.id || '').toLowerCase()
 
+    // A booking matches the search query if the query is empty or if it is included in either the booking title or reference.
     const matchesQuery = !normalizedQuery
       || bookingTitle.includes(normalizedQuery)
       || bookingReference.includes(normalizedQuery)
@@ -62,6 +67,7 @@ export function filterBookings(bookings, { searchQuery = '', selectedYear = 'All
   })
 }
 
+// function for sorting bookings
 export function sortBookings(bookings, sortBy = 'newest-checkin') {
   const sorted = [...bookings]
   
@@ -110,6 +116,7 @@ export function sortBookings(bookings, sortBy = 'newest-checkin') {
   return sorted
 }
 
+// function for normalizing booking data for display in the history list
 export function normalizeBookingForDisplay(booking) {
   return {
     ...booking,
@@ -125,6 +132,7 @@ export function normalizeBookingForDisplay(booking) {
   }
 }
 
+// function for filtering receipts
 export function filterReceipts(receipts, { searchQuery = '', selectedYear = 'All', selectedPaymentType = 'all' } = {}) {
   return receipts.filter((receipt) => {
     // Search filter (by customer name or invoice number)
@@ -133,6 +141,7 @@ export function filterReceipts(receipts, { searchQuery = '', selectedYear = 'All
     const invoiceNumber = (receipt.invoiceNumber || '').toLowerCase()
     const stayLabel = (receipt.stayLabel || '').toLowerCase()
 
+    // A receipt matches the search query if the query is empty or if it is included in the customer name, invoice number, or stay label.
     const matchesQuery = !normalizedQuery
       || customerName.includes(normalizedQuery)
       || invoiceNumber.includes(normalizedQuery)
@@ -185,6 +194,7 @@ export function sortReceipts(receipts, sortBy = 'newest-issued') {
   return sorted
 }
 
+// function for normalizing receipt data for display in the history list
 export function normalizeReceiptForDisplay(receipt) {
   return {
     ...receipt,

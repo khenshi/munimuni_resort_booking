@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Navigate, useNavigate, useLocation } from 'react-router-dom'
 import { getCustomerBookingList, getCustomerReceipts, readCurrentCustomer } from '../../components/login'
 import { useBookingStateSync } from '../../components/booking'
@@ -57,6 +57,9 @@ const RECEIPTS_SORT_OPTIONS = [
 export default function CustomerHistoryPage() {
   const currentCustomer = readCurrentCustomer()
   const location = useLocation()
+  const navigate = useNavigate()
+
+  // State for active tab, filters, and sort options
   const [activeTab, setActiveTab] = useState(() => {
     const tab = new URLSearchParams(location.search).get('tab')
     return tab === 'billing' ? 'billing' : 'bookings'
@@ -65,7 +68,10 @@ export default function CustomerHistoryPage() {
     currentCustomer ? getCustomerBookingList(currentCustomer.id) : []
   ))
 
+  // Sync bookings state with any changes that might happen elsewhere in the app
   useBookingStateSync(currentCustomer?.id, setCustomerBookings)
+  
+  // Shared filters
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedYear, setSelectedYear] = useState('All')
   
@@ -77,8 +83,22 @@ export default function CustomerHistoryPage() {
   const [bookingsSortOrder, setBookingsSortOrder] = useState('newest-checkin')
   const [receiptsSortOrder, setReceiptsSortOrder] = useState('newest-issued')
 
-  const navigate = useNavigate()
+  // Sync active tab with URL query parameter
+  useEffect(() => {
+    const tab = new URLSearchParams(location.search).get('tab')
+    const nextTab = tab === 'billing' ? 'billing' : 'bookings'
+    setActiveTab(nextTab)
+  }, [location.search])
 
+  // Handle tab changes and update URL query parameter
+  const handleTabChange = (tabId) => {
+    setActiveTab(tabId)
+    const searchParams = new URLSearchParams(location.search)
+    searchParams.set('tab', tabId)
+    navigate({ pathname: location.pathname, search: `?${searchParams.toString()}` }, { replace: true })
+  }
+
+  // Memoize filtered and sorted bookings and receipts for display
   const visibleBookings = useMemo(() => {
     const filtered = filterBookings(customerBookings, {
       searchQuery,
@@ -100,6 +120,7 @@ export default function CustomerHistoryPage() {
     return sorted.map(normalizeReceiptForDisplay)
   }, [currentCustomer, searchQuery, selectedYear, selectedPaymentType, receiptsSortOrder])
 
+  // Handle view details action for both bookings and receipts
   const handleViewDetails = (record) => {
     if (activeTab === 'bookings') {
       navigate(`/customer/bookings/${encodeURIComponent(record.id)}`)
@@ -108,6 +129,7 @@ export default function CustomerHistoryPage() {
     }
   }
 
+  // Redirect to login if no current customer
   if (!currentCustomer) {
     return <Navigate to="/customer/login" replace />
   }
@@ -125,13 +147,14 @@ export default function CustomerHistoryPage() {
           </div>
         </div>
 
+        {/* Tabs for switching between bookings and billing history */}
         <div className="customerHistoryTabs" role="tablist" aria-label="History tabs">
           {HISTORY_TABS.map((tab) => (
             <button
               key={tab.id}
               type="button"
               className={`customerHistoryTab ${activeTab === tab.id ? 'active' : ''}`}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => handleTabChange(tab.id)}
               aria-selected={activeTab === tab.id}
               role="tab"
             >
@@ -140,6 +163,7 @@ export default function CustomerHistoryPage() {
           ))}
         </div>
 
+        {/* Toolbar with search*/}
         <div className="customerHistoryToolbar">
           <label className="customerHistorySearch" htmlFor="history-search">
             <span className="customerHistorySearchLabel">Search history</span>
@@ -154,7 +178,8 @@ export default function CustomerHistoryPage() {
               }
             />
           </label>
-
+          
+          {/* Filters for year, booking type (for bookings), and payment type (for receipts) */}
           <div className="customerHistoryFilters">
             <div className="customerHistoryFilter">
               <label htmlFor="history-year">
@@ -229,7 +254,8 @@ export default function CustomerHistoryPage() {
             </div>
           </div>
         </div>
-
+        
+        {/* Content area for displaying either bookings or receipts based on active tab */}
         <div className="customerHistoryContent">
           <div className="customerHistoryStatus">
             <p>
