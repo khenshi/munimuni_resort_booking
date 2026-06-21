@@ -82,72 +82,6 @@
   gap: 12px;
 }
 
-.profileMenuWrap {
-  position: relative;
-}
-
-.profileFabButton {
-  width: 40px;
-  height: 40px;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.32);
-  background: rgba(255, 255, 255, 0.16);
-  color: rgba(255, 255, 255, 0.95);
-  font-family: var(--font-body);
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.2px;
-  cursor: pointer;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.24);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
-
-.profileFabButton:hover {
-  border-color: rgba(var(--brand-cyan-rgb), 0.9);
-}
-
-.profileDropdownMenu {
-  position: absolute;
-  top: calc(100% + 10px);
-  right: 0;
-  min-width: 190px;
-  border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  background: rgba(10, 14, 20, 0.84);
-  box-shadow: 0 22px 48px rgba(0, 0, 0, 0.34);
-  padding: 8px;
-  display: grid;
-  gap: 6px;
-}
-
-.profileDropdownTitle {
-  margin: 0;
-  padding: 8px 10px;
-  color: rgba(255, 255, 255, 0.86);
-  font-size: 12px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.profileDropdownLink,
-.profileDropdownButton {
-  text-decoration: none;
-  border: none;
-  border-radius: 8px;
-  background: transparent;
-  color: rgba(255, 255, 255, 0.92);
-  padding: 10px;
-  text-align: left;
-  font: inherit;
-  font-size: 13px;
-  cursor: pointer;
-}
-
-.profileDropdownLink:hover,
-.profileDropdownButton:hover {
-  background: rgba(255, 255, 255, 0.08);
-}
-
 .bookNowBtn {
   text-decoration: none;
   display: inline-flex;
@@ -247,10 +181,6 @@
 @media (max-width: 860px) {
   .navLinks {
     display: none;
-  }
-
-  .profileDropdownMenu {
-    right: -6px;
   }
 
   .menuButton {

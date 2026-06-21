@@ -1,5 +1,4 @@
 import {
-  PaymentBookingSelection,
   PaymentBookingSummary,
   PaymentEmptyState,
   PaymentPageShell,
@@ -14,7 +13,6 @@ export default function PaymentPage() {
   const {
     checkoutMode,
     bookingData,
-    payableBookings,
     paymentMethod,
     setPaymentMethod,
     paymentOption,
@@ -27,10 +25,8 @@ export default function PaymentPage() {
     remainingBalanceAfterPayment,
     formatCurrency,
     handlePayment,
-    handleSelectBooking,
-    goToDashboard,
+    goToHome,
     goToPackages,
-    goToHistory,
   } = usePaymentPageLogic()
 
   if (transactionSummary) {
@@ -41,40 +37,27 @@ export default function PaymentPage() {
           bookingData={bookingData}
           paymentMethod={paymentMethod}
           formatCurrency={formatCurrency}
-          onReturnToDashboard={goToDashboard}
-          onViewHistory={goToHistory}
+          onReturnHome={goToHome}
         />
       </PaymentPageShell>
     )
   }
 
   if (!bookingData) {
-    if (payableBookings.length === 0) {
-      return (
-        <PaymentPageShell title="No Pending Payments" onBack={goToDashboard}>
-          <PaymentEmptyState
-            title="No Pending Payments"
-            message="No pending payments or bookings as of this moment."
-            actionLabel="Go to Booking Page"
-            onAction={goToPackages}
-          />
-        </PaymentPageShell>
-      )
-    }
-
     return (
-      <PaymentPageShell title="Select Booking to Pay" onBack={goToDashboard}>
-        <PaymentBookingSelection
-          payableBookings={payableBookings}
-          onSelectBooking={handleSelectBooking}
-          formatCurrency={formatCurrency}
+      <PaymentPageShell title="No Booking Selected" onBack={goToPackages}>
+        <PaymentEmptyState
+          title="No Booking Selected"
+          message="Choose a package first so we can prepare your payment summary."
+          actionLabel="Go to Packages"
+          onAction={goToPackages}
         />
       </PaymentPageShell>
     )
   }
 
   return (
-    <PaymentPageShell title="Complete Your Payment" onBack={goToDashboard}>
+    <PaymentPageShell title="Complete Your Payment" onBack={goToPackages}>
       <PaymentBookingSummary
         bookingData={bookingData}
         totalAmount={totalAmount}

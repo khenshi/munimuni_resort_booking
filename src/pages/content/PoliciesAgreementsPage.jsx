@@ -34,7 +34,7 @@ const POLICY_GROUPS = [
     items: [
       'Guest information is used to manage bookings, billing, communication, and support requests.',
       'Personal data is handled with care and shared only for operational needs, payment processing, or legal compliance.',
-      'Guests can expect basic account and transaction details to remain protected within the resort system.',
+      'Guests can expect booking and payment details to remain protected within the resort system.',
     ],
   },
 ]

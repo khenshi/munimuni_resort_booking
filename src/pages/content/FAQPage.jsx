@@ -37,12 +37,12 @@ const FAQ_GROUPS = [
       {
         question: 'When is payment due?',
         answer:
-          'Payment may be due at booking, upon arrival, or before check-in depending on the package rules. Your booking or receipt record shows the current payment status.',
+          'Payment may be due at booking, upon arrival, or before check-in depending on the package rules. The payment confirmation screen shows the current payment status.',
       },
       {
         question: 'Where can I check my payment status?',
         answer:
-          'Open your booking history or receipt history to review whether a stay is paid, pending, or settled.',
+          'After payment, the confirmation screen shows whether the booking is paid in full or has an outstanding balance.',
       },
     ],
   },
@@ -84,9 +84,9 @@ const FAQ_GROUPS = [
           'Processing time depends on the original payment channel. Cash, card, and online transfer refunds can have different release schedules.',
       },
       {
-        question: 'Where do I see refunded receipts?',
+        question: 'How are refunds confirmed?',
         answer:
-          'Refunded transactions appear in receipt history with their latest payment status so they can be reviewed at any time.',
+          'Refunded transactions are handled through the resort support process and confirmed through the original payment channel.',
       },
     ],
   },

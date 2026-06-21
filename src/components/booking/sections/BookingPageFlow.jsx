@@ -21,8 +21,6 @@ export default function BookingPageFlow({
   maxAllowedGuests,
   onChange,
   activeDateUnavailable,
-  isAuthenticated,
-  loginActionState,
 }) {
   return (
     <main className="bookingMain">
@@ -30,15 +28,7 @@ export default function BookingPageFlow({
         <p className="bookingKicker">Reservation</p>
         <h1 id="booking-heading">{pageHeading}</h1>
 
-        {!isAuthenticated ? (
-          <BookingStateNotice
-            title="Sign in required"
-            message="Please sign in or create an account to continue with your booking. Your booking page will reopen after you finish."
-            actionTo="/customer/login"
-            actionState={loginActionState}
-            actionLabel="Sign In or Sign Up"
-          />
-        ) : !selectedOffer ? (
+        {!selectedOffer ? (
           <BookingStateNotice
             title="No selected offer yet"
             message="Please choose an offer first so we can pre-fill your booking details."

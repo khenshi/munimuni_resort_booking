@@ -3,7 +3,6 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { resolveAutoCheckOutDate, resolveSelectedOffer } from '../utils/booking-utils'
 import { addDaysToISODate, getTodayISODate } from '../../packages/utils/availability-utils'
 import { isItemAvailableForDate } from '../../packages'
-import { readCurrentCustomer } from '../../login/auth-storage'
 import {
   buildFullName,
   createInitialBookingFormData,
@@ -42,10 +41,8 @@ export default function useBookingPageLogic() {
   const navigate = useNavigate()
   const query = new URLSearchParams(location.search)
   const navigationState = location.state ?? {}
-  const currentPath = `${location.pathname}${location.search}`
   const prefillStayDates = navigationState.prefillStayDates ?? {}
   const selectedOfferFromState = navigationState.selectedOffer
-  const currentCustomer = readCurrentCustomer()
 
   const offerType = query.get('offerType') ?? ''
   const offerId = query.get('offerId') ?? ''
@@ -140,7 +137,6 @@ export default function useBookingPageLogic() {
   )
 
   const pageHeading = 'Book Your Stay'
-  const isAuthenticated = Boolean(currentCustomer?.id)
 
   const guestCapacityHint = useMemo(
     () => getGuestCapacityHint(selectedOffer, formData.checkInDate, maxAllowedGuests),
@@ -209,7 +205,7 @@ export default function useBookingPageLogic() {
       totalAmount: costBreakdown.totalAmount,
     }
 
-    navigate('/customer/payment', {
+    navigate('/payment', {
       state: {
         source: 'booking-checkout',
         bookingDraft,
@@ -237,10 +233,5 @@ export default function useBookingPageLogic() {
     guestCapacityHint,
     maxAllowedGuests,
     activeDateUnavailable,
-    isAuthenticated,
-    loginActionState: {
-      returnTo: currentPath,
-      authMode: 'signin',
-    },
   }
 }

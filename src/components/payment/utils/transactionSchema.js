@@ -10,7 +10,7 @@ export const createTransaction = ({
   transactionId,
   bookingId,
   timestamp = new Date().toISOString(),
-  customerDetails,
+  guestDetails,
   itemizedCosts,
   paymentMethod,
   totalAmount,
@@ -22,7 +22,7 @@ export const createTransaction = ({
   transactionId,
   bookingId,
   timestamp,
-  customerDetails,
+  guestDetails,
   itemizedCosts, // { room: number, rentals: number }
   paymentMethod,
   totalAmount,
