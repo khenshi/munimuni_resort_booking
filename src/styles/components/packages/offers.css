@@ -499,13 +499,11 @@
 .offerDetailsGalleryPlaceholder {
   min-height: 168px;
   border-radius: 14px;
-  border: 1px dashed rgba(var(--color-cyan-rgb), 0.34);
-  background: #f4f8fb;
   color: rgba(22, 32, 51, 0.58);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 16px;
+  padding: 8px;
   text-align: center;
 }
 

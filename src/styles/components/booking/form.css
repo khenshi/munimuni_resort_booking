@@ -58,7 +58,7 @@
 }
 
 .bookingStaticValue {
-  border: 1px dashed rgba(var(--color-cyan-rgb), 0.4);
+  border: 1px solid rgba(var(--color-cyan-rgb), 0.4);
   border-radius: 10px;
   background: rgba(var(--color-cyan-rgb), 0.08);
   padding: 10px 12px;
