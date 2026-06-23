@@ -6,7 +6,7 @@ import PackageOfferDetailsPage from './pages/packages/PackageOfferDetailsPage'
 import PoliciesAgreementsPage from './pages/content/PoliciesAgreementsPage'
 import FAQPage from './pages/content/FAQPage'
 import PaymentPage from './pages/payment/PaymentPage'
-import { PackagesLayout } from './components/packages'
+import { PackagesLayout } from './components/packages/packages-list-page'
 
 export default function App() {
   return (

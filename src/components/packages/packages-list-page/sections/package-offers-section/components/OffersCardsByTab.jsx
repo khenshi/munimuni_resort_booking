@@ -1,4 +1,4 @@
-import PackageOfferCard from '../../../cards/PackageOfferCard'
+import PackageOfferCard from './PackageOfferCard'
 
 export default function OffersCardsByTab({
   activeTab,

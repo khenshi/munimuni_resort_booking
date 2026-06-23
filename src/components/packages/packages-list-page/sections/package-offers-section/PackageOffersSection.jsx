@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import { addOns, cottages, dayTourOffers, overnightOffers } from '../../../../data/packages'
+import { addOns, cottages, dayTourOffers, overnightOffers } from '../../../../../data/packages'
 import { addDaysToISODate, getStayNightsByTab, getTodayISODate, isItemAvailableForDate } from '../../utils/availability-utils'
 import BookingGuardPopup from '../../feedback/BookingGuardPopup'
-import usePackagesOfferFilters from './hooks/use-packages-offer-filters'
+import usePackagesOfferFilters from '../../state/use-packages-offer-filters'
 import OffersActiveFilters from './components/OffersActiveFilters'
 import OffersCardsByTab from './components/OffersCardsByTab'
 import OffersDateNotices from './components/OffersDateNotices'
@@ -18,7 +18,7 @@ import {
   hasActiveFilters,
   markAndOrderByAvailability,
   sortItems,
-} from './utils/offers-logic'
+} from '../../utils/offers-logic'
 
 export default function PackagesOffersSection({ activeTab }) {
   const { activeFilters, updateActiveFilters, clearAllFilters } = usePackagesOfferFilters(activeTab)

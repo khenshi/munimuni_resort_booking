@@ -3,5 +3,4 @@ export { default as PaymentBookingSummary } from './sections/PaymentBookingSumma
 export { default as PaymentPaymentForm } from './sections/PaymentPaymentForm'
 export { default as PaymentSuccessState } from './sections/PaymentSuccessState'
 export { default as PaymentEmptyState } from './sections/PaymentEmptyState'
-export { default as PaymentBookingSelection } from './sections/PaymentBookingSelection'
 export { default as usePaymentPageLogic } from './state/usePaymentPageLogic'

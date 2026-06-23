@@ -1,5 +1,5 @@
 import { cottages, dayTourOffers, overnightOffers } from '../../../data/packages'
-import { addDaysToISODate } from '../../packages/utils/availability-utils'
+import { addDaysToISODate } from '../../packages/packages-list-page/utils/availability-utils'
 
 export const stepLabels = ['Stay Details', 'Guest Info', 'Review']
 

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 import PackagesPageHeader from './PackagesPageHeader'
-import { readPackagesViewState, writePackagesViewState } from '../state/packages-view-state'
+import { readPackagesViewState, writePackagesViewState } from '../packages-list-page/state/packages-view-state'
 import { tabByType } from '../details'
 
 export default function PackagesLayout() {

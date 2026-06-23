@@ -1,8 +1,8 @@
 import { useMemo, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { resolveAutoCheckOutDate, resolveSelectedOffer } from '../utils/booking-utils'
-import { addDaysToISODate, getTodayISODate } from '../../packages/utils/availability-utils'
-import { isItemAvailableForDate } from '../../packages'
+import { addDaysToISODate, getTodayISODate } from '../../packages/packages-list-page/utils/availability-utils'
+import { isItemAvailableForDate } from '../../packages/packages-list-page'
 import {
   buildFullName,
   createInitialBookingFormData,

@@ -1,5 +1,5 @@
 import { cottages, dayTourOffers, overnightOffers } from '../../../data/packages'
-import { isItemAvailableForDate } from '../../packages'
+import { isItemAvailableForDate } from '../../packages/packages-list-page'
 
 export function resolveSelectedAvailabilityItem(offerType, offerId) {
   if (offerType === 'daytour' && offerId === 'basic') {

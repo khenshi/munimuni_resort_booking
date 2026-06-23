@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { addDaysToISODate, getStayNightsByTab, getTodayISODate, isItemAvailableForDate } from '../utils/availability-utils'
+import { addDaysToISODate, getStayNightsByTab, getTodayISODate, isItemAvailableForDate } from '../packages-list-page/utils/availability-utils'
 
 export default function PackageOfferDateEditor({
   offerType,

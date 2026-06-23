@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { infoContentByTab } from '../../../data/packages'
+import { infoContentByTab } from '../../../../data/packages'
 
 export default function PackagesInfoSection({ activeTab }) {
   const content = infoContentByTab[activeTab] ?? infoContentByTab.daytour

@@ -1,4 +1,4 @@
-import { cottages, dayTourOffers, overnightOffers } from '../../../data/packages'
+import { cottages, dayTourOffers, overnightOffers } from '../../../../data/packages'
 
 export const tabByType = {
   daytour: 'daytour',
